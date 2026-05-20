@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STARAVIA | Premium Aviachiptalar</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              DEFAULT: '#D4A445',
+              soft: '#E8C26A',
+              dark: '#B78434'
+            },
+            ink: '#23201C',
+            paper: '#Fdfcfb'
+          },
+          boxShadow: {
+            soft: '0 20px 40px -15px rgba(0,0,0,0.1)',
+            glow: '0 0 20px rgba(212, 164, 69, 0.3)'
+          },
+          fontFamily: {
+            display: ['Playfair Display', 'serif'],
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    }
+    .glass-dark {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .destinations-bg {
+      background:
+        linear-gradient(180deg, rgba(20, 18, 16, 0.95), rgba(10, 9, 8, 0.98)),
+        url('https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format&fit=crop&w=1800&q=80');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .field { transition: all 0.3s ease; }
+    .field:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(212,164,69,.25);
+      border-color: #D4A445;
+      background: #ffffff;
+      transform: translateY(-2px);
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #D4A445; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #B78434; }
+  </style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased selection:bg-gold selection:text-white relative overflow-x-hidden">
+  
+  <main class="w-full">
+    <div class="relative min-h-screen w-full flex flex-col overflow-hidden bg-ink">
+      
+      <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+        <source src="Cover800x312_darken_3mb.mp4" type="video/mp4">
+      </video>
+
+      <div class="relative z-10 mx-auto w-full max-w-[1500px] flex-1 flex flex-col">
+        
+        <header class="relative z-50 flex items-center justify-between gap-4 px-6 py-6 md:px-12 lg:px-8">
+          <div class="flex items-center gap-4">
+            <span class="font-display text-3xl font-bold tracking-widest text-gold">STARAVIA</span>
+          </div>
+
+          <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-white/90">
+            <a href="#parvozlar" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Parvozlar</a>
+            <a href="#chegirmalar" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Chegirmalar</a>
+            <a href="#biz-haqimizda" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Biz haqimizda</a>
+          </nav>
+
+          <div class="flex items-center gap-4">
+            <a href="#" class="hidden md:flex group items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:bg-gold hover:border-gold hover:-translate-y-1">
+              24/7 Support
+            </a>
+            
+            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none p-2 rounded-lg bg-black/20 backdrop-blur-md">
+              <svg id="burger-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+              <svg id="close-icon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <div id="mobile-menu" class="absolute z-50 top-[90px] left-4 right-4 rounded-2xl glass-dark hidden flex-col gap-4 p-6 shadow-2xl md:hidden transition-all duration-300">
+            <a href="#parvozlar" class="text-white text-lg font-medium hover:text-gold">Parvozlar</a>
+            <hr class="border-white/10">
+            <a href="#chegirmalar" class="text-white text-lg font-medium hover:text-gold">Chegirmalar</a>
+            <hr class="border-white/10">
+            <a href="#biz-haqimizda" class="text-white text-lg font-medium hover:text-gold">Biz haqimizda</a>
+            <a href="#" class="mt-2 text-center rounded-xl bg-gold px-6 py-3 text-base font-medium text-white transition-all hover:bg-gold-dark">24/7 Support</a>
+          </div>
+        </header>
+
+        <div class="flex-1 grid items-center gap-12 px-6 pb-12 pt-4 md:px-12 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+          
+          <div class="max-w-[700px] p-6 sm:p-8 rounded-3xl glass-dark">
+            <span class="mb-4 inline-block rounded-full bg-gold/20 border border-gold/30 px-4 py-1.5 text-xs sm:text-sm font-semibold tracking-wider text-gold-soft uppercase shadow-sm">Kashf etish vaqti keldi</span>
+            <h1 class="font-display text-4xl sm:text-5xl leading-[1.15] text-white md:text-6xl lg:text-7xl">
+              Chipta kerakmi?<br />
+              <span class="text-gold-soft">Biz buni amalga oshiramiz.</span>
+            </h1>
+            <p class="mt-4 sm:mt-6 max-w-[500px] text-base sm:text-lg leading-relaxed text-white/90 font-medium">
+              Parvoz so'rovingizni quyida yuboring. Bizning mutaxassislarimiz sizga eng qulay va arzon variantlarni tezda taqdim etishadi.
+            </p>
+          </div>
+
+          <div class="glass relative z-10 mt-2 sm:mt-4 rounded-[2rem] p-6 sm:p-8 md:p-10 lg:ml-auto w-full max-w-[550px]">
+            
+            <h2 class="font-display text-2xl sm:text-3xl font-semibold text-ink mb-6">Parvozni rejalashtirish</h2>
+            
+            <div class="flex flex-wrap items-center gap-2 mb-6 bg-white/50 p-1.5 rounded-xl border border-gray-200 w-full">
+              <button type="button" id="btn-one-way" class="trip-type-btn flex-1 px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-transparent text-ink/70 hover:bg-white transition-all">Bir tomonlama</button>
+              <button type="button" id="btn-round-trip" class="trip-type-btn flex-1 px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-ink text-white shadow-md transition-all">Borish-qaytish</button>
+              <button type="button" id="btn-multi-city" class="trip-type-btn flex-1 px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-transparent text-ink/70 hover:bg-white transition-all">Ko'p manzilli</button>
+            </div>
+
+            <form id="flightForm" class="space-y-4 sm:space-y-5">
+              <datalist id="airports">
+                <option value="TAS">Toshkent, O'zbekiston (TAS)</option>
+                <option value="FEG">Farg'ona, O'zbekiston (FEG)</option>
+                <option value="SKD">Samarqand, O'zbekiston (SKD)</option>
+                <option value="IST">Istanbul, Turkiya (IST)</option>
+                <option value="DXB">Dubay, BAA (DXB)</option>
+                <option value="JFK">New York, AQSH (JFK)</option>
+                <option value="LHR">London, Buyuk Britaniya (LHR)</option>
+              </datalist>
+
+              <div class="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2">
+                <input list="airports" required class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500" placeholder="Qayerdan" autocomplete="off" />
+                <input list="airports" required class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500" placeholder="Qayerga" autocomplete="off" />
+              </div>
+              
+              <div class="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2">
+                <input required type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500" placeholder="Uchish sanasi" />
+                <input id="return-date" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500 transition-opacity duration-300" placeholder="Qaytish sanasi" />
+              </div>
+              
+              <div class="grid grid-cols-1 gap-4 sm:gap-5 sm:grid-cols-2">
+                <input required type="number" min="1" class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500" placeholder="Yo'lovchilar" />
+                <select class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink">
+                  <option value="" disabled selected>Klassni tanlang</option>
+                  <option>Ekonom</option>
+                  <option>Premium Ekonom</option>
+                  <option>Biznes</option>
+                  <option>Birinchi Klass</option>
+                </select>
+              </div>
+              
+              <input required type="tel" class="field h-12 sm:h-14 w-full rounded-xl border border-gray-200 bg-white/80 px-4 text-[14px] sm:text-[15px] font-medium text-ink placeholder:text-gray-500" placeholder="Telefon raqamingiz" />
+              
+              <button type="submit" class="mt-2 sm:mt-4 w-full rounded-xl bg-gold py-3 sm:py-4 text-base sm:text-lg font-semibold text-white transition-all hover:-translate-y-1 hover:bg-gold-dark hover:shadow-glow">
+                <a href="search-results.html">So'rov yuborish</a>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section id="chegirmalar" class="w-full bg-[#f0ebe1] px-6 py-20 md:px-12 lg:px-8">
+      <div class="mx-auto max-w-[1500px]">
+        <div class="text-center mb-12">
+          <span class="text-gold font-semibold tracking-wider uppercase text-sm">Maxsus Takliflar</span>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-ink mt-2">Qaynoq <span class="italic text-gold">Chegirmalar</span></h2>
+          <p class="text-ink/70 mt-4 max-w-2xl mx-auto">Eng mashhur yo'nalishlar bo'yicha eksklyuziv narxlar. Chiptalarni hoziroq bron qiling va tejab qoling.</p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-black/5 group">
+            <div class="flex justify-between items-center mb-4">
+              <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold">-20% Chegirma</span>
+              <span class="text-ink/50 text-sm">To'g'ridan-to'g'ri reys</span>
+            </div>
+            <div class="flex items-center justify-between mt-6">
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">TAS</h3>
+                <p class="text-sm text-ink/60">Toshkent</p>
+              </div>
+              <div class="flex-1 px-4 flex flex-col items-center relative">
+                <div class="h-[2px] w-full bg-gray-200 border-dashed border-t-2 border-gray-300"></div>
+                <span class="text-2xl absolute -top-4 group-hover:translate-x-12 transition-transform duration-700">✈️</span>
+              </div>
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">IST</h3>
+                <p class="text-sm text-ink/60">Istanbul</p>
+              </div>
+            </div>
+            <div class="mt-8 flex justify-between items-end">
+              <div>
+                <p class="text-sm text-ink/50 line-through">$450</p>
+                <p class="text-3xl font-bold text-gold">$360</p>
+              </div>
+              <button class="bg-ink text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-gold transition-colors">Bron qilish</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-black/5 group">
+            <div class="flex justify-between items-center mb-4">
+              <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-bold">Ommabop</span>
+              <span class="text-ink/50 text-sm">Baggaj kiritilgan</span>
+            </div>
+            <div class="flex items-center justify-between mt-6">
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">TAS</h3>
+                <p class="text-sm text-ink/60">Toshkent</p>
+              </div>
+              <div class="flex-1 px-4 flex flex-col items-center relative">
+                <div class="h-[2px] w-full bg-gray-200 border-dashed border-t-2 border-gray-300"></div>
+                <span class="text-2xl absolute -top-4 group-hover:translate-x-12 transition-transform duration-700">✈️</span>
+              </div>
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">DXB</h3>
+                <p class="text-sm text-ink/60">Dubai</p>
+              </div>
+            </div>
+            <div class="mt-8 flex justify-between items-end">
+              <div>
+                <p class="text-sm text-white select-none">.</p>
+                <p class="text-3xl font-bold text-gold">$280</p>
+              </div>
+              <button class="bg-ink text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-gold transition-colors">Bron qilish</button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-black/5 group">
+            <div class="flex justify-between items-center mb-4">
+              <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold">Yangi yo'nalish</span>
+              <span class="text-ink/50 text-sm">Ovqatlanish mavjud</span>
+            </div>
+            <div class="flex items-center justify-between mt-6">
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">TAS</h3>
+                <p class="text-sm text-ink/60">Toshkent</p>
+              </div>
+              <div class="flex-1 px-4 flex flex-col items-center relative">
+                <div class="h-[2px] w-full bg-gray-200 border-dashed border-t-2 border-gray-300"></div>
+                <span class="text-2xl absolute -top-4 group-hover:translate-x-12 transition-transform duration-700">✈️</span>
+              </div>
+              <div class="text-center">
+                <h3 class="text-2xl font-bold text-ink">NYC</h3>
+                <p class="text-sm text-ink/60">New York</p>
+              </div>
+            </div>
+            <div class="mt-8 flex justify-between items-end">
+              <div>
+                <p class="text-sm text-ink/50 line-through">$1050</p>
+                <p class="text-3xl font-bold text-gold">$890</p>
+              </div>
+              <button class="bg-ink text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-gold transition-colors">Bron qilish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="parvozlar" class="destinations-bg w-full px-6 py-16 text-white md:px-12 lg:px-8 lg:py-24">
+      <div class="mx-auto w-full max-w-[1500px]">
+        <div class="mb-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <h3 class="font-display text-4xl font-semibold text-white md:text-5xl">Mashhur <span class="text-gold">Manzillar</span></h3>
+          <a href="#" class="text-sm font-medium uppercase tracking-wider text-gold hover:underline hover:text-white transition-colors">Barchasini ko'rish →</a>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          <article class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
+            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=800&q=80" alt="New York" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
+            <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
+              <h4 class="font-display text-2xl font-medium tracking-wide">New York</h4>
+              <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">AQSH</p>
+            </div>
+          </article>
+          <article class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
+            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" alt="Dubai" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
+            <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
+              <h4 class="font-display text-2xl font-medium tracking-wide">Dubai</h4>
+              <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">BAA</p>
+            </div>
+          </article>
+          <article class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
+            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80" alt="London" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
+            <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
+              <h4 class="font-display text-2xl font-medium tracking-wide">London</h4>
+              <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">Buyuk Britaniya</p>
+            </div>
+          </article>
+          <article class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
+            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=800&q=80" alt="Paris" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
+            <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
+              <h4 class="font-display text-2xl font-medium tracking-wide">Paris</h4>
+              <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">Fransiya</p>
+            </div>
+          </article>
+          <article class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
+            <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80" alt="Istanbul" loading="lazy"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
+            <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
+              <h4 class="font-display text-2xl font-medium tracking-wide">Istanbul</h4>
+              <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">Turkiya</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="biz-haqimizda" class="w-full bg-ink text-white py-16 lg:py-24 border-t border-white/10">
+      <div class="mx-auto w-full max-w-[1500px] px-6 md:px-12 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 class="font-display text-4xl md:text-5xl font-bold leading-tight">Dunyo bo'ylab ishonchli <br/><span class="text-gold">parvozlar hamkori.</span></h2>
+            <p class="mt-6 text-white/70 text-lg leading-relaxed">Biz mijozlarimizga eng yaxshi xizmatni taqdim etishga intilamiz. 10 yildan ortiq tajriba bilan har bir parvoz xavfsiz, qulay va arzon bo'lishini ta'minlaymiz.</p>
+            
+            <div class="grid grid-cols-2 gap-8 mt-10">
+              <div>
+                <h4 class="text-4xl font-bold text-gold font-display">15K+</h4>
+                <p class="text-white/60 mt-2">Mamnun mijozlar</p>
+              </div>
+              <div>
+                <h4 class="text-4xl font-bold text-gold font-display">50+</h4>
+                <p class="text-white/60 mt-2">Davlatlarga parvoz</p>
+              </div>
+              <div>
+                <h4 class="text-4xl font-bold text-gold font-display">200+</h4>
+                <p class="text-white/60 mt-2">Aviakompaniyalar</p>
+              </div>
+              <div>
+                <h4 class="text-4xl font-bold text-gold font-display">24/7</h4>
+                <p class="text-white/60 mt-2">Mijozlarni qo'llab-quvvatlash</p>
+              </div>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="absolute -inset-4 bg-gold/20 rounded-[2rem] blur-xl"></div>
+            <img src="https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=800&q=80" alt="Airplane" class="relative rounded-[2rem] shadow-2xl border border-white/10 w-full h-[500px] object-cover" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="w-full bg-paper px-6 py-20 md:px-12 lg:px-8">
+      <div class="mx-auto max-w-[1500px] text-center">
+        <h2 class="font-display text-4xl md:text-5xl font-bold text-ink">Mijozlarimiz <span class="italic text-gold">fikrlari</span></h2>
+        
+        <div class="grid md:grid-cols-3 gap-8 mt-16 text-left">
+          <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-4xl absolute top-4 right-6 font-display opacity-40">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Sayt orqali chipta topish juda oson ekan. Agentlar menga eng arzon va qulay reysni topib berishdi. Katta rahmat!"</p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                <img src="https://i.pravatar.cc/100?img=1" alt="User" class="w-full h-full object-cover">
+              </div>
+              <div>
+                <h5 class="font-bold text-ink">Aziza K.</h5>
+                <p class="text-xs text-ink/50">Toshkent, O'zbekiston</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-4xl absolute top-4 right-6 font-display opacity-40">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Dubayga oilaviy dam olish uchun chipta oldik. Narxlar juda hamyonbop va xizmat sifati a'lo darajada."</p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                <img src="https://i.pravatar.cc/100?img=11" alt="User" class="w-full h-full object-cover">
+              </div>
+              <div>
+                <h5 class="font-bold text-ink">Rustam B.</h5>
+                <p class="text-xs text-ink/50">Samarqand, O'zbekiston</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-4xl absolute top-4 right-6 font-display opacity-40">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Tezkor yordam markazi juda yaxshi ishlaydi. Parvozim o'zgarganda muammoni zudlik bilan hal qilib berishdi."</p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                <img src="https://i.pravatar.cc/100?img=5" alt="User" class="w-full h-full object-cover">
+              </div>
+              <div>
+                <h5 class="font-bold text-ink">Malika O.</h5>
+                <p class="text-xs text-ink/50">Buxoro, O'zbekiston</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="w-full bg-[#1A1816] pt-20 pb-8 text-white">
+      <div class="mx-auto w-full max-w-[1500px] px-6 md:px-12 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          
+          <div>
+            <span class="font-display text-3xl font-bold tracking-widest text-gold mb-6 block">STARAVIA</span>
+            <p class="text-white/60 text-sm leading-relaxed mb-6">Orzuingizdagi manzillarga eng qulay va hamyonbop parvozlar. Dunyo bo'ylab kashfiyotlarni biz bilan boshlang.</p>
+            <div class="flex gap-4">
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors">📸</a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors">📱</a>
+              <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors">🌐</a>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Kompaniya</h4>
+            <ul class="space-y-3 text-white/60 text-sm">
+              <li><a href="#" class="hover:text-gold transition-colors">Biz haqimizda</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Vakansiyalar</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Hamkorlik</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Yangiliklar</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Yordam</h4>
+            <ul class="space-y-3 text-white/60 text-sm">
+              <li><a href="#" class="hover:text-gold transition-colors">FAQ</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Qoidalar va shartlar</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Maxfiylik siyosati</a></li>
+              <li><a href="#" class="hover:text-gold transition-colors">Aloqa</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-lg font-bold mb-6">Yangiliklarga obuna</h4>
+            <p class="text-white/60 text-sm mb-4">Eng so'nggi chegirmalar va qaynoq takliflarni email orqali oling.</p>
+            <div class="flex gap-2">
+              <input type="email" placeholder="Email manzilingiz" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold">
+              <button class="bg-gold px-4 py-3 rounded-xl hover:bg-gold-dark transition-colors">→</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+          <p>&copy; 2026 STARAVIA. Barcha huquqlar himoyalangan.</p>
+          <div class="flex gap-4">
+            <span>Uzbekistan, Andijan</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-8 sm:w-[450px] bg-white p-6 rounded-[1.5rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.2)] border border-gray-100 z-[100] translate-y-[150%] transition-transform duration-700">
+      <div class="flex items-start gap-4">
+        <div class="text-3xl">🍪</div>
+        <div>
+          <h4 class="font-display text-lg font-bold text-ink">Cookie fayllar</h4>
+          <p class="text-sm text-ink/70 mt-1 leading-relaxed">Saytimizdan foydalanish tajribangizni yaxshilash va sizga moslashtirilgan xizmatlarni taqdim etish uchun cookie fayllaridan foydalanamiz.</p>
+        </div>
+      </div>
+      <div class="mt-5 flex gap-3">
+        <button id="accept-cookies" class="flex-1 bg-ink text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gold transition-colors">Barchasini qabul qilish</button>
+        <button id="reject-cookies" class="px-4 py-2.5 rounded-xl text-sm font-medium text-ink hover:bg-gray-100 transition-colors border border-gray-200">Rad etish</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // 1. FORM YUBORISH LOGIKASI
+    document.getElementById('flightForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = 'Yuborilmoqda...';
+      
+      setTimeout(() => {
+        alert("Parvoz so'rovi muvaffaqiyatli yuborildi! \nAgentingiz tez orada siz bilan bog'lanadi.");
+        btn.innerHTML = originalText;
+        this.reset();
+      }, 1000);
+    });
+
+    // 2. BURGER MENYU LOGIKASI
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const burgerIcon = document.getElementById('burger-icon');
+    const closeIcon = document.getElementById('close-icon');
+
+    mobileBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+      burgerIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+
+    document.querySelectorAll('#mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        burgerIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      });
+    });
+
+    // 3. TRIP TYPE LOGIKASI
+    const tripBtns = document.querySelectorAll('.trip-type-btn');
+    const returnDateInput = document.getElementById('return-date');
+
+    tripBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        tripBtns.forEach(b => {
+          b.classList.remove('bg-ink', 'text-white', 'shadow-md');
+          b.classList.add('bg-transparent', 'text-ink/70', 'hover:bg-white');
+        });
+        
+        e.target.classList.remove('bg-transparent', 'text-ink/70', 'hover:bg-white');
+        e.target.classList.add('bg-ink', 'text-white', 'shadow-md');
+
+        if(e.target.id === 'btn-one-way') {
+           returnDateInput.disabled = true;
+           returnDateInput.classList.add('opacity-40', 'cursor-not-allowed');
+           returnDateInput.value = '';
+        } else {
+           returnDateInput.disabled = false;
+           returnDateInput.classList.remove('opacity-40', 'cursor-not-allowed');
+        }
+      });
+    });
+
+    // 4. COOKIE BANNER LOGIKASI
+    const cookieBanner = document.getElementById('cookie-banner');
+    const acceptCookiesBtn = document.getElementById('accept-cookies');
+    const rejectCookiesBtn = document.getElementById('reject-cookies');
+
+    // Agar foydalanuvchi oldin tanlov qilmagan bo'lsa, 2 soniyadan so'ng banner chiqadi
+    if (!localStorage.getItem('cookieConsent')) {
+      setTimeout(() => {
+        cookieBanner.classList.remove('translate-y-[150%]');
+      }, 2000);
+    }
+
+    acceptCookiesBtn.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'accepted');
+      cookieBanner.classList.add('translate-y-[150%]');
+    });
+
+    rejectCookiesBtn.addEventListener('click', () => {
+      localStorage.setItem('cookieConsent', 'rejected');
+      cookieBanner.classList.add('translate-y-[150%]');
+    });
+  </script>
+</body>
+</html>
