@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="uz" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>STARAVIA | Parvoz Natijalari</title>
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -16,219 +14,590 @@
         extend: {
           colors: {
             gold: { DEFAULT: '#D4A445', soft: '#E8C26A', dark: '#B78434' },
-            ink: '#1A1816',
-            paper: '#FFFFFF',
-            surface: '#F8F9FA'
+            ink: '#1A1816', paper: '#FFFFFF', surface: '#F8F9FA'
           },
-          fontFamily: {
-            display: ['Playfair Display', 'serif'],
-            sans: ['Poppins', 'sans-serif']
-          }
+          fontFamily: { display: ['Playfair Display','serif'], sans: ['Poppins','sans-serif'] }
         }
       }
     }
   </script>
   <style>
-    .card-light {
-      background: #FFFFFF;
-      border: 1px solid #E5E7EB;
-      box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
-    .card-light:hover {
-      border-color: rgba(212, 164, 69, 0.4);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
-      transform: translateY(-2px);
-    }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #D4A445; border-radius: 4px; }
+    .card-light { background:#fff; border:1px solid #E5E7EB; box-shadow:0 4px 20px -5px rgba(0,0,0,0.05); transition:all 0.3s ease; }
+    .card-light:hover { border-color:rgba(212,164,69,0.4); box-shadow:0 10px 25px -5px rgba(0,0,0,0.08); transform:translateY(-2px); }
+    .card-light.selected { border-color:#D4A445; box-shadow:0 0 0 2px #D4A445; }
+    ::-webkit-scrollbar { width:6px; }
+    ::-webkit-scrollbar-thumb { background:#D4A445; border-radius:4px; }
+    .whatsapp-btn { animation:pulse-green 2s infinite; }
+    @keyframes pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(37,211,102,0.4);}70%{box-shadow:0 0 0 12px rgba(37,211,102,0);} }
+    .modal-overlay { backdrop-filter:blur(6px); }
+    .filter-drawer { transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);} }
+    .flight-card { animation:fadeIn 0.4s ease forwards; }
+    input[type=range] { accent-color:#D4A445; }
   </style>
 </head>
-<body class="bg-surface text-ink font-sans antialiased selection:bg-gold selection:text-white pb-20">
+<body class="bg-surface text-ink font-sans antialiased selection:bg-gold selection:text-white">
 
-  <header class="w-full border-b border-gray-200 bg-white sticky top-0 z-50">
-    <div class="mx-auto max-w-[1500px] flex items-center justify-between px-6 py-4 md:px-12 lg:px-8">
-      <a href="index.html" class="font-display text-2xl font-bold tracking-widest text-gold hover:text-gold-dark transition-colors">STARAVIA</a>
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-ink border border-gray-200 cursor-pointer hover:border-gold transition-colors">AK</div>
-      </div>
+<!-- ===== HEADER ===== -->
+<header class="w-full border-b border-gray-200 bg-white sticky top-0 z-40 shadow-sm">
+  <div class="mx-auto max-w-[1500px] flex items-center justify-between px-6 py-4 md:px-12 lg:px-8">
+    <a href="index.html" class="font-display text-2xl font-bold tracking-widest text-gold hover:text-gold-dark transition-colors">STARAVIA</a>
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/998901234567" target="_blank" class="hidden sm:flex items-center gap-2 bg-[#25D366] text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.535 5.875L.057 23.447a.5.5 0 00.609.61l5.71-1.498A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.496-5.27-1.373l-.38-.214-3.938 1.032 1.048-3.823-.234-.392A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Yordam
+      </a>
+      <a href="index.html" class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-ink border border-gray-200 hover:border-gold transition-colors">←</a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <section class="bg-white py-6 border-b border-gray-200 shadow-sm">
-    <div class="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-6">
-        <div class="text-center">
-          <h2 class="text-2xl font-bold font-display text-ink">TAS</h2>
-          <p class="text-xs text-gray-500 font-medium">Toshkent</p>
-        </div>
-        <div class="flex flex-col items-center px-4 w-32">
-          <span class="text-xs text-gold mb-1 font-semibold">Borish</span>
-          <div class="h-[1px] w-full bg-gray-300 relative">
-            <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400">✈️</span>
-          </div>
-        </div>
-        <div class="text-center">
-          <h2 class="text-2xl font-bold font-display text-ink">DXB</h2>
-          <p class="text-xs text-gray-500 font-medium">Dubay</p>
-        </div>
+
+<!-- ===== SEARCH SUMMARY BAR ===== -->
+<section class="bg-white py-5 border-b border-gray-200 shadow-sm">
+  <div class="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-4 flex-wrap">
+      <div class="text-center"><h2 class="text-2xl font-bold font-display text-ink" id="summary-from">TAS</h2><p class="text-xs text-gray-500 font-medium" id="summary-from-city">Toshkent</p></div>
+      <div class="flex flex-col items-center px-3 w-24">
+        <span class="text-xs text-gold mb-1 font-semibold">Borish</span>
+        <div class="h-[1px] w-full bg-gray-300 relative flex items-center justify-center"><span class="text-base">✈️</span></div>
       </div>
-      
-      <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-200 font-medium">
-        <div class="flex items-center gap-2"><span class="text-gold">📅</span> 15 Iyun, 2026</div>
-        <div class="w-[1px] h-4 bg-gray-300"></div>
-        <div class="flex items-center gap-2"><span class="text-gold">👤</span> 1 Kattalar</div>
-        <div class="w-[1px] h-4 bg-gray-300"></div>
-        <div class="flex items-center gap-2"><span class="text-gold">👑</span> Ekonom</div>
-        <button class="ml-2 text-gold font-semibold hover:text-gold-dark transition-colors">O'zgartirish</button>
-      </div>
+      <div class="text-center"><h2 class="text-2xl font-bold font-display text-ink" id="summary-to">DXB</h2><p class="text-xs text-gray-500 font-medium" id="summary-to-city">Dubay</p></div>
     </div>
-  </section>
-
-  <main class="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-8 mt-10 grid lg:grid-cols-[300px_1fr] gap-10">
-    
-    <aside class="hidden lg:block space-y-8 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm h-fit">
-      <div>
-        <h3 class="text-lg font-bold text-ink mb-4">Filtrlar</h3>
-        <div class="flex justify-between items-center text-sm mb-4">
-          <span class="text-gray-600 font-medium">Narx diapazoni</span>
-          <span class="text-gold font-semibold">$250 - $1200</span>
-        </div>
-        <input type="range" min="250" max="1200" class="w-full accent-gold bg-gray-200 h-1 rounded-full appearance-none cursor-pointer">
-      </div>
-
-      <div class="border-t border-gray-100 pt-6">
-        <h4 class="font-bold text-ink mb-4">To'xtashlar (Stops)</h4>
-        <label class="flex items-center gap-3 mb-3 cursor-pointer group">
-          <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold focus:ring-offset-white">
-          <span class="text-sm text-gray-600 font-medium group-hover:text-ink transition-colors">To'g'ridan-to'g'ri ($320 dan)</span>
-        </label>
-        <label class="flex items-center gap-3 mb-3 cursor-pointer group">
-          <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold focus:ring-offset-white">
-          <span class="text-sm text-gray-600 font-medium group-hover:text-ink transition-colors">1 ta to'xtash ($250 dan)</span>
-        </label>
-      </div>
-
-      <div class="border-t border-gray-100 pt-6">
-        <h4 class="font-bold text-ink mb-4">Aviakompaniyalar</h4>
-        <label class="flex items-center justify-between mb-3 cursor-pointer group">
-          <div class="flex items-center gap-3">
-            <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold focus:ring-offset-white">
-            <span class="text-sm text-gray-600 font-medium group-hover:text-ink transition-colors">Uzbekistan Airways</span>
-          </div>
-          <span class="text-xs text-gray-400 font-medium">$320</span>
-        </label>
-        <label class="flex items-center justify-between mb-3 cursor-pointer group">
-          <div class="flex items-center gap-3">
-            <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold focus:ring-offset-white">
-            <span class="text-sm text-gray-600 font-medium group-hover:text-ink transition-colors">Flydubai</span>
-          </div>
-          <span class="text-xs text-gray-400 font-medium">$280</span>
-        </label>
-        <label class="flex items-center justify-between mb-3 cursor-pointer group">
-          <div class="flex items-center gap-3">
-            <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-gold focus:ring-gold focus:ring-offset-white">
-            <span class="text-sm text-gray-600 font-medium group-hover:text-ink transition-colors">Emirates</span>
-          </div>
-          <span class="text-xs text-gray-400 font-medium">$450</span>
-        </label>
-      </div>
-    </aside>
-
-    <div class="space-y-6">
-      
-      <div class="flex items-center justify-between mb-2">
-        <p class="text-gray-600 font-medium">Topilgan reyslar: <span class="text-ink font-bold">24 ta</span></p>
-        <select class="bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-ink font-medium focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold">
-          <option>Eng arzon oldin</option>
-          <option>Eng tez oldin</option>
-          <option>Tavsiya etilgan</option>
-        </select>
-      </div>
-
-      <div class="card-light rounded-2xl p-6 relative overflow-hidden">
-        <div class="absolute top-0 left-0 bg-gold text-white text-[10px] font-bold px-3 py-1 uppercase tracking-wider rounded-br-lg">Eng Arzon</div>
-        
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6 mt-2">
-          
-          <div class="flex items-center gap-4 w-full md:w-auto">
-            <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-xl border border-gray-200">✈️</div>
-            <div>
-              <h4 class="font-bold text-ink">Flydubai</h4>
-              <p class="text-xs text-gray-500 font-medium">FZ-1942 • Boeing 737</p>
-            </div>
-          </div>
-
-          <div class="flex-1 flex items-center justify-center gap-6 w-full">
-            <div class="text-right">
-              <h3 class="text-2xl font-bold font-display text-ink">08:30</h3>
-              <p class="text-sm text-gray-500 font-medium">TAS</p>
-            </div>
-            
-            <div class="flex flex-col items-center px-2 w-32">
-              <span class="text-xs text-gray-500 mb-1 font-medium">3s 45d</span>
-              <div class="h-[2px] w-full bg-gray-200 relative"></div>
-              <span class="text-[10px] text-gold mt-1 font-bold tracking-wide">To'g'ridan-to'g'ri</span>
-            </div>
-
-            <div class="text-left">
-              <h3 class="text-2xl font-bold font-display text-ink">11:15</h3>
-              <p class="text-sm text-gray-500 font-medium">DXB</p>
-            </div>
-          </div>
-
-          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-6 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
-            <div class="text-left md:text-right">
-              <p class="text-xs text-gray-500 font-medium">1 kishi uchun</p>
-              <p class="text-3xl font-bold text-gold">$280</p>
-            </div>
-            <button class="bg-ink text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors shadow-md">Tanlash</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-light rounded-2xl p-6 relative overflow-hidden">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          <div class="flex items-center gap-4 w-full md:w-auto">
-            <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-xl border border-gray-200">🇺🇿</div>
-            <div>
-              <h4 class="font-bold text-ink">Uzbekistan Airways</h4>
-              <p class="text-xs text-gray-500 font-medium">HY-333 • Airbus A320</p>
-            </div>
-          </div>
-
-          <div class="flex-1 flex items-center justify-center gap-6 w-full">
-            <div class="text-right">
-              <h3 class="text-2xl font-bold font-display text-ink">14:00</h3>
-              <p class="text-sm text-gray-500 font-medium">TAS</p>
-            </div>
-            
-            <div class="flex flex-col items-center px-2 w-32">
-              <span class="text-xs text-gray-500 mb-1 font-medium">3s 30d</span>
-              <div class="h-[2px] w-full bg-gray-200 relative"></div>
-              <span class="text-[10px] text-green-600 mt-1 font-bold tracking-wide">Eng tez</span>
-            </div>
-
-            <div class="text-left">
-              <h3 class="text-2xl font-bold font-display text-ink">16:30</h3>
-              <p class="text-sm text-gray-500 font-medium">DXB</p>
-            </div>
-          </div>
-
-          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-6 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
-            <div class="text-left md:text-right">
-              <p class="text-xs text-gray-500 font-medium">1 kishi uchun</p>
-              <p class="text-3xl font-bold text-gold">$320</p>
-            </div>
-            <button class="bg-ink text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors shadow-md">Tanlash</button>
-          </div>
-        </div>
-      </div>
-
+    <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 font-medium">
+      <div class="flex items-center gap-2"><span class="text-gold">📅</span><span id="summary-date">15 Iyun, 2026</span></div>
+      <div class="w-[1px] h-4 bg-gray-300"></div>
+      <div class="flex items-center gap-2"><span class="text-gold">👤</span><span id="summary-passengers">1 Kattalar</span></div>
+      <div class="w-[1px] h-4 bg-gray-300"></div>
+      <div class="flex items-center gap-2"><span class="text-gold">👑</span><span id="summary-class">Ekonom</span></div>
+      <a href="index.html" class="ml-1 text-gold font-semibold hover:text-gold-dark transition-colors">O'zgartirish</a>
     </div>
-  </main>
+    <button id="mobile-filter-btn" class="lg:hidden flex items-center gap-2 bg-ink text-white px-4 py-2.5 rounded-xl text-sm font-medium">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+      Filtrlar
+    </button>
+  </div>
+</section>
 
+<!-- ===== MAIN LAYOUT ===== -->
+<main class="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-8 mt-8 pb-20 grid lg:grid-cols-[300px_1fr] gap-8">
+
+  <!-- ===== SIDEBAR FILTERS (desktop) ===== -->
+  <aside class="hidden lg:block space-y-6 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm h-fit sticky top-24">
+    <div class="flex items-center justify-between"><h3 class="text-lg font-bold text-ink">Filtrlar</h3><button id="reset-filters" class="text-xs text-gold hover:underline font-medium">Tozalash</button></div>
+
+    <div class="border-t border-gray-100 pt-5">
+      <div class="flex justify-between items-center text-sm mb-3"><span class="text-gray-700 font-semibold">Narx diapazoni</span><span class="text-gold font-bold" id="price-label">$250 — $1200</span></div>
+      <input type="range" id="price-range" min="250" max="1200" value="1200" class="w-full h-1.5 rounded-full cursor-pointer"/>
+    </div>
+
+    <div class="border-t border-gray-100 pt-5">
+      <h4 class="font-semibold text-ink mb-3">To'xtashlar</h4>
+      <label class="flex items-center gap-3 mb-2.5 cursor-pointer group">
+        <input type="checkbox" checked data-filter="stops" value="direct" class="w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-sm text-gray-600 group-hover:text-ink transition-colors">To'g'ridan-to'g'ri</span>
+        <span class="ml-auto text-xs text-gray-400 font-medium">$280 dan</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer group">
+        <input type="checkbox" checked data-filter="stops" value="1stop" class="w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-sm text-gray-600 group-hover:text-ink transition-colors">1 ta to'xtash</span>
+        <span class="ml-auto text-xs text-gray-400 font-medium">$250 dan</span>
+      </label>
+    </div>
+
+    <div class="border-t border-gray-100 pt-5">
+      <h4 class="font-semibold text-ink mb-3">Aviakompaniyalar</h4>
+      <label class="flex items-center justify-between mb-2.5 cursor-pointer group">
+        <div class="flex items-center gap-3"><input type="checkbox" checked data-filter="airline" value="flydubai" class="w-4 h-4 rounded accent-gold cursor-pointer"/><span class="text-sm text-gray-600 group-hover:text-ink">Flydubai</span></div>
+        <span class="text-xs text-gray-400 font-medium">$280</span>
+      </label>
+      <label class="flex items-center justify-between mb-2.5 cursor-pointer group">
+        <div class="flex items-center gap-3"><input type="checkbox" checked data-filter="airline" value="uzbekistan" class="w-4 h-4 rounded accent-gold cursor-pointer"/><span class="text-sm text-gray-600 group-hover:text-ink">Uzbekistan Airways</span></div>
+        <span class="text-xs text-gray-400 font-medium">$320</span>
+      </label>
+      <label class="flex items-center justify-between mb-2.5 cursor-pointer group">
+        <div class="flex items-center gap-3"><input type="checkbox" checked data-filter="airline" value="emirates" class="w-4 h-4 rounded accent-gold cursor-pointer"/><span class="text-sm text-gray-600 group-hover:text-ink">Emirates</span></div>
+        <span class="text-xs text-gray-400 font-medium">$450</span>
+      </label>
+      <label class="flex items-center justify-between mb-2.5 cursor-pointer group">
+        <div class="flex items-center gap-3"><input type="checkbox" checked data-filter="airline" value="turkish" class="w-4 h-4 rounded accent-gold cursor-pointer"/><span class="text-sm text-gray-600 group-hover:text-ink">Turkish Airlines</span></div>
+        <span class="text-xs text-gray-400 font-medium">$380</span>
+      </label>
+      <label class="flex items-center justify-between cursor-pointer group">
+        <div class="flex items-center gap-3"><input type="checkbox" checked data-filter="airline" value="airarabia" class="w-4 h-4 rounded accent-gold cursor-pointer"/><span class="text-sm text-gray-600 group-hover:text-ink">Air Arabia</span></div>
+        <span class="text-xs text-gray-400 font-medium">$260</span>
+      </label>
+    </div>
+
+    <div class="border-t border-gray-100 pt-5">
+      <h4 class="font-semibold text-ink mb-3">Uchish vaqti</h4>
+      <label class="flex items-center gap-3 mb-2.5 cursor-pointer group">
+        <input type="checkbox" checked data-filter="time" value="morning" class="w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-sm text-gray-600 group-hover:text-ink">Ertalab (06:00–12:00)</span>
+      </label>
+      <label class="flex items-center gap-3 mb-2.5 cursor-pointer group">
+        <input type="checkbox" checked data-filter="time" value="afternoon" class="w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-sm text-gray-600 group-hover:text-ink">Tushdan keyin (12:00–18:00)</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer group">
+        <input type="checkbox" checked data-filter="time" value="evening" class="w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-sm text-gray-600 group-hover:text-ink">Kechqurun (18:00–24:00)</span>
+      </label>
+    </div>
+  </aside>
+
+
+  <!-- ===== RESULTS COLUMN ===== -->
+  <div class="space-y-5">
+    <div class="flex items-center justify-between">
+      <p class="text-gray-600 font-medium">Topilgan reyslar: <span class="text-ink font-bold" id="results-count">6 ta</span></p>
+      <select id="sort-select" class="bg-white border border-gray-300 rounded-xl px-3 py-2.5 text-sm text-ink font-medium focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold cursor-pointer">
+        <option value="cheapest">Eng arzon oldin</option>
+        <option value="fastest">Eng tez oldin</option>
+        <option value="best">Tavsiya etilgan</option>
+      </select>
+    </div>
+
+    <!-- FLIGHT CARDS CONTAINER -->
+    <div id="flights-container" class="space-y-4">
+
+      <!-- Flight 1 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="280" data-airline="flydubai" data-stops="direct" data-time="morning" data-duration="225">
+        <div class="absolute top-0 left-0 bg-gold text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-br-xl">Eng Arzon</div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5 mt-2">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center border border-blue-100 font-bold text-blue-600 text-sm">FZ</div>
+            <div><h4 class="font-bold text-ink text-sm">Flydubai</h4><p class="text-xs text-gray-400">FZ-1942 • Boeing 737</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">08:30</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">3s 45d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-gold mt-1 font-bold tracking-wide uppercase">To'g'ridan-to'g'ri</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">11:15</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$280</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bekor qilish mumkin</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 23 kg</span>
+          <span class="bg-gray-50 text-gray-600 px-2.5 py-1 rounded-lg text-xs font-medium">Kichik bagaj kiritilgan</span>
+        </div>
+      </div>
+
+      <!-- Flight 2 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="320" data-airline="uzbekistan" data-stops="direct" data-time="afternoon" data-duration="210">
+        <div class="absolute top-0 left-0 bg-green-500 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-br-xl">Eng Tez</div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5 mt-2">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-green-50 rounded-full flex items-center justify-center border border-green-100 font-bold text-green-700 text-sm">HY</div>
+            <div><h4 class="font-bold text-ink text-sm">Uzbekistan Airways</h4><p class="text-xs text-gray-400">HY-333 • Airbus A320</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">14:00</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">3s 30d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-gold mt-1 font-bold tracking-wide uppercase">To'g'ridan-to'g'ri</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">16:30</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$320</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bekor qilish mumkin</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 23 kg</span>
+          <span class="bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-xs font-medium">Ovqatlanish mavjud</span>
+        </div>
+      </div>
+
+      <!-- Flight 3 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="260" data-airline="airarabia" data-stops="1stop" data-time="morning" data-duration="300">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-red-50 rounded-full flex items-center justify-center border border-red-100 font-bold text-red-500 text-sm">G9</div>
+            <div><h4 class="font-bold text-ink text-sm">Air Arabia</h4><p class="text-xs text-gray-400">G9-505 • Airbus A321</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">07:00</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">5s 00d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-orange-500 mt-1 font-bold tracking-wide uppercase">1 ta to'xtash • SHJ</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">11:00</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$260</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-orange-50 text-orange-600 px-2.5 py-1 rounded-lg text-xs font-medium">⚠ Bekor qilib bo'lmaydi</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 20 kg</span>
+        </div>
+      </div>
+
+      <!-- Flight 4 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="450" data-airline="emirates" data-stops="direct" data-time="evening" data-duration="230">
+        <div class="absolute top-0 left-0 bg-purple-500 text-white text-[10px] font-bold px-3 py-1.5 uppercase tracking-wider rounded-br-xl">Premium</div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5 mt-2">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-purple-50 rounded-full flex items-center justify-center border border-purple-100 font-bold text-purple-700 text-sm">EK</div>
+            <div><h4 class="font-bold text-ink text-sm">Emirates</h4><p class="text-xs text-gray-400">EK-602 • Boeing 777</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">20:00</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">3s 50d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-gold mt-1 font-bold tracking-wide uppercase">To'g'ridan-to'g'ri</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">22:50</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$450</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bekor qilish mumkin</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 30 kg</span>
+          <span class="bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-xs font-medium">Ovqatlanish mavjud</span>
+          <span class="bg-purple-50 text-purple-700 px-2.5 py-1 rounded-lg text-xs font-medium">Business lounge</span>
+        </div>
+      </div>
+
+      <!-- Flight 5 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="380" data-airline="turkish" data-stops="1stop" data-time="afternoon" data-duration="360">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-red-50 rounded-full flex items-center justify-center border border-red-100 font-bold text-red-600 text-sm">TK</div>
+            <div><h4 class="font-bold text-ink text-sm">Turkish Airlines</h4><p class="text-xs text-gray-400">TK-297 • Airbus A330</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">15:30</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">6s 00d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-orange-500 mt-1 font-bold tracking-wide uppercase">1 ta to'xtash • IST</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">21:30</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$380</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bekor qilish mumkin</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 23 kg</span>
+          <span class="bg-yellow-50 text-yellow-700 px-2.5 py-1 rounded-lg text-xs font-medium">Ovqatlanish mavjud</span>
+        </div>
+      </div>
+
+      <!-- Flight 6 -->
+      <div class="flight-card card-light rounded-2xl p-5 sm:p-6 relative overflow-hidden cursor-pointer"
+           data-price="305" data-airline="flydubai" data-stops="direct" data-time="afternoon" data-duration="235">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+          <div class="flex items-center gap-3 w-full md:w-auto min-w-[160px]">
+            <div class="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center border border-blue-100 font-bold text-blue-600 text-sm">FZ</div>
+            <div><h4 class="font-bold text-ink text-sm">Flydubai</h4><p class="text-xs text-gray-400">FZ-1944 • Boeing 737 MAX</p></div>
+          </div>
+          <div class="flex-1 flex items-center justify-center gap-4 w-full">
+            <div class="text-right"><h3 class="text-2xl font-bold font-display text-ink">17:45</h3><p class="text-xs text-gray-500 font-medium">TAS</p></div>
+            <div class="flex flex-col items-center px-2 flex-1 max-w-[140px]">
+              <span class="text-xs text-gray-400 mb-1">3s 55d</span>
+              <div class="h-[2px] w-full bg-gray-200 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-sm">✈️</div></div>
+              <span class="text-[10px] text-gold mt-1 font-bold tracking-wide uppercase">To'g'ridan-to'g'ri</span>
+            </div>
+            <div class="text-left"><h3 class="text-2xl font-bold font-display text-ink">20:40</h3><p class="text-xs text-gray-500 font-medium">DXB</p></div>
+          </div>
+          <div class="w-full md:w-auto flex flex-row md:flex-col items-center justify-between md:items-end gap-2 pl-0 md:pl-5 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0">
+            <div class="text-left md:text-right"><p class="text-xs text-gray-400">1 kishi uchun</p><p class="text-3xl font-bold text-gold">$305</p></div>
+            <button class="select-btn bg-ink text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-gold transition-colors text-sm shadow-sm whitespace-nowrap">Tanlash</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+          <span class="bg-green-50 text-green-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bekor qilish mumkin</span>
+          <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg text-xs font-medium">✓ Bagaj: 23 kg</span>
+        </div>
+      </div>
+
+    </div><!-- end flights-container -->
+
+    <!-- NO RESULTS MESSAGE -->
+    <div id="no-results" class="hidden text-center py-20">
+      <div class="text-6xl mb-4">✈️</div>
+      <h3 class="font-display text-2xl font-bold text-ink mb-2">Reys topilmadi</h3>
+      <p class="text-gray-500 mb-6">Filtrlarni o'zgartiring yoki WhatsApp orqali bizga murojaat qiling.</p>
+      <a href="https://wa.me/998901234567" target="_blank" class="bg-[#25D366] text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity inline-flex items-center gap-2">
+        WhatsApp orqali so'rash
+      </a>
+    </div>
+
+  </div><!-- end results column -->
+</main>
+
+
+<!-- ===== MOBILE FILTER DRAWER ===== -->
+<div id="filter-overlay" class="fixed inset-0 bg-black/50 z-50 hidden modal-overlay"></div>
+<div id="filter-drawer" class="filter-drawer fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl p-6 translate-y-full max-h-[85vh] overflow-y-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-xl font-bold text-ink">Filtrlar</h3>
+    <button id="close-drawer" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-ink hover:bg-gray-200 transition-colors">✕</button>
+  </div>
+  <div class="space-y-6">
+    <div>
+      <div class="flex justify-between items-center text-sm mb-3"><span class="font-semibold">Narx diapazoni</span><span class="text-gold font-bold" id="mobile-price-label">$250 — $1200</span></div>
+      <input type="range" id="mobile-price-range" min="250" max="1200" value="1200" class="w-full h-1.5 rounded-full cursor-pointer"/>
+    </div>
+    <div>
+      <h4 class="font-semibold text-ink mb-3">To'xtashlar</h4>
+      <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="stops" value="direct" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">To'g'ridan-to'g'ri</span></label>
+      <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="stops" value="1stop" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">1 ta to'xtash</span></label>
+    </div>
+    <div>
+      <h4 class="font-semibold text-ink mb-3">Aviakompaniyalar</h4>
+      <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="airline" value="flydubai" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">Flydubai</span></label>
+      <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="airline" value="uzbekistan" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">Uzbekistan Airways</span></label>
+      <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="airline" value="emirates" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">Emirates</span></label>
+      <label class="flex items-center gap-3 mb-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="airline" value="turkish" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">Turkish Airlines</span></label>
+      <label class="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked data-mobile-filter="airline" value="airarabia" class="w-4 h-4 rounded accent-gold"/><span class="text-sm text-gray-600">Air Arabia</span></label>
+    </div>
+  </div>
+  <button id="apply-filters-btn" class="mt-8 w-full bg-ink text-white py-3.5 rounded-xl font-semibold hover:bg-gold transition-colors">Filtrlarni qo'llash</button>
+</div>
+
+<!-- ===== BOOKING MODAL ===== -->
+<div id="booking-modal" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 modal-overlay bg-black/60">
+  <div class="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-[480px] shadow-2xl relative">
+    <button id="close-modal" class="absolute top-4 right-4 w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors text-ink font-bold">✕</button>
+    <h3 class="font-display text-2xl font-bold text-ink mb-1">Bron qilish</h3>
+    <p class="text-gray-500 text-sm mb-6">Ma'lumotlaringizni kiriting, agentimiz siz bilan bog'lanadi.</p>
+    <div id="modal-flight-info" class="bg-gold/10 rounded-2xl p-4 mb-6 border border-gold/20"></div>
+    <form id="booking-form" class="space-y-4">
+      <div class="grid grid-cols-2 gap-3">
+        <input required type="text" placeholder="Ism" class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm font-medium text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"/>
+        <input required type="text" placeholder="Familiya" class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm font-medium text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"/>
+      </div>
+      <input required type="tel" placeholder="📞 Telefon raqamingiz" class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm font-medium text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"/>
+      <input required type="email" placeholder="📧 Email manzilingiz" class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm font-medium text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"/>
+      <select class="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm font-medium text-ink focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all">
+        <option value="" disabled selected>To'lov usulini tanlang</option>
+        <option>Naqd pul</option>
+        <option>Bank kartasi</option>
+        <option>Bank o'tkazmasi</option>
+      </select>
+      <label class="flex items-start gap-3 cursor-pointer">
+        <input required type="checkbox" class="mt-1 w-4 h-4 rounded accent-gold cursor-pointer"/>
+        <span class="text-xs text-gray-500">Foydalanish shartlari va maxfiylik siyosatini qabul qilaman</span>
+      </label>
+      <button type="submit" class="w-full bg-gold text-white py-3.5 rounded-xl font-semibold hover:bg-gold-dark transition-all hover:-translate-y-0.5 shadow-sm text-base">
+        So'rov Yuborish
+      </button>
+    </form>
+    <div id="booking-success" class="hidden text-center py-8">
+      <div class="text-6xl mb-4">🎉</div>
+      <h4 class="font-display text-2xl font-bold text-ink mb-2">Muvaffaqiyatli!</h4>
+      <p class="text-gray-500 text-sm mb-6">So'rovingiz qabul qilindi. Agentimiz 30 daqiqa ichida siz bilan bog'lanadi.</p>
+      <a href="https://wa.me/998901234567" target="_blank" class="bg-[#25D366] text-white px-6 py-3 rounded-xl font-medium hover:opacity-90 transition-opacity inline-flex items-center gap-2 text-sm">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.535 5.875L.057 23.447a.5.5 0 00.609.61l5.71-1.498A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.496-5.27-1.373l-.38-.214-3.938 1.032 1.048-3.823-.234-.392A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        WhatsApp orqali bog'lanish
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== WHATSAPP FLOATING ===== -->
+<a href="https://wa.me/998901234567?text=Salom!%20Chipta%20haqida%20ma'lumot%20olmoqchiman." target="_blank" class="whatsapp-btn fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300">
+  <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.535 5.875L.057 23.447a.5.5 0 00.609.61l5.71-1.498A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.496-5.27-1.373l-.38-.214-3.938 1.032 1.048-3.823-.234-.392A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+
+<!-- ===== FOOTER ===== -->
+<footer class="w-full bg-[#1A1816] py-8 text-white mt-8">
+  <div class="mx-auto max-w-[1500px] px-6 md:px-12 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+    <a href="index.html" class="font-display text-xl font-bold tracking-widest text-gold">STARAVIA</a>
+    <p>© 2026 STARAVIA. Barcha huquqlar himoyalangan.</p>
+    <div class="flex gap-4">
+      <a href="#" class="hover:text-gold transition-colors">Maxfiylik</a>
+      <a href="#" class="hover:text-gold transition-colors">Shartlar</a>
+      <a href="https://wa.me/998901234567" target="_blank" class="hover:text-gold transition-colors">Aloqa</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== READ URL PARAMS =====
+  const params = new URLSearchParams(window.location.search);
+  const cityMap = { TAS:'Toshkent', DXB:'Dubay', IST:'Istanbul', JFK:'New York', LHR:'London', CDG:'Paris', FEG:"Farg'ona", SKD:'Samarqand', BKK:'Bangkok', KUL:'Kuala Lumpur' };
+  const fromCode = params.get('from') || 'TAS';
+  const toCode   = params.get('to')   || 'DXB';
+  document.getElementById('summary-from').textContent = fromCode;
+  document.getElementById('summary-to').textContent   = toCode;
+  document.getElementById('summary-from-city').textContent = cityMap[fromCode] || fromCode;
+  document.getElementById('summary-to-city').textContent   = cityMap[toCode]   || toCode;
+  if (params.get('date')) document.getElementById('summary-date').textContent = params.get('date');
+  if (params.get('passengers')) document.getElementById('summary-passengers').textContent = params.get('passengers') + ' Kattalar';
+  if (params.get('cabin')) {
+    const cabinMap = { economy:'Ekonom', premium:'Premium Ekonom', business:'Biznes', first:'Birinchi Klass' };
+    document.getElementById('summary-class').textContent = cabinMap[params.get('cabin')] || params.get('cabin');
+  }
+
+  // ===== FILTER & SORT LOGIC =====
+  let maxPrice = 1200;
+
+  function getActiveFilters(prefix) {
+    const stops = [...document.querySelectorAll(`[data-${prefix}-filter="stops"]:checked`)].map(el => el.value);
+    const airlines = [...document.querySelectorAll(`[data-${prefix}-filter="airline"]:checked`)].map(el => el.value);
+    const times = prefix === 'filter' ? [...document.querySelectorAll(`[data-filter="time"]:checked`)].map(el => el.value) : null;
+    return { stops, airlines, times };
+  }
+
+  function applyFilters() {
+    const desktopStops = [...document.querySelectorAll('[data-filter="stops"]:checked')].map(el => el.value);
+    const desktopAirlines = [...document.querySelectorAll('[data-filter="airline"]:checked')].map(el => el.value);
+    const desktopTimes = [...document.querySelectorAll('[data-filter="time"]:checked')].map(el => el.value);
+    const cards = document.querySelectorAll('.flight-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const price = parseInt(card.dataset.price);
+      const airline = card.dataset.airline;
+      const stops = card.dataset.stops;
+      const time = card.dataset.time;
+      const show = price <= maxPrice && desktopAirlines.includes(airline) && desktopStops.includes(stops) && desktopTimes.includes(time);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    document.getElementById('results-count').textContent = visible + ' ta';
+    document.getElementById('no-results').classList.toggle('hidden', visible > 0);
+  }
+
+  // Price range desktop
+  const priceRange = document.getElementById('price-range');
+  const priceLabel = document.getElementById('price-label');
+  priceRange.addEventListener('input', () => {
+    maxPrice = parseInt(priceRange.value);
+    priceLabel.textContent = '$250 — $' + maxPrice;
+    if (document.getElementById('mobile-price-range')) document.getElementById('mobile-price-range').value = maxPrice;
+    applyFilters();
+  });
+
+  // Checkbox filters
+  document.querySelectorAll('[data-filter]').forEach(el => el.addEventListener('change', applyFilters));
+
+  // Reset
+  document.getElementById('reset-filters').addEventListener('click', () => {
+    document.querySelectorAll('[data-filter]').forEach(el => el.checked = true);
+    priceRange.value = 1200;
+    maxPrice = 1200;
+    priceLabel.textContent = '$250 — $1200';
+    applyFilters();
+  });
+
+  // Sort
+  document.getElementById('sort-select').addEventListener('change', function() {
+    const container = document.getElementById('flights-container');
+    const cards = [...container.querySelectorAll('.flight-card')];
+    cards.sort((a, b) => {
+      if (this.value === 'cheapest') return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+      if (this.value === 'fastest') return parseInt(a.dataset.duration) - parseInt(b.dataset.duration);
+      return 0;
+    });
+    cards.forEach(c => container.appendChild(c));
+  });
+
+  // ===== MOBILE FILTER DRAWER =====
+  const filterBtn = document.getElementById('mobile-filter-btn');
+  const filterOverlay = document.getElementById('filter-overlay');
+  const filterDrawer = document.getElementById('filter-drawer');
+  const closeDrawerBtn = document.getElementById('close-drawer');
+  const applyBtn = document.getElementById('apply-filters-btn');
+
+  function openDrawer() { filterOverlay.classList.remove('hidden'); filterDrawer.style.transform = 'translateY(0)'; }
+  function closeDrawer() { filterOverlay.classList.add('hidden'); filterDrawer.style.transform = 'translateY(100%)'; }
+
+  filterBtn.addEventListener('click', openDrawer);
+  filterOverlay.addEventListener('click', closeDrawer);
+  closeDrawerBtn.addEventListener('click', closeDrawer);
+
+  // Mobile price range
+  const mobilePriceRange = document.getElementById('mobile-price-range');
+  const mobilePriceLabel = document.getElementById('mobile-price-label');
+  mobilePriceRange.addEventListener('input', () => {
+    mobilePriceLabel.textContent = '$250 — $' + mobilePriceRange.value;
+    priceRange.value = mobilePriceRange.value;
+  });
+
+  applyBtn.addEventListener('click', () => {
+    maxPrice = parseInt(mobilePriceRange.value);
+    // sync mobile checkboxes to desktop
+    ['stops','airline'].forEach(type => {
+      const mobileChecked = [...document.querySelectorAll(`[data-mobile-filter="${type}"]:checked`)].map(el=>el.value);
+      document.querySelectorAll(`[data-filter="${type}"]`).forEach(el => { el.checked = mobileChecked.includes(el.value); });
+    });
+    applyFilters();
+    closeDrawer();
+  });
+
+  // ===== BOOKING MODAL =====
+  const modal = document.getElementById('booking-modal');
+  let selectedFlight = null;
+
+  document.querySelectorAll('.select-btn').forEach((btn, i) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = btn.closest('.flight-card');
+      const airline = card.querySelector('h4').textContent;
+      const dep = card.querySelectorAll('.text-2xl.font-bold.font-display')[0].textContent;
+      const arr = card.querySelectorAll('.text-2xl.font-bold.font-display')[1].textContent;
+      const price = card.dataset.price;
+      selectedFlight = { airline, dep, arr, price };
+      document.getElementById('modal-flight-info').innerHTML = `
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="font-bold text-ink text-sm">${airline}</p>
+            <p class="text-gray-500 text-xs mt-0.5">${fromCode} ${dep} → ${toCode} ${arr}</p>
+          </div>
+          <p class="text-2xl font-bold text-gold">$${price}</p>
+        </div>`;
+      document.getElementById('booking-success').classList.add('hidden');
+      document.getElementById('booking-form').classList.remove('hidden');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+  });
+
+  document.getElementById('close-modal').addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); });
+  modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); } });
+
+  document.getElementById('booking-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.classList.add('hidden');
+    document.getElementById('booking-success').classList.remove('hidden');
+  });
+
+  // Card click = select highlight
+  document.querySelectorAll('.flight-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.flight-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+</script>
 </body>
 </html>
