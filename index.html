@@ -51,22 +51,18 @@
 <main class="w-full">
 
   <!-- ===== TOP BAR ===== -->
-  <div class="w-full bg-[#0b1628] border-b border-white/10 px-6 py-2 md:px-12 lg:px-8">
+  <div class="w-full border-b border-white/10 px-6 py-2 md:px-12 lg:px-8" style="background:rgba(26,31,46,0.97);">
     <div class="mx-auto max-w-[1500px] flex items-center justify-between gap-4">
-      <!-- Left: contact info -->
-      <div class="flex items-center gap-5 text-xs text-white/70">
-        <a href="tel:+998901234567" class="flex items-center gap-1.5 hover:text-gold transition-colors">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          +998 90 123 45 67
+      <!-- Left: Logo + 24/7 Support -->
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3">
+          <img src="STARAVIA.png" alt="STARAVIA Logo" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
+          <span class="font-display text-xl font-bold tracking-widest text-gold">STARAVIA</span>
+        </div>
+        <a href="https://wa.me/998901234567" target="_blank" class="hidden sm:flex items-center gap-1.5 text-xs text-white/70 hover:text-gold transition-colors">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.535 5.875L.057 23.447a.5.5 0 00.609.61l5.71-1.498A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.496-5.27-1.373l-.38-.214-3.938 1.032 1.048-3.823-.234-.392A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          24/7 Support
         </a>
-        <span class="hidden sm:flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          info@staravia.uz
-        </span>
-        <span class="hidden md:flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Du–Sha: 09:00–20:00
-        </span>
       </div>
       <!-- Right: socials + language -->
       <div class="flex items-center gap-4">
@@ -83,9 +79,9 @@
         </div>
         <div class="w-px h-4 bg-white/20 hidden sm:block"></div>
         <select class="bg-transparent text-white/60 text-xs border-none outline-none cursor-pointer hover:text-gold transition-colors">
-          <option value="uz" class="bg-[#0b1628]">🇺🇿 UZ</option>
-          <option value="ru" class="bg-[#0b1628]">🇷🇺 RU</option>
-          <option value="en" class="bg-[#0b1628]">🇬🇧 EN</option>
+          <option value="uz" class="bg-[#1a1f2e]">🇺🇿 UZ</option>
+          <option value="ru" class="bg-[#1a1f2e]">🇷🇺 RU</option>
+          <option value="en" class="bg-[#1a1f2e]">🇬🇧 EN</option>
         </select>
       </div>
     </div>
@@ -101,10 +97,6 @@
 
       <!-- NAVBAR -->
       <header class="relative z-50 flex items-center justify-between gap-4 px-6 py-6 md:px-12 lg:px-8">
-        <div class="flex items-center gap-3">
-          <img src="STARAVIA.png" alt="STARAVIA Logo" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
-          <span class="font-display text-3xl font-bold tracking-widest text-gold">STARAVIA</span>
-        </div>
         <nav class="hidden md:flex items-center gap-10 text-[15px] font-medium text-white/90">
           <a href="#parvozlar" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Parvozlar</a>
           <a href="#chegirmalar" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Chegirmalar</a>
@@ -112,10 +104,6 @@
           <a href="#fikrlar" class="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">Fikrlar</a>
         </nav>
         <div class="flex items-center gap-4">
-          <a href="https://wa.me/998901234567" target="_blank" class="hidden md:flex group items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:bg-gold hover:border-gold hover:-translate-y-1">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.562 4.14 1.535 5.875L.057 23.447a.5.5 0 00.609.61l5.71-1.498A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.7-.496-5.27-1.373l-.38-.214-3.938 1.032 1.048-3.823-.234-.392A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-            24/7 Support
-          </a>
           <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none p-2 rounded-lg bg-black/20 backdrop-blur-md">
             <svg id="burger-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
             <svg id="close-icon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
