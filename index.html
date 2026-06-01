@@ -313,7 +313,7 @@
 
         <!-- Savings tagline -->
         <p class="mt-6 text-gold-soft italic text-sm md:text-base font-medium">
-          "Start your journey with<span class="font-bold text-gold not-italic">Staravia</span>"
+          "Start your journey with <span class="font-bold text-gold not-italic">Staravia</span>"
         </p>
 
         <!-- Trust badges -->
@@ -487,55 +487,69 @@
   </section>
 
 
-  <!-- ===== MASHHUR MANZILLAR ===== -->
-  <section id="parvozlar" class="destinations-bg w-full px-6 py-16 text-white md:px-12 lg:px-8 lg:py-24">
+  <!-- ===== WHY CHOOSE US / ABOUT SERVICES ===== -->
+  <section id="parvozlar" class="w-full bg-white px-6 py-20 md:px-12 lg:px-8">
     <div class="mx-auto w-full max-w-[1500px]">
-      <div class="mb-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <h3 class="font-display text-4xl font-semibold text-white md:text-5xl">Popular <span class="text-gold">Destinations</span></h3>
-        <button onclick="scrollToForm()" class="text-sm font-medium uppercase tracking-wider text-gold hover:underline hover:text-white transition-colors">View All →</button>
+      
+      <!-- First Row: Image Left, Text Right -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
+        <div class="relative">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Business Class Seat" class="rounded-3xl shadow-xl w-full h-[400px] object-cover"/>
+          <div class="absolute -top-4 -right-4 w-24 h-24 bg-gold/10 rounded-full blur-2xl"></div>
+        </div>
+        <div>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-ink leading-tight">
+            STARAVIA Travel is Trusted<br/>by Over <span class="text-gold">188K+ Travelers</span>
+          </h2>
+          <p class="mt-6 text-ink/70 text-lg leading-relaxed">
+            Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.
+          </p>
+          <p class="mt-4 text-ink/60 leading-relaxed">
+            If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!
+          </p>
+        </div>
       </div>
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        <article onclick="scrollToForm('TAS','JFK')" class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
-          <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=800&q=80" alt="New York" loading="lazy"/>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
-          <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
-            <h4 class="font-display text-2xl font-medium tracking-wide">New York</h4>
-            <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">USA • from $890</p>
+
+      <!-- Second Row: Text Left, Image Right -->
+      <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
+        <div class="order-2 lg:order-1">
+          <div class="border-l-4 border-gold pl-6">
+            <h3 class="font-display text-3xl md:text-4xl font-bold text-ink mb-4">
+              Expert First & Business Class<br/>Travel Management
+            </h3>
           </div>
-        </article>
-        <article onclick="scrollToForm('TAS','DXB')" class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
-          <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" alt="Dubai" loading="lazy"/>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
-          <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
-            <h4 class="font-display text-2xl font-medium tracking-wide">Dubai</h4>
-            <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">UAE • from $280</p>
-          </div>
-        </article>
-        <article onclick="scrollToForm('TAS','LHR')" class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
-          <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80" alt="London" loading="lazy"/>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
-          <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
-            <h4 class="font-display text-2xl font-medium tracking-wide">London</h4>
-            <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">United Kingdom • from $650</p>
-          </div>
-        </article>
-        <article onclick="scrollToForm('TAS','CDG')" class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
-          <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=800&q=80" alt="Paris" loading="lazy"/>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
-          <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
-            <h4 class="font-display text-2xl font-medium tracking-wide">Paris</h4>
-            <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">France • from $580</p>
-          </div>
-        </article>
-        <article onclick="scrollToForm('TAS','IST')" class="group relative h-64 cursor-pointer overflow-hidden rounded-[1.5rem] bg-white/5 shadow-xl">
-          <img class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=800&q=80" alt="Istanbul" loading="lazy"/>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity group-hover:from-black/90"></div>
-          <div class="absolute bottom-5 left-5 transition-transform duration-300 group-hover:-translate-y-2">
-            <h4 class="font-display text-2xl font-medium tracking-wide">Istanbul</h4>
-            <p class="text-sm text-gold opacity-0 transition-opacity duration-300 group-hover:opacity-100">Turkey • from $360</p>
-          </div>
-        </article>
+          <p class="mt-6 text-ink/70 leading-relaxed">
+            At Staravia Travel, you get your Personal Travel Manager - your own flight personal shopper, providing a bespoke plus travel search. Save your valuable time and avoid stress into your dedicated travel expert to take care of all your arrangements. Our team will work with you to offer you more with your preferences and priorities top of mind.
+          </p>
+        </div>
+        <div class="relative order-1 lg:order-2">
+          <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=800&q=80" alt="First Class Seat" class="rounded-3xl shadow-xl w-full h-[400px] object-cover"/>
+          <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gold/10 rounded-full blur-2xl"></div>
+        </div>
       </div>
+
+      <!-- Third Row: Two Column Text -->
+      <div class="grid lg:grid-cols-2 gap-12">
+        <div class="bg-[#f0ebe1] rounded-3xl p-8">
+          <div class="w-16 h-1 bg-gold mb-6"></div>
+          <h3 class="font-display text-2xl md:text-3xl font-bold text-ink mb-4">
+            Real People Instead of Online Engines
+          </h3>
+          <p class="text-ink/70 leading-relaxed">
+            There are no website booking engines here. With Staravia Travel, you deal with a real person who understands your needs. We make each quote different from the others to provide attractive ticket prices. Our team and partners are using available in all facets of the reservation we have with the major airlines, all of which can only be easily accomplished today. This is how you get the absolute best price and value.
+          </p>
+        </div>
+        <div class="bg-[#f0ebe1] rounded-3xl p-8">
+          <div class="w-16 h-1 bg-gold mb-6"></div>
+          <h3 class="font-display text-2xl md:text-3xl font-bold text-ink mb-4">
+            After-Hours Support Until You Return
+          </h3>
+          <p class="text-ink/70 leading-relaxed">
+            Every customer we've secured more than expert travel advice and unbeatable prices and holidays on offer, professional advice. Our free after-hours assistance means the 7 unexpected changes and/or new can always be reached to handle schedule, immediate offers.
+          </p>
+        </div>
+      </div>
+
     </div>
   </section>
 
