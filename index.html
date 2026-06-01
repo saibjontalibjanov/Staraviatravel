@@ -491,10 +491,30 @@
   <section id="parvozlar" class="w-full bg-white px-6 py-20 md:px-12 lg:px-8">
     <div class="mx-auto w-full max-w-[1500px]">
       
-      <!-- First Row: Image Left, Text Right -->
+      <!-- First Row: Image Carousel Left, Text Right -->
       <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
         <div class="relative">
-          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Business Class Seat" class="rounded-3xl shadow-xl w-full h-[400px] object-cover"/>
+          <!-- Carousel Container -->
+          <div class="relative overflow-hidden rounded-3xl shadow-xl">
+            <div id="carousel-1" class="flex transition-transform duration-500 ease-out">
+              <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Business Class Seat 1" class="w-full h-[400px] object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=800&q=80" alt="Business Class Seat 2" class="w-full h-[400px] object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80" alt="Business Class Seat 3" class="w-full h-[400px] object-cover flex-shrink-0"/>
+            </div>
+            <!-- Navigation Buttons -->
+            <button onclick="moveCarousel('carousel-1', -1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button onclick="moveCarousel('carousel-1', 1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <!-- Dots Indicator -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white"></div>
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white/50"></div>
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white/50"></div>
+            </div>
+          </div>
           <div class="absolute -top-4 -right-4 w-24 h-24 bg-gold/10 rounded-full blur-2xl"></div>
         </div>
         <div>
@@ -510,7 +530,7 @@
         </div>
       </div>
 
-      <!-- Second Row: Text Left, Image Right -->
+      <!-- Second Row: Text Left, Image Carousel Right -->
       <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
         <div class="order-2 lg:order-1">
           <div class="border-l-4 border-gold pl-6">
@@ -523,7 +543,27 @@
           </p>
         </div>
         <div class="relative order-1 lg:order-2">
-          <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=800&q=80" alt="First Class Seat" class="rounded-3xl shadow-xl w-full h-[400px] object-cover"/>
+          <!-- Carousel Container -->
+          <div class="relative overflow-hidden rounded-3xl shadow-xl">
+            <div id="carousel-2" class="flex transition-transform duration-500 ease-out">
+              <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=800&q=80" alt="First Class Seat 1" class="w-full h-[400px] object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80" alt="First Class Seat 2" class="w-full h-[400px] object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?auto=format&fit=crop&w=800&q=80" alt="First Class Seat 3" class="w-full h-[400px] object-cover flex-shrink-0"/>
+            </div>
+            <!-- Navigation Buttons -->
+            <button onclick="moveCarousel('carousel-2', -1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button onclick="moveCarousel('carousel-2', 1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <!-- Dots Indicator -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white"></div>
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white/50"></div>
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white/50"></div>
+            </div>
+          </div>
           <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gold/10 rounded-full blur-2xl"></div>
         </div>
       </div>
@@ -925,6 +965,35 @@
     dealsScrollPosition = Math.max(dealsScrollPosition - cardWidth * 3, 0);
     dealsCarousel.style.transform = `translateX(-${dealsScrollPosition}px)`;
   });
+
+  // ===== IMAGE CAROUSELS =====
+  const carouselStates = {
+    'carousel-1': 0,
+    'carousel-2': 0
+  };
+
+  function moveCarousel(carouselId, direction) {
+    const carousel = document.getElementById(carouselId);
+    const images = carousel.children.length;
+    const dots = document.querySelectorAll(`.${carouselId}-dot`);
+    
+    // Update position
+    carouselStates[carouselId] = (carouselStates[carouselId] + direction + images) % images;
+    
+    // Move carousel
+    carousel.style.transform = `translateX(-${carouselStates[carouselId] * 100}%)`;
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+      if (index === carouselStates[carouselId]) {
+        dot.classList.remove('bg-white/50');
+        dot.classList.add('bg-white');
+      } else {
+        dot.classList.remove('bg-white');
+        dot.classList.add('bg-white/50');
+      }
+    });
+  }
 </script>
 </body>
 </html>
