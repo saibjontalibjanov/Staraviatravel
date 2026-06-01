@@ -272,12 +272,17 @@
                 <label class="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Departure Date</label>
                 <input id="depart-date" required type="text" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" placeholder="Select Date" class="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full cursor-pointer"/>
               </div>
+              <!-- Return Date (hidden by default for one-way) -->
+              <div id="return-date-field" class="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 hidden">
+                <label class="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Return Date</label>
+                <input id="return-date" type="text" onfocus="this.type='date'" onblur="if(!this.value)this.type='text'" placeholder="Select Date" class="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full cursor-pointer"/>
+              </div>
               <!-- Passengers / Cabin -->
-              <div class="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer" onclick="document.getElementById('pax-dropdown').classList.toggle('hidden')">
+              <div id="pax-container" class="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer relative">
                 <label class="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Passengers / Cabin</label>
                 <div id="pax-label" class="text-ink font-semibold text-sm text-left">1 | Business</div>
                 <!-- Dropdown -->
-                <div id="pax-dropdown" class="hidden absolute mt-14 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-60 text-left">
+                <div id="pax-dropdown" class="hidden absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-60 text-left">
                   <div class="flex items-center justify-between mb-3">
                     <span class="text-sm font-medium text-ink">Passengers</span>
                     <div class="flex items-center gap-3">
@@ -289,10 +294,10 @@
                   <div>
                     <p class="text-sm font-medium text-ink mb-2">Class</p>
                     <div class="grid grid-cols-2 gap-2">
-                      <button type="button" onclick="setCabin('Ekonom')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">Economy</button>
-                      <button type="button" onclick="setCabin('Premium')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">Premium Economy</button>
-                      <button type="button" onclick="setCabin('Biznes')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gold text-xs font-medium text-gold bg-gold/5">Business</button>
-                      <button type="button" onclick="setCabin('Birinchi')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">First class</button>
+                      <button type="button" onclick="setCabin('Economy')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">Economy</button>
+                      <button type="button" onclick="setCabin('Premium Economy')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">Premium Economy</button>
+                      <button type="button" onclick="setCabin('Business')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gold text-xs font-medium text-gold bg-gold/5">Business</button>
+                      <button type="button" onclick="setCabin('First Class')" class="cabin-btn px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gold hover:text-gold transition-colors">First class</button>
                     </div>
                   </div>
                 </div>
@@ -688,16 +693,33 @@
 
   // ===== PAX DROPDOWN =====
   let paxCount = 1;
-  let cabinSelected = 'Biznes';
+  let cabinSelected = 'Business';
+  
+  // Toggle dropdown
+  const paxContainer = document.getElementById('pax-container');
+  const paxDropdown = document.getElementById('pax-dropdown');
+  
+  paxContainer.addEventListener('click', function(e) {
+    e.stopPropagation();
+    paxDropdown.classList.toggle('hidden');
+  });
+  
+  // Prevent dropdown from closing when clicking inside it
+  paxDropdown.addEventListener('click', function(e) {
+    e.stopPropagation();
+  });
+  
   function updatePaxLabel() {
     document.getElementById('pax-label').textContent = paxCount + ' | ' + cabinSelected;
     document.getElementById('pax-count').textContent = paxCount;
   }
+  
   function changePax(delta) {
     event.stopPropagation();
     paxCount = Math.max(1, Math.min(20, paxCount + delta));
     updatePaxLabel();
   }
+  
   function setCabin(val) {
     event.stopPropagation();
     cabinSelected = val;
@@ -709,10 +731,12 @@
     event.target.classList.remove('border-gray-200','text-gray-600');
     updatePaxLabel();
   }
+  
   // Close dropdown on outside click
   document.addEventListener('click', function(e) {
-    const dd = document.getElementById('pax-dropdown');
-    if (dd && !dd.closest('div').contains(e.target)) dd.classList.add('hidden');
+    if (!paxContainer.contains(e.target)) {
+      paxDropdown.classList.add('hidden');
+    }
   });
 
   // ===== SCROLL TO FORM =====
@@ -744,6 +768,9 @@
 
   // ===== TRIP TYPE =====
   const tripBtns = document.querySelectorAll('.trip-type-btn');
+  const returnDateField = document.getElementById('return-date-field');
+  const returnDateInput = document.getElementById('return-date');
+  
   tripBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       tripBtns.forEach(b => {
@@ -752,6 +779,16 @@
       });
       e.target.classList.add('border-b-2','border-gold','font-semibold','text-white');
       e.target.classList.remove('text-white/60');
+      
+      // Show/hide return date based on trip type
+      if (e.target.id === 'btn-round-trip') {
+        returnDateField.classList.remove('hidden');
+        returnDateInput.setAttribute('required', 'required');
+      } else {
+        returnDateField.classList.add('hidden');
+        returnDateInput.removeAttribute('required');
+        returnDateInput.value = '';
+      }
     });
   });
 
