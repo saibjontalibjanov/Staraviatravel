@@ -495,7 +495,24 @@
       <div class="grid lg:grid-cols-2 gap-12 items-center mb-20">
         <div class="relative group">
           <div class="aspect-square rounded-2xl overflow-hidden shadow-2xl">
-            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Business Class Experience" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+            <div id="carousel-1" class="flex transition-transform duration-500 ease-out h-full">
+              <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80" alt="Business Class 1" class="w-full h-full object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=600&q=80" alt="Business Class 2" class="w-full h-full object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80" alt="Business Class 3" class="w-full h-full object-cover flex-shrink-0"/>
+            </div>
+            <!-- Navigation Buttons -->
+            <button onclick="moveCarousel('carousel-1', -1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10 opacity-0 group-hover:opacity-100">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button onclick="moveCarousel('carousel-1', 1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10 opacity-0 group-hover:opacity-100">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <!-- Dots Indicator -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white transition-all"></div>
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white/50 transition-all"></div>
+              <div class="carousel-1-dot w-2 h-2 rounded-full bg-white/50 transition-all"></div>
+            </div>
           </div>
           <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/20 rounded-2xl -z-10"></div>
         </div>
@@ -526,7 +543,24 @@
         </div>
         <div class="relative group order-1 lg:order-2">
           <div class="aspect-square rounded-2xl overflow-hidden shadow-2xl">
-            <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=600&q=80" alt="Luxury Travel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+            <div id="carousel-2" class="flex transition-transform duration-500 ease-out h-full">
+              <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=600&q=80" alt="First Class 1" class="w-full h-full object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=600&q=80" alt="First Class 2" class="w-full h-full object-cover flex-shrink-0"/>
+              <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?auto=format&fit=crop&w=600&q=80" alt="First Class 3" class="w-full h-full object-cover flex-shrink-0"/>
+            </div>
+            <!-- Navigation Buttons -->
+            <button onclick="moveCarousel('carousel-2', -1)" class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10 opacity-0 group-hover:opacity-100">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button onclick="moveCarousel('carousel-2', 1)" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all z-10 opacity-0 group-hover:opacity-100">
+              <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <!-- Dots Indicator -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white transition-all"></div>
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white/50 transition-all"></div>
+              <div class="carousel-2-dot w-2 h-2 rounded-full bg-white/50 transition-all"></div>
+            </div>
           </div>
           <div class="absolute -top-6 -left-6 w-32 h-32 bg-gold/20 rounded-2xl -z-10"></div>
         </div>
