@@ -719,37 +719,101 @@
 
   <!-- ===== FIKRLAR ===== -->
   <section id="fikrlar" class="w-full bg-paper px-6 py-20 md:px-12 lg:px-8">
-    <div class="mx-auto max-w-[1500px] text-center">
-      <span class="text-gold font-semibold tracking-wider uppercase text-sm">Our Clients</span>
-      <h2 class="font-display text-4xl md:text-5xl font-bold text-ink mt-2">What Our Clients <span class="italic text-gold">Say</span></h2>
-      <div class="grid md:grid-cols-3 gap-8 mt-16 text-left">
-        <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
-          <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
-          <div class="flex gap-1 text-gold mb-4">★★★★★</div>
-          <p class="text-ink/70 italic mb-6">"Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!"</p>
-          <div class="flex items-center gap-4">
-            <img src="https://i.pravatar.cc/100?img=1" alt="Aziza K." class="w-12 h-12 rounded-full object-cover"/>
-            <div><h5 class="font-bold text-ink">Aziza K.</h5><p class="text-xs text-ink/50">Tashkent, Uzbekistan</p></div>
-          </div>
+    <div class="mx-auto max-w-[1500px]">
+      <div class="flex items-center justify-between mb-12">
+        <div class="text-center flex-1">
+          <span class="text-gold font-semibold tracking-wider uppercase text-sm">Our Clients</span>
+          <h2 class="font-display text-4xl md:text-5xl font-bold text-ink mt-2">What Our Clients <span class="italic text-gold">Say</span></h2>
         </div>
-        <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
-          <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
-          <div class="flex gap-1 text-gold mb-4">★★★★★</div>
-          <p class="text-ink/70 italic mb-6">"We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent."</p>
-          <div class="flex items-center gap-4">
-            <img src="https://i.pravatar.cc/100?img=11" alt="Rustam B." class="w-12 h-12 rounded-full object-cover"/>
-            <div><h5 class="font-bold text-ink">Rustam B.</h5><p class="text-xs text-ink/50">Samarkand, Uzbekistan</p></div>
-          </div>
+        <!-- Carousel Navigation -->
+        <div class="hidden md:flex gap-3">
+          <button id="testimonials-prev" class="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gold hover:text-white hover:border-gold transition-all shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="testimonials-next" class="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-gold hover:text-white hover:border-gold transition-all shadow-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
         </div>
-        <div class="bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
-          <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
-          <div class="flex gap-1 text-gold mb-4">★★★★★</div>
-          <p class="text-ink/70 italic mb-6">"The support center works great. When my flight changed, they resolved the issue immediately."</p>
-          <div class="flex items-center gap-4">
-            <img src="https://i.pravatar.cc/100?img=5" alt="Malika O." class="w-12 h-12 rounded-full object-cover"/>
-            <div><h5 class="font-bold text-ink">Malika O.</h5><p class="text-xs text-ink/50">Bukhara, Uzbekistan</p></div>
+      </div>
+      
+      <!-- Carousel Container -->
+      <div class="relative overflow-hidden">
+        <div id="testimonials-carousel" class="flex gap-8 transition-transform duration-500 ease-out">
+          
+          <!-- Testimonial Card 1 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!"</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=1" alt="Aziza K." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Aziza K.</h5><p class="text-xs text-ink/50">Tashkent, Uzbekistan</p></div>
+            </div>
           </div>
+          
+          <!-- Testimonial Card 2 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=11" alt="Rustam B." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Rustam B.</h5><p class="text-xs text-ink/50">Samarkand, Uzbekistan</p></div>
+            </div>
+          </div>
+          
+          <!-- Testimonial Card 3 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"The support center works great. When my flight changed, they resolved the issue immediately."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=5" alt="Malika O." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Malika O.</h5><p class="text-xs text-ink/50">Bukhara, Uzbekistan</p></div>
+            </div>
+          </div>
+          
+          <!-- Testimonial Card 4 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=12" alt="Dilshod M." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Dilshod M.</h5><p class="text-xs text-ink/50">Tashkent, Uzbekistan</p></div>
+            </div>
+          </div>
+          
+          <!-- Testimonial Card 5 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=9" alt="Nilufar S." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Nilufar S.</h5><p class="text-xs text-ink/50">Andijan, Uzbekistan</p></div>
+            </div>
+          </div>
+          
+          <!-- Testimonial Card 6 -->
+          <div class="flex-shrink-0 w-full md:w-[calc(33.333%-1.5rem)] bg-white p-8 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-black/5 relative">
+            <div class="text-gold text-5xl absolute top-4 right-6 font-display opacity-30 leading-none">"</div>
+            <div class="flex gap-1 text-gold mb-4">★★★★★</div>
+            <p class="text-ink/70 italic mb-6">"Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle."</p>
+            <div class="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?img=14" alt="Sardor T." class="w-12 h-12 rounded-full object-cover"/>
+              <div><h5 class="font-bold text-ink">Sardor T.</h5><p class="text-xs text-ink/50">Namangan, Uzbekistan</p></div>
+            </div>
+          </div>
+          
         </div>
+      </div>
+      
+      <!-- Mobile Navigation Dots -->
+      <div class="flex justify-center gap-2 mt-8 md:hidden">
+        <button class="testimonial-dot w-2 h-2 rounded-full bg-gold"></button>
+        <button class="testimonial-dot w-2 h-2 rounded-full bg-gray-300"></button>
+        <button class="testimonial-dot w-2 h-2 rounded-full bg-gray-300"></button>
       </div>
     </div>
   </section>
@@ -1295,6 +1359,34 @@
     dealsScrollPosition = Math.max(dealsScrollPosition - cardWidth * 3, 0);
     dealsCarousel.style.transform = `translateX(-${dealsScrollPosition}px)`;
   });
+
+  // ===== TESTIMONIALS CAROUSEL =====
+  const testimonialsCarousel = document.getElementById('testimonials-carousel');
+  const testimonialsPrev = document.getElementById('testimonials-prev');
+  const testimonialsNext = document.getElementById('testimonials-next');
+  let testimonialsPosition = 0;
+  const totalTestimonials = testimonialsCarousel.children.length;
+  const visibleCards = 3;
+
+  testimonialsNext.addEventListener('click', () => {
+    if (testimonialsPosition < totalTestimonials - visibleCards) {
+      testimonialsPosition++;
+      updateTestimonialsCarousel();
+    }
+  });
+
+  testimonialsPrev.addEventListener('click', () => {
+    if (testimonialsPosition > 0) {
+      testimonialsPosition--;
+      updateTestimonialsCarousel();
+    }
+  });
+
+  function updateTestimonialsCarousel() {
+    const cardWidthPercent = 100 / visibleCards;
+    const translateX = -(testimonialsPosition * cardWidthPercent);
+    testimonialsCarousel.style.transform = `translateX(${translateX}%)`;
+  }
 
   // ===== IMAGE CAROUSELS =====
   const carouselStates = {
