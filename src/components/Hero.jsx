@@ -19,7 +19,7 @@ const Hero = () => {
   }
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col overflow-hidden bg-ink">
+    <div className="relative min-h-screen w-full flex flex-col bg-ink">
       <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0">
         <source src="/Cover800x312_darken_3mb.mp4" type="video/mp4" />
       </video>
