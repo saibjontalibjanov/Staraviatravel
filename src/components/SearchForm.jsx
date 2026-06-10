@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 
 const SearchForm = () => {
@@ -182,12 +183,12 @@ const SearchForm = () => {
         </div>
       </form>
 
-      {/* Passengers/Cabin Dropdown - FIXED position to avoid any overflow clipping */}
-      {showPaxDropdown && (
+      {/* Passengers/Cabin Dropdown - rendered via PORTAL to body to escape ALL overflow:hidden */}
+      {showPaxDropdown && createPortal(
         <>
-          <div className="fixed inset-0 z-[60] bg-black/20" onClick={() => setShowPaxDropdown(false)}></div>
+          <div className="fixed inset-0 z-[9998] bg-black/20" onClick={() => setShowPaxDropdown(false)}></div>
           <div 
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[90vw] max-w-[300px] text-left" 
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[90vw] max-w-[300px] text-left" 
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-2">
@@ -241,7 +242,8 @@ const SearchForm = () => {
               </div>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   )
