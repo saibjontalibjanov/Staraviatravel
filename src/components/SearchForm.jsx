@@ -14,7 +14,7 @@ const SearchForm = () => {
 
   const airports = [
     'Toshkent (TAS)',
-    'Farg\'ona (FEG)',
+    "Farg'ona (FEG)",
     'Samarqand (SKD)',
     'Istanbul (IST)',
     'Dubay (DXB)',
@@ -44,7 +44,6 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Navigate to search results
     const searchParams = new URLSearchParams({
       from,
       to,
@@ -86,7 +85,7 @@ const SearchForm = () => {
 
       {/* Main search form */}
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col lg:flex-row items-stretch bg-white rounded-lg overflow-hidden shadow-2xl">
+        <div className="flex flex-col lg:flex-row items-stretch bg-white rounded-lg overflow-visible shadow-2xl">
           {/* From */}
           <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0">
             <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">From...</label>
@@ -170,54 +169,6 @@ const SearchForm = () => {
             >
               {passengers} | {cabin}
             </div>
-            
-            {/* Dropdown */}
-            {showPaxDropdown && (
-              <>
-                <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setShowPaxDropdown(false) }}></div>
-                <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 p-4 w-60 text-left" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-ink">Passengers</span>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        type="button" 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(-1) }}
-                        className="w-7 h-7 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center"
-                      >
-                        −
-                      </button>
-                      <span className="text-sm font-bold text-ink w-4 text-center">{passengers}</span>
-                      <button 
-                        type="button" 
-                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(1) }}
-                        className="w-7 h-7 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-ink mb-2">Class</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {['Economy', 'Premium Economy', 'Business', 'First Class'].map((cabinType) => (
-                        <button 
-                          key={cabinType}
-                          type="button" 
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCabinChange(cabinType); setShowPaxDropdown(false) }}
-                          className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-                            cabin === cabinType
-                              ? 'border-gold text-gold bg-gold/5'
-                              : 'border-gray-200 text-gray-600 hover:border-gold hover:text-gold'
-                          }`}
-                        >
-                          {cabinType}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
           
           {/* Search button */}
@@ -230,6 +181,54 @@ const SearchForm = () => {
           </button>
         </div>
       </form>
+
+      {/* Passengers/Cabin Dropdown - rendered OUTSIDE the form to avoid overflow clipping */}
+      {showPaxDropdown && (
+        <>
+          <div className="fixed inset-0 z-[60]" onClick={() => setShowPaxDropdown(false)}></div>
+          <div className="relative z-[70] mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-4 w-full max-w-[280px] mx-auto lg:ml-auto lg:mr-[80px] text-left" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-medium text-ink">Passengers</span>
+              <div className="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(-1) }}
+                  className="w-8 h-8 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-lg"
+                >
+                  −
+                </button>
+                <span className="text-base font-bold text-ink w-5 text-center">{passengers}</span>
+                <button 
+                  type="button" 
+                  onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(1) }}
+                  className="w-8 h-8 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-lg"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-ink mb-2">Class</p>
+              <div className="grid grid-cols-2 gap-2">
+                {['Economy', 'Premium Economy', 'Business', 'First Class'].map((cabinType) => (
+                  <button 
+                    key={cabinType}
+                    type="button" 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCabinChange(cabinType); setShowPaxDropdown(false) }}
+                    className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${
+                      cabin === cabinType
+                        ? 'border-gold text-gold bg-gold/5'
+                        : 'border-gray-200 text-gray-600 hover:border-gold hover:text-gold'
+                    }`}
+                  >
+                    {cabinType}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }
