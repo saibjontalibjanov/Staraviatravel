@@ -182,42 +182,56 @@ const SearchForm = () => {
         </div>
       </form>
 
-      {/* Passengers/Cabin Dropdown - rendered OUTSIDE the form to avoid overflow clipping */}
+      {/* Passengers/Cabin Dropdown - FIXED position to avoid any overflow clipping */}
       {showPaxDropdown && (
         <>
-          <div className="fixed inset-0 z-[60]" onClick={() => setShowPaxDropdown(false)}></div>
-          <div className="relative z-[70] mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl p-4 w-full max-w-[280px] mx-auto lg:ml-auto lg:mr-[80px] text-left" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
+          <div className="fixed inset-0 z-[60] bg-black/20" onClick={() => setShowPaxDropdown(false)}></div>
+          <div 
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[90vw] max-w-[300px] text-left" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-base font-bold text-ink">Passengers / Cabin</h4>
+              <button 
+                type="button"
+                onClick={() => setShowPaxDropdown(false)}
+                className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 text-gray-500 text-sm"
+              >
+                ✕
+              </button>
+            </div>
+            <hr className="border-gray-100 mb-4" />
+            <div className="flex items-center justify-between mb-5">
               <span className="text-sm font-medium text-ink">Passengers</span>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <button 
                   type="button" 
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(-1) }}
-                  className="w-8 h-8 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-lg"
+                  className="w-9 h-9 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-xl"
                 >
                   −
                 </button>
-                <span className="text-base font-bold text-ink w-5 text-center">{passengers}</span>
+                <span className="text-lg font-bold text-ink w-5 text-center">{passengers}</span>
                 <button 
                   type="button" 
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(1) }}
-                  className="w-8 h-8 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-lg"
+                  className="w-9 h-9 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-xl"
                 >
                   +
                 </button>
               </div>
             </div>
             <div>
-              <p className="text-sm font-medium text-ink mb-2">Class</p>
+              <p className="text-sm font-medium text-ink mb-3">Class</p>
               <div className="grid grid-cols-2 gap-2">
                 {['Economy', 'Premium Economy', 'Business', 'First Class'].map((cabinType) => (
                   <button 
                     key={cabinType}
                     type="button" 
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCabinChange(cabinType); setShowPaxDropdown(false) }}
-                    className={`px-3 py-2 rounded-lg border text-xs font-medium transition-colors ${
+                    className={`px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
                       cabin === cabinType
-                        ? 'border-gold text-gold bg-gold/5'
+                        ? 'border-gold text-gold bg-gold/10'
                         : 'border-gray-200 text-gray-600 hover:border-gold hover:text-gold'
                     }`}
                   >
