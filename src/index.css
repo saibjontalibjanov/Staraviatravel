@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Styles */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.destinations-bg {
+  background: linear-gradient(180deg, rgba(20, 18, 16, 0.95), rgba(10, 9, 8, 0.98)),
+    url('https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.field {
+  transition: all 0.3s ease;
+}
+
+.field:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 164, 69, 0.25);
+  border-color: #d4a445;
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4a445;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b78434;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.whatsapp-btn {
+  animation: pulse-green 2s infinite;
+}
+
+@keyframes pulse-green {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(37, 211, 102, 0);
+  }
+}
+
+.phone-btn {
+  animation: pulse-green 2s infinite;
+}
+
+/* Language Selector Styles */
+#language-selector {
+  cursor: pointer;
+  user-select: none;
+}
+
+#current-flag {
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#language-dropdown {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.language-option:hover {
+  background-color: #f9fafb;
+}
+
+.language-option:active {
+  background-color: #f3f4f6;
+}
+
+.fi {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Flight Results Page Styles */
+.card-light {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.card-light:hover {
+  border-color: rgba(212, 164, 69, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.card-light.selected {
+  border-color: #d4a445;
+  box-shadow: 0 0 0 2px #d4a445;
+}
+
+.modal-overlay {
+  backdrop-filter: blur(6px);
+}
+
+.filter-drawer {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flight-card {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+input[type='range'] {
+  accent-color: #d4a445;
+}
