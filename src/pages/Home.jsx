@@ -1,8 +1,17 @@
+import { useState } from 'react'
 import TopBar from '../components/TopBar'
 import Hero from '../components/Hero'
 import TrustBar from '../components/TrustBar'
+import HotDeals from '../components/HotDeals'
+import FAQ from '../components/FAQ'
+import Footer from '../components/Footer'
+import FloatingButtons from '../components/FloatingButtons'
+import PhonePopup from '../components/PhonePopup'
+import CookieBanner from '../components/CookieBanner'
 
 const Home = () => {
+  const [showPhonePopup, setShowPhonePopup] = useState(false)
+
   return (
     <div className="bg-paper text-ink font-sans antialiased selection:bg-gold selection:text-white relative overflow-x-hidden">
       <TopBar />
@@ -10,18 +19,8 @@ const Home = () => {
         <Hero />
         <TrustBar />
         
-        {/* Hot Deals Section - Placeholder for now */}
-        <section id="chegirmalar" className="w-full bg-[#f0ebe1] px-6 py-20 md:px-12 lg:px-8">
-          <div className="mx-auto max-w-[1500px]">
-            <div className="text-center mb-12">
-              <span className="text-gold font-semibold tracking-wider uppercase text-sm">Special Offers</span>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2">Hot Deals</h2>
-            </div>
-            <div className="text-center text-gray-600">
-              <p>Exclusive flight deals coming soon...</p>
-            </div>
-          </div>
-        </section>
+        {/* Hot Deals Section */}
+        <HotDeals />
 
         {/* Why Choose Us Section */}
         <section id="parvozlar" className="w-full bg-white px-6 py-20 md:px-12 lg:px-8">
@@ -138,17 +137,21 @@ const Home = () => {
           </div>
         </section>
 
+        {/* FAQ Section */}
+        <FAQ />
+
         {/* Footer */}
-        <footer className="w-full bg-ink text-white px-6 py-12 md:px-12 lg:px-8">
-          <div className="mx-auto max-w-[1500px] text-center">
-            <h3 className="font-display text-2xl font-bold text-gold mb-4">STARAVIA</h3>
-            <p className="text-white/70 mb-6">Premium & Business Class Travel Solutions</p>
-            <div className="flex items-center justify-center gap-6 text-sm text-white/60">
-              <span>© 2026 Staravia Travel. All rights reserved.</span>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </main>
+
+      {/* Floating Buttons */}
+      <FloatingButtons onPhoneClick={() => setShowPhonePopup(true)} />
+
+      {/* Phone Popup Modal */}
+      <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
+
+      {/* Cookie Banner */}
+      <CookieBanner />
     </div>
   )
 }
