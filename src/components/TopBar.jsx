@@ -88,10 +88,10 @@ const TopBar = () => {
         {/* Right: Language + Phone */}
         <div className="flex items-center gap-4">
           <div className="w-px h-4 bg-gray-200 hidden sm:block"></div>
-          
+
           {/* Language Selector */}
           <div className="relative inline-block">
-            <div 
+            <div
               onClick={() => setShowLangDropdown(!showLangDropdown)}
               className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
             >
@@ -101,11 +101,11 @@ const TopBar = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </div>
-            
+
             {showLangDropdown && (
               <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 min-w-[120px]">
                 {languages.map((lang) => (
-                  <div 
+                  <div
                     key={lang.code}
                     onClick={() => handleLanguageChange(lang)}
                     className="language-option flex items-center gap-3 px-4 py-2 hover:bg-gray-50 cursor-pointer transition-colors"
@@ -117,11 +117,11 @@ const TopBar = () => {
               </div>
             )}
           </div>
-          
+
           <div className="w-px h-4 bg-gray-200 hidden sm:block"></div>
-          
+
           {/* Phone Button */}
-          <a 
+          <a
             href="tel:+998901234567"
             className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gold hover:text-gold-dark transition-colors cursor-pointer"
           >
