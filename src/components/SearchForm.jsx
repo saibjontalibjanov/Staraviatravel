@@ -162,7 +162,7 @@ const SearchForm = () => {
           )}
 
           {/* Passengers / Cabin */}
-          <div className="hidden absolute top-full left-0 sm:left-auto sm:-right-4 mt-2 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 p-5 w-[90vw] sm:w-80 text-left transition-all duration-200 origin-top">
+          <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer">
             <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Passengers / Cabin</label>
             <div
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowPaxDropdown(!showPaxDropdown) }}
