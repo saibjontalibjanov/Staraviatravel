@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const TopBar = () => {
+const TopBar = ({ onPhoneClick }) => {
   const [showLangDropdown, setShowLangDropdown] = useState(false)
   const [currentLang, setCurrentLang] = useState({ code: 'en', flag: 'gb', name: 'ENG' })
 
@@ -27,7 +27,6 @@ const TopBar = () => {
 
         {/* Center: Features */}
         <div className="hidden lg:flex items-center gap-6">
-          {/* Accredited Agency */}
           <div className="flex items-center gap-2 relative group cursor-pointer">
             <img src="/pictures/nav-pictures/nav-pic1.png" alt="Navigation Icon" className="h-8 w-auto object-contain" onError={(e) => e.target.style.display = 'none'} />
             <div className="text-left">
@@ -40,13 +39,12 @@ const TopBar = () => {
               <div className="mt-3 pt-3 border-t border-gray-100">
                 <div className="flex items-center gap-2 text-xs text-gold font-semibold">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  Verified & Trusted
+                  Verified &amp; Trusted
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 24/7 Service */}
           <div className="flex items-center gap-2 relative group cursor-pointer">
             <img src="/pictures/nav-pictures/nav-24.png" alt="24/7 Service" className="h-8 w-auto object-contain" onError={(e) => e.target.style.display = 'none'} />
             <div className="text-left">
@@ -65,7 +63,6 @@ const TopBar = () => {
             </div>
           </div>
 
-          {/* Secure Payment */}
           <div className="flex items-center gap-2 relative group cursor-pointer">
             <img src="/pictures/nav-pictures/nav-secure.png" alt="Secure Payment" className="h-8 w-auto object-contain" onError={(e) => e.target.style.display = 'none'} />
             <div className="text-left">
@@ -120,14 +117,14 @@ const TopBar = () => {
           
           <div className="w-px h-4 bg-gray-200 hidden sm:block"></div>
           
-          {/* Phone Button */}
-          <a 
-            href="tel:+998901234567"
+          {/* Phone Button - opens popup */}
+          <button
+            onClick={onPhoneClick}
             className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gold hover:text-gold-dark transition-colors cursor-pointer"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             +998 90 123 45 67
-          </a>
+          </button>
         </div>
       </div>
     </div>
