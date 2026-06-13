@@ -196,7 +196,7 @@ const SearchForm = () => {
         </div>
       </form>
 
-      {/* Passengers/Cabin Dropdown - rendered via PORTAL to body to escape ALL overflow:hidden */}
+      {/* Passengers/Cabin Dropdown */}
       {showPaxDropdown && createPortal(
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setShowPaxDropdown(false)}></div>
