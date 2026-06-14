@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,6 +12,18 @@ const SearchForm = () => {
   const [passengers, setPassengers] = useState(1)
   const [cabin, setCabin] = useState('Business')
   const [showPaxDropdown, setShowPaxDropdown] = useState(false)
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 })
+  const paxRef = useRef(null)
+
+  useEffect(() => {
+    if (showPaxDropdown && paxRef.current) {
+      const rect = paxRef.current.getBoundingClientRect()
+      setDropdownPos({
+        top: rect.bottom + 8,
+        left: rect.left + rect.width / 2
+      })
+    }
+  }, [showPaxDropdown])
 
   const airports = [
     'Toshkent (TAS)',
@@ -162,7 +174,7 @@ const SearchForm = () => {
           )}
 
           {/* Passengers / Cabin */}
-          <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer">
+          <div ref={paxRef} className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer">
             <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Passengers / Cabin</label>
             <div
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowPaxDropdown(!showPaxDropdown) }}
@@ -185,9 +197,10 @@ const SearchForm = () => {
       {/* Passengers/Cabin Dropdown - rendered via PORTAL to body to escape ALL overflow:hidden */}
       {showPaxDropdown && createPortal(
         <>
-          <div className="fixed inset-0 z-[9998] bg-black/20" onClick={() => setShowPaxDropdown(false)}></div>
+          <div className="fixed inset-0 z-[9998]" onClick={() => setShowPaxDropdown(false)}></div>
           <div
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[90vw] max-w-[280px] text-left"
+            className="fixed z-[9999] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[280px] text-left -translate-x-1/2"
+            style={{ top: `${dropdownPos.top}px`, left: `${dropdownPos.left}px` }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
