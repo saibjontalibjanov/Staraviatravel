@@ -1,13 +1,195 @@
 import { useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 
+// Book Flight Popup Component
+const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    paymentMethod: '',
+    termsAccepted: false
+  })
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setSubmitted(true)
+    setTimeout(() => {
+      setSubmitted(false)
+      onClose()
+      setFormData({
+        firstName: '',
+        lastName: '',
+        phone: '',
+        email: '',
+        paymentMethod: '',
+        termsAccepted: false
+      })
+    }, 3000)
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
+        >
+          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Content */}
+        <div className="p-6 md:p-8">
+          {submitted ? (
+            <div className="text-center py-10">
+              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-ink mb-2 font-display">Request Sent!</h3>
+              <p className="text-gray-600">Our agent will contact you shortly.</p>
+            </div>
+          ) : (
+            <>
+              {/* Title */}
+              <h2 className="text-2xl font-bold text-ink font-display mb-1">Book Flight</h2>
+              <p className="text-sm text-gray-500 mb-6">Enter your details and our agent will contact you.</p>
+
+              {/* Flight Info Card */}
+              {flightInfo && (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 flex items-center justify-between">
+                  <div>
+                    <p className="font-bold text-ink text-sm">{flightInfo.airline}</p>
+                    <p className="text-xs text-gray-500">{flightInfo.route}</p>
+                  </div>
+                  <p className="text-xl font-bold text-gold">${flightInfo.price.toLocaleString()}</p>
+                </div>
+              )}
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name Row */}
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    name="firstName"
+                    required
+                    placeholder="First Name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    required
+                    placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base">📞</span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    placeholder="Your phone number"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+
+                {/* Email */}
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-base">📧</span>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="Your email address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
+                  />
+                </div>
+
+                {/* Payment Method */}
+                <select
+                  name="paymentMethod"
+                  required
+                  value={formData.paymentMethod}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink bg-white focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all appearance-none cursor-pointer"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
+                >
+                  <option value="" disabled>Select payment method</option>
+                  <option value="credit-card">Credit Card</option>
+                  <option value="debit-card">Debit Card</option>
+                  <option value="bank-transfer">Bank Transfer</option>
+                  <option value="cash">Cash</option>
+                </select>
+
+                {/* Terms Checkbox */}
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="termsAccepted"
+                    required
+                    checked={formData.termsAccepted}
+                    onChange={handleChange}
+                    className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-gold cursor-pointer"
+                  />
+                  <span className="text-xs text-gray-500">I accept the Terms of Use and Privacy Policy</span>
+                </label>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  className="w-full bg-gold hover:bg-gold-dark text-white font-bold text-base py-3.5 rounded-xl transition-colors shadow-md"
+                >
+                  Submit Request
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 const SearchResults = () => {
   const [searchParams] = useSearchParams()
+  const [showBookPopup, setShowBookPopup] = useState(false)
+  const [selectedFlight, setSelectedFlight] = useState(null)
 
   const from = searchParams.get('from') || 'Dubai'
   const to = searchParams.get('to') || 'New York'
   const fromCode = searchParams.get('from')?.match(/\(([^)]+)\)/)?.[1] || 'DXB'
   const toCode = searchParams.get('to')?.match(/\(([^)]+)\)/)?.[1] || 'JFK'
+  const fromCity = from.replace(/\s*\([^)]*\)/, '')
+  const toCity = to.replace(/\s*\([^)]*\)/, '')
   const passengers = searchParams.get('passengers') || '1'
   const cabin = searchParams.get('cabin') || 'Business'
   const tripType = searchParams.get('returnDate') ? 'round-trip' : 'one-way'
@@ -23,7 +205,6 @@ const SearchResults = () => {
   const airlineOffers = [
     {
       airline: 'EgyptAir',
-      logo: null,
       logoText: 'EGYPTAIR',
       cabin: 'Business class',
       tripType: 'one way',
@@ -31,7 +212,6 @@ const SearchResults = () => {
     },
     {
       airline: 'Royal Air Maroc',
-      logo: null,
       logoText: 'Royal Air Maroc',
       cabin: 'Business class',
       tripType: 'one way',
@@ -39,7 +219,6 @@ const SearchResults = () => {
     },
     {
       airline: 'ITA Airways',
-      logo: null,
       logoText: 'ITA AIRWAYS',
       cabin: 'Business class',
       tripType: 'one way',
@@ -47,7 +226,6 @@ const SearchResults = () => {
     },
     {
       airline: 'Turkish Airlines',
-      logo: null,
       logoText: 'Turkish Airlines',
       cabin: 'Business class',
       tripType: 'one way',
@@ -55,7 +233,6 @@ const SearchResults = () => {
     },
     {
       airline: 'Emirates',
-      logo: null,
       logoText: 'Emirates',
       cabin: 'Business class',
       tripType: 'one way',
@@ -63,7 +240,6 @@ const SearchResults = () => {
     },
     {
       airline: 'Qatar Airways',
-      logo: null,
       logoText: 'Qatar Airways',
       cabin: 'Business class',
       tripType: 'one way',
@@ -77,6 +253,24 @@ const SearchResults = () => {
     { value: '2M+', label: 'CLIENTS SERVED' },
     { value: '500+', label: 'LIVE AGENTS' }
   ]
+
+  const handleFeaturedClick = () => {
+    setSelectedFlight({
+      airline: 'Featured Deal',
+      route: `${fromCity} (${fromCode}) → ${toCity} (${toCode})`,
+      price: featuredDeal.price
+    })
+    setShowBookPopup(true)
+  }
+
+  const handleOfferClick = (offer) => {
+    setSelectedFlight({
+      airline: offer.airline,
+      route: `${fromCity} (${fromCode}) → ${toCity} (${toCode})`,
+      price: offer.price
+    })
+    setShowBookPopup(true)
+  }
 
   return (
     <div className="bg-white text-ink font-sans antialiased selection:bg-gold selection:text-white min-h-screen">
@@ -101,17 +295,20 @@ const SearchResults = () => {
       {/* Main Content */}
       <main className="mx-auto max-w-[1200px] px-6 py-8">
 
-        {/* Featured Deal Card */}
-        <div className="border border-gray-200 rounded-lg p-6 mb-6">
+        {/* Featured Deal Card - Clickable */}
+        <div
+          onClick={handleFeaturedClick}
+          className="border border-gray-200 rounded-lg p-6 mb-6 cursor-pointer hover:border-gold/50 hover:shadow-lg transition-all"
+        >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             {/* Route Info */}
             <div>
               <div className="flex items-center gap-3 mb-1">
-                <h2 className="text-2xl font-bold text-ink">{from.replace(/\s*\([^)]*\)/, '')}</h2>
+                <h2 className="text-2xl font-bold text-ink">{fromCity}</h2>
                 <span className="bg-gray-100 border border-gray-300 text-xs font-bold text-ink px-2 py-0.5 rounded">{fromCode}</span>
               </div>
               <div className="flex items-center gap-3 mb-2">
-                <h2 className="text-2xl font-bold text-ink">{to.replace(/\s*\([^)]*\)/, '')}</h2>
+                <h2 className="text-2xl font-bold text-ink">{toCity}</h2>
                 <span className="bg-gray-100 border border-gray-300 text-xs font-bold text-ink px-2 py-0.5 rounded">{toCode}</span>
               </div>
               <p className="text-sm text-gray-500">
@@ -173,11 +370,12 @@ const SearchResults = () => {
           ))}
         </div>
 
-        {/* Airline Offer Cards */}
+        {/* Airline Offer Cards - Clickable */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {airlineOffers.map((offer, idx) => (
             <div
               key={idx}
+              onClick={() => handleOfferClick(offer)}
               className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group"
             >
               {/* Airline Name/Logo */}
@@ -219,6 +417,13 @@ const SearchResults = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
         </svg>
       </a>
+
+      {/* Book Flight Popup */}
+      <BookFlightPopup
+        isOpen={showBookPopup}
+        onClose={() => setShowBookPopup(false)}
+        flightInfo={selectedFlight}
+      />
     </div>
   )
 }
