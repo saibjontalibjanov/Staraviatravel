@@ -236,16 +236,32 @@ const Home = () => {
           <div className="absolute top-20 left-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-80 h-80 bg-gold/10 rounded-full blur-3xl"></div>
           
+          {/* Subtle pattern overlay */}
+          <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #D4A445 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+          
           <div className="mx-auto w-full max-w-[1400px] px-6 md:px-12 lg:px-8 relative z-10">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="relative flex justify-center lg:justify-start">
-                <div className="relative w-full max-w-md">
-                  <img 
-                    src="/pictures/popup-pictures/woman-business-class.png" 
-                    alt="Luxury Travel Concierge" 
-                    className="relative z-10 w-full h-auto object-contain drop-shadow-2xl rounded-full" 
-                    style={{ border: '20px solid white' }}
-                  />
+                {/* Decorative phone icon floating */}
+                <div className="absolute top-8 left-1/4 bg-white rounded-full p-5 shadow-[0_20px_60px_-15px_rgba(212,164,69,0.3)] border border-gold/20 animate-float z-20">
+                  <svg className="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 10.999h2C22 5.869 18.127 2 12.99 2v2C17.052 4 20 6.943 20 10.999z"/>
+                    <path d="M13 8c2.103 0 3 .897 3 3h2c0-3.225-1.775-5-5-5v2zm3.422 5.443a1.001 1.001 0 00-1.391.043l-2.393 2.461c-.576-.11-1.734-.471-2.926-1.66-1.192-1.193-1.553-2.354-1.66-2.926l2.459-2.394a1 1 0 00.043-1.391L6.859 3.513a1 1 0 00-1.391-.087l-2.17 1.861a1 1 0 00-.29.649c-.015.25-.301 6.172 4.291 10.766C11.305 20.707 16.323 21 17.705 21c.202 0 .326-.006.359-.008a.992.992 0 00.648-.291l1.86-2.171a.997.997 0 00-.086-1.391l-4.064-3.696z"/>
+                  </svg>
+                </div>
+                
+                {/* Main circular background with luxury styling */}
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-gold/5 rounded-full transform scale-110 blur-3xl"></div>
+                  <div className="absolute inset-0 border border-gold/20 rounded-full transform scale-105"></div>
+                  <div className="relative w-full max-w-md">
+                    <img 
+                      src="/pictures/popup-pictures/woman-business-class.png" 
+                      alt="Luxury Travel Concierge" 
+                      className="relative z-10 w-full h-auto object-contain drop-shadow-2xl rounded-full" 
+                      style={{ border: '20px solid white' }}
+                    />
+                  </div>
                 </div>
               </div>
               
