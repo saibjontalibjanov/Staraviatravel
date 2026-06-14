@@ -20,7 +20,7 @@ const SearchForm = () => {
       const rect = paxRef.current.getBoundingClientRect()
       setDropdownPos({
         top: rect.bottom + 8,
-        left: rect.left + rect.width / 2
+        left: rect.left
       })
     }
   }, [showPaxDropdown])
@@ -199,73 +199,57 @@ const SearchForm = () => {
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setShowPaxDropdown(false)}></div>
           <div
-            className="fixed z-[9999] bg-white border border-gray-200 rounded-xl shadow-2xl p-5 w-[280px] text-left -translate-x-1/2"
+            className="fixed z-[9999] bg-white border border-gray-200 rounded-xl shadow-xl p-4 w-[260px] text-left"
             style={{ top: `${dropdownPos.top}px`, left: `${dropdownPos.left}px` }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="text-center mb-1 pb-3 border-b border-gray-100">
-              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest">Passengers / Cabin</p>
-              <p className="text-ink font-bold text-lg mt-1">{passengers} | {cabin}</p>
-            </div>
-
             {/* Passengers */}
-            <div className="py-4 border-b border-gray-100">
-              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest mb-3">PASSENGERS</p>
-              <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-medium text-ink">Passengers</span>
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(-1) }}
-                  className="w-10 h-10 rounded border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-xl"
+                  className="w-7 h-7 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-sm"
                 >
                   −
                 </button>
-                <span className="text-xl font-bold text-ink w-8 text-center border border-gray-200 rounded py-1.5">{passengers}</span>
+                <span className="text-sm font-bold text-ink w-4 text-center">{passengers}</span>
                 <button
                   type="button"
                   onClick={(e) => { e.preventDefault(); e.stopPropagation(); changePax(1) }}
-                  className="w-10 h-10 rounded border border-gold bg-gold text-white font-bold hover:bg-gold-dark transition-colors flex items-center justify-center text-xl"
+                  className="w-7 h-7 rounded-full border border-gray-300 text-ink font-bold hover:bg-gray-100 transition-colors flex items-center justify-center text-sm"
                 >
                   +
                 </button>
               </div>
             </div>
 
-            {/* Cabin Class */}
-            <div className="py-4">
-              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-widest mb-3">CABIN CLASS</p>
-              <div className="space-y-2.5">
-                {['Premium Economy', 'Business', 'First'].map((cabinType) => (
-                  <label
-                    key={cabinType}
-                    className="flex items-center gap-3 cursor-pointer group"
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCabinChange(cabinType) }}
+            {/* Class */}
+            <div>
+              <p className="text-sm font-medium text-ink mb-2">Class</p>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { label: 'Economy', value: 'Economy' },
+                  { label: 'Premium Economy', value: 'Premium Economy' },
+                  { label: 'Business', value: 'Business' },
+                  { label: 'First class', value: 'First' }
+                ].map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleCabinChange(item.value) }}
+                    className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                      cabin === item.value
+                        ? 'border-gold text-gold bg-gold/5'
+                        : 'border-gray-200 text-gray-600 hover:border-gold hover:text-gold'
+                    }`}
                   >
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                      cabin === cabinType ? 'border-gold' : 'border-gray-300 group-hover:border-gold/50'
-                    }`}>
-                      {cabin === cabinType && (
-                        <div className="w-3 h-3 rounded-full bg-gold"></div>
-                      )}
-                    </div>
-                    <span className={`text-sm font-medium transition-colors ${
-                      cabin === cabinType ? 'text-ink font-semibold' : 'text-gray-600'
-                    }`}>
-                      {cabinType}
-                    </span>
-                  </label>
+                    {item.label}
+                  </button>
                 ))}
               </div>
             </div>
-
-            {/* Done Button */}
-            <button
-              type="button"
-              onClick={() => setShowPaxDropdown(false)}
-              className="w-full mt-2 text-gold font-semibold text-sm uppercase tracking-wider hover:text-gold-dark transition-colors text-right pr-1 py-1"
-            >
-              DONE
-            </button>
           </div>
         </>,
         document.body
