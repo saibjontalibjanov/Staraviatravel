@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "flightsearch",
+  "info": {
+    "singularName": "search-results",
+    "pluralName": "flightsearch",
+    "displayName": "Search"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "from": {
+      "type": "string"
+    },
+    "to": {
+      "type": "string"
+    },
+    "departureDate": {
+      "type": "date"
+    }
+  }
+}

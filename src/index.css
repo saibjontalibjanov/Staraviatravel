@@ -177,3 +177,8 @@
 input[type='range'] {
   accent-color: #d4a445;
 }
+
+#TopBarSticky {
+  position: sticky !important;
+  top: 0 !important;
+}

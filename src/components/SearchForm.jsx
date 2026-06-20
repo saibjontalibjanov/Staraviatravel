@@ -7,7 +7,7 @@ const SearchForm = () => {
   const [tripType, setTripType] = useState('one-way')
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
-  const [departDate, setDepartDate] = useState('')
+  const [departureDate, setDepartureDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
   const [passengers, setPassengers] = useState(1)
   const [cabin, setCabin] = useState('Business')
@@ -15,6 +15,8 @@ const SearchForm = () => {
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
   const paxRef = useRef(null)
   const formRef = useRef(null)
+
+  const today = new Date().toISOString().split('T')[0]
 
   useEffect(() => {
     if (showPaxDropdown && formRef.current) {
@@ -62,7 +64,7 @@ const SearchForm = () => {
     const searchParams = new URLSearchParams({
       from,
       to,
-      departDate,
+      departureDate,
       ...(tripType === 'round-trip' && { returnDate }),
       passengers,
       cabin
@@ -154,8 +156,9 @@ const SearchForm = () => {
             <input
               required
               type="date"
-              value={departDate}
-              onChange={(e) => setDepartDate(e.target.value)}
+              min={today}
+              value={departureDate}
+              onChange={(e) => setDepartureDate(e.target.value)}
               placeholder="Select Date"
               className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full cursor-pointer"
             />
@@ -167,6 +170,7 @@ const SearchForm = () => {
               <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Return Date</label>
               <input
                 type="date"
+                min={departureDate || today}
                 value={returnDate}
                 onChange={(e) => setReturnDate(e.target.value)}
                 placeholder="Select Date"

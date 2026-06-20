@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Nav1 from '../../pictures/icons/staravia-logo-horizontal.png';
+import Nav2 from '../../pictures/icons/staravia-logo-2.png';
+import '../index.css'
 
 const TopBar = ({ onPhoneClick }) => {
   const [showLangDropdown, setShowLangDropdown] = useState(false)
@@ -16,13 +20,15 @@ const TopBar = ({ onPhoneClick }) => {
   }
 
   return (
-    <div className="w-full bg-white border-b border-gray-200 px-6 py-2 md:px-12 lg:px-8 sticky top-0 z-50 shadow-sm">
+    <div id='TopBarSticky' className="sticky w-full bg-white border-b border-gray-200 px-6 py-2 md:px-12 lg:px-8 top-0 z-50 shadow-sm">
       <div className="mx-auto max-w-[1500px] flex items-center justify-between gap-4">
         {/* Left: Logo */}
         <div className="flex items-center gap-3 ml-8">
-          <span className="font-display text-xl font-bold tracking-widest text-gold">STARAVIA</span>
+          <Link to="/">
+            <img src={Nav1} alt="Staravia Logo" className="h-8 w-auto object-cover" onError={(e) => e.target.style.display = 'none'} />
+          </Link>
           <div className="w-px h-8 bg-gray-300 mx-2"></div>
-          <img src="/STARAVIA.png" alt="STARAVIA Logo" className="h-10 w-auto object-contain" onError={(e) => e.target.style.display = 'none'} />
+          <img src={Nav2} alt="STARAVIA Logo" className="h-8 w-auto object-cover" onError={(e) => e.target.style.display = 'none'} />
         </div>
 
         {/* Center: Features */}
