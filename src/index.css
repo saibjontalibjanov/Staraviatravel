@@ -182,3 +182,32 @@ input[type='range'] {
   position: sticky !important;
   top: 0 !important;
 }
+
+
+/* Custom Date Input Styles */
+.date-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  color: #1a1a1a;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.date-input::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+/* When no date is selected, show placeholder style */
+.date-input:not(:valid),
+.date-input[value=''] {
+  color: #9ca3af;
+}

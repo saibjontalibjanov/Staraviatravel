@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
+import TestimonialsCarousel from './Home'
 import TopBar from '../components/TopBar';
 import TrustBar from '../components/TrustBar';
 import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
+import Testimonials from '../components/Testimonials';
+import PhonePopup from '../components/PhonePopup';
+import TakeoffProgressLoader from './TakeoffProgressLoader';
 
 
 const STRAPI_URL = 'http://localhost:1337';
@@ -194,6 +198,18 @@ const SearchResults = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [cityImage, setCityImage] = useState(null)
+  const [showPhonePopup, setShowPhonePopup] = useState(false)
+  const carouselRef = useRef(null)
+
+  const scrollCarousel = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = 320 // card width (300) + gap (20)
+      carouselRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      })
+    }
+  }
 
   const from = searchParams.get('from') || 'Dubai'
   const to = searchParams.get('to') || 'New York'
@@ -238,75 +254,55 @@ const SearchResults = () => {
         setLoading(true);
         setError(null);
 
-        // Strapi backend-dagi proxy endpointga so'rov yuboramiz
-        const response = await fetch(`${STRAPI_URL}/api/flightsearch`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: fromCode,
-            to: toCode,
-            departureDate,
-            returnDate: tripType === 'round-trip' ? returnDate : undefined,
-            passengers: parseInt(passengers),
-            cabin: cabin.toLowerCase(),
-            type: tripType,
-          }),
+        // Build query params for the GET /api/flights endpoint
+        const queryParams = new URLSearchParams({
+          departure_id: fromCode,
+          arrival_id: toCode,
+          date: departureDate,
+          cabin: cabin,
         });
 
+        if (tripType === 'round-trip' && returnDate) {
+          queryParams.append('return_date', returnDate);
+        }
+
+        const response = await fetch(`${STRAPI_URL}/api/flights?${queryParams.toString()}`);
+
         if (!response.ok) {
-          throw new Error('Parvozlarni yuklashda xatolik yuz berdi');
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error?.message || errData.message || 'Parvozlarni yuklashda xatolik yuz berdi');
         }
 
         const result = await response.json();
         console.log('Backend raw response:', result);
 
-        // SerpApi xatolik qaytarganini tekshiramiz
-        if (result.error || (result.search_metadata && result.search_metadata.status === "Error")) {
-          throw new Error(result.error || result.search_metadata?.error || 'API qidiruvda xatolik yuz berdi');
+        if (result.error) {
+          throw new Error(result.error);
         }
 
-        // Handle both custom backend format and raw SerpApi structure
-        // Ba'zan ma'lumotlar best_flights yoki other_flights ichida bo'ladi
-        const rawOffers = result.data?.offers || result.best_flights || result.other_flights || [];
+        const rawFlights = result.flights || [];
 
-        if (!Array.isArray(rawOffers)) {
-          throw new Error('Natijalar kutilgan formatda kelmadi');
+        if (!Array.isArray(rawFlights) || rawFlights.length === 0) {
+          setOffers([]);
+          return;
         }
 
-        const formattedOffers = rawOffers.map((offer, idx) => {
-          // SerpApi Google Flights structure
-          if (offer.flights && Array.isArray(offer.flights)) {
-            const firstSegment = offer.flights[0];
-            return {
-              id: offer.id || `flight-${idx}`,
-              airline: firstSegment.airline || 'Multiple Airlines',
-              logo: firstSegment.airline_logo || null,
-              logoText: firstSegment.airline || 'Flight',
-              cabin: cabin + ' class',
-              tripType: tripType,
-              price: offer.price ? parseFloat(offer.price) : 0,
-              oldPrice: offer.price ? parseFloat(offer.price) * 1.15 : 0,
-              route: `${fromCity} → ${toCity}`
-            };
-          }
-          
-          // Custom/Existing structure fallback
-          const airlineName = offer.owner?.name || offer.airline || 'Airline';
-          const price = parseFloat(offer.total_amount || offer.price || 0) || 0;
-          return {
-            id: offer.id || idx,
-            airline: airlineName,
-            logo: offer.logo || null,
-            logoText: airlineName,
-            cabin: cabin + ' class',
-            tripType: tripType,
-            price: price,
-            oldPrice: offer.oldPrice || price * 1.15,
-            route: `${fromCity} → ${toCity}`
-          };
-        });
+        const formattedOffers = rawFlights.map((flight) => ({
+          id: flight.id,
+          airline: flight.airline || 'Unknown Airline',
+          logo: flight.airlineLogo || null,
+          logoText: flight.airline || 'Flight',
+          cabin: cabin + ' class',
+          tripType: tripType,
+          price: flight.price || 0,
+          oldPrice: flight.price ? Math.round(flight.price * 1.15) : 0,
+          route: `${fromCity} → ${toCity}`,
+          duration: flight.duration,
+          stops: flight.stops,
+          flightNumber: flight.flightNumber,
+          departure: flight.departure,
+          arrival: flight.arrival,
+        }));
 
         setOffers(formattedOffers);
       } catch (err) {
@@ -327,10 +323,10 @@ const SearchResults = () => {
   const airlineOffers = offers.length > 1 ? offers.slice(1) : [];
 
   const stats = [
-    { value: '10+', label: 'YEARS IN BUSINESS' },
+    { value: '1+', label: 'YEARS IN BUSINESS' },
     { value: '97%', label: 'SATISFACTION RATE' },
-    { value: '2M+', label: 'CLIENTS SERVED' },
-    { value: '500+', label: 'LIVE AGENTS' }
+    { value: '1k+', label: 'CLIENTS SERVED' },
+    { value: '50+', label: 'LIVE AGENTS' }
   ]
 
   const handleFeaturedClick = () => {
@@ -362,10 +358,9 @@ const SearchResults = () => {
 
         {/* Featured Deal Card - Clickable */}
         {loading ? (
-          <div className="text-center py-20">
-            <div className="animate-spin w-10 h-10 border-4 border-gold border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-ink/60 font-medium">Eng yaxshi parvozlarni qidirmoqdamiz...</p>
-          </div>
+          <>
+            <TakeoffProgressLoader />
+          </>
         ) : error ? (
           <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100">
             <p className="text-red-600 font-bold mb-2">Xatolik</p>
@@ -455,39 +450,94 @@ const SearchResults = () => {
               ))}
             </div>
 
-            {/* Airline Offer Cards - Clickable */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {airlineOffers.map((offer, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => handleOfferClick(offer)}
-                  className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group"
+            {/* Airline Offer Cards - Carousel if more than 3 */}
+            {airlineOffers.length > 3 ? (
+              <div className="relative">
+                {/* Left scroll button - only on screens > 850px */}
+                <button
+                  onClick={() => scrollCarousel('left')}
+                  className="hidden min-[850px]:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 items-center justify-center shadow-lg hover:bg-gold hover:text-white hover:border-gold transition-all"
                 >
-                  {/* Airline Name/Logo */}
-                  <div className="mb-4 h-10 flex items-center gap-3">
-                    {offer.logo ? (
-                      <img src={offer.logo} alt={offer.airline} className="h-full w-auto object-contain" />
-                    ) : (
-                      <span className="text-lg font-bold text-ink">{offer.logoText}</span>
-                    )}
-                  </div>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
 
-                  {/* Trip Details */}
-                  <p className="text-sm text-gray-500 mb-4">
-                    {offer.cabin} | {offer.tripType}
-                  </p>
+                {/* Right scroll button - only on screens > 850px */}
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  className="hidden min-[850px]:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white border border-gray-200 items-center justify-center shadow-lg hover:bg-gold hover:text-white hover:border-gold transition-all"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
 
-                  {/* Price + Arrow */}
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-2xl font-bold text-ink">${offer?.price?.toLocaleString()}</span>
-                      <span className="text-xs text-gray-500 align-top">*</span>
-                    </div>
-                    <svg className="w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                <div ref={carouselRef} className="overflow-x-auto pb-4 -mx-2 px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  <div className="flex gap-5" style={{ width: 'max-content' }}>
+                    {airlineOffers.map((offer, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => handleOfferClick(offer)}
+                        className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group w-[300px] flex-shrink-0"
+                      >
+                        {/* Airline Name/Logo */}
+                        <div className="mb-4 h-10 flex items-center gap-3">
+                          {offer.logo ? (
+                            <img src={offer.logo} alt={offer.airline} className="h-full w-auto object-contain" />
+                          ) : (
+                            <span className="text-lg font-bold text-ink">{offer.logoText}</span>
+                          )}
+                        </div>
+
+                        {/* Trip Details */}
+                        <p className="text-sm text-gray-500 mb-4">
+                          {offer.cabin} | {offer.tripType}
+                        </p>
+
+                        {/* Price + Arrow */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-2xl font-bold text-ink">${offer?.price?.toLocaleString()}</span>
+                            <span className="text-xs text-gray-500 align-top">*</span>
+                          </div>
+                          <svg className="w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {airlineOffers.map((offer, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => handleOfferClick(offer)}
+                    className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    {/* Airline Name/Logo */}
+                    <div className="mb-4 h-10 flex items-center gap-3">
+                      {offer.logo ? (
+                        <img src={offer.logo} alt={offer.airline} className="h-full w-auto object-contain" />
+                      ) : (
+                        <span className="text-lg font-bold text-ink">{offer.logoText}</span>
+                      )}
+                    </div>
+
+                    {/* Trip Details */}
+                    <p className="text-sm text-gray-500 mb-4">
+                      {offer.cabin} | {offer.tripType}
+                    </p>
+
+                    {/* Price + Arrow */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="text-2xl font-bold text-ink">${offer?.price?.toLocaleString()}</span>
+                        <span className="text-xs text-gray-500 align-top">*</span>
+                      </div>
+                      <svg className="w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Disclaimer */}
             <p className="text-[10px] text-gray-400 mt-6 leading-relaxed">
@@ -499,15 +549,18 @@ const SearchResults = () => {
       </main>
 
       {/* Floating Phone Button */}
-      <a
-        href="tel:+998901234567"
+      <button
+        onClick={() => setShowPhonePopup(true)}
         className="phone-btn fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
         aria-label="Call Us"
       >
         <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
         </svg>
-      </a>
+      </button>
+
+      {/* Phone Popup */}
+      <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
 
       {/* Book Flight Popup */}
       <BookFlightPopup
@@ -515,34 +568,7 @@ const SearchResults = () => {
         onClose={() => setShowBookPopup(false)}
         flightInfo={selectedFlight}
       />
-
-      <TrustBar />
-      <FAQ />
-      <Footer />
-    </div>
-  )
-}
-{
-  (
-
-      {/* Floating Phone Button */}
-      <a
-        href="tel:+998901234567"
-        className="phone-btn fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
-        aria-label="Call Us"
-      >
-        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-        </svg>
-      </a>
-
-      {/* Book Flight Popup */}
-      <BookFlightPopup
-        isOpen={showBookPopup}
-        onClose={() => setShowBookPopup(false)}
-        flightInfo={selectedFlight}
-      />
-    <div>
+      {/* <Testimonials /> */}
       <TrustBar />
       <FAQ />
       <Footer />

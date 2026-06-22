@@ -1,6 +1,134 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
+import DatePicker from './DatePicker'
+
+// Airport autocomplete dropdown component
+const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) => {
+  const [query, setQuery] = useState(value)
+  const [suggestions, setSuggestions] = useState([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const [allAirports, setAllAirports] = useState([])
+  const [loading, setLoading] = useState(false)
+  const inputRef = useRef(null)
+  const dropdownRef = useRef(null)
+
+  // Fetch airports from Strapi backend (which proxies the IATA API)
+  useEffect(() => {
+    const cached = sessionStorage.getItem('iata_airports')
+    if (cached) {
+      setAllAirports(JSON.parse(cached))
+      return
+    }
+
+    setLoading(true)
+    fetch('http://localhost:1337/api/airports')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          sessionStorage.setItem('iata_airports', JSON.stringify(data))
+          setAllAirports(data)
+        }
+      })
+      .catch(err => console.error('Failed to fetch airports:', err))
+      .finally(() => setLoading(false))
+  }, [])
+
+  // Sync external value changes (e.g. swap)
+  useEffect(() => {
+    setQuery(value)
+  }, [value])
+
+  // Filter airports based on query
+  const filterAirports = useCallback((searchQuery) => {
+    if (!searchQuery || searchQuery.length < 2) return []
+    const q = searchQuery.toLowerCase()
+    return allAirports
+      .filter(a => {
+        if (excludeCode && a.code === excludeCode) return false
+        return (
+          a.code.toLowerCase().includes(q) ||
+          a.name.toLowerCase().includes(q) ||
+          a.city.toLowerCase().includes(q) ||
+          a.country.toLowerCase().includes(q)
+        )
+      })
+      .slice(0, 8)
+  }, [allAirports, excludeCode])
+
+  const handleInputChange = (e) => {
+    const val = e.target.value
+    setQuery(val)
+    const filtered = filterAirports(val)
+    setSuggestions(filtered)
+    setShowDropdown(filtered.length > 0)
+  }
+
+  const handleSelect = (airport) => {
+    const display = `${airport.city} (${airport.code})`
+    setQuery(display)
+    onChange(display)
+    setShowDropdown(false)
+  }
+
+  const handleFocus = () => {
+    if (query.length >= 2) {
+      const filtered = filterAirports(query)
+      setSuggestions(filtered)
+      setShowDropdown(filtered.length > 0)
+    }
+  }
+
+  const handleBlur = () => {
+    // Delay to allow click on dropdown item
+    setTimeout(() => setShowDropdown(false), 200)
+  }
+
+  return (
+    <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 relative">
+      <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">{label}</label>
+      <input
+        ref={inputRef}
+        required
+        autoComplete="off"
+        placeholder={placeholder}
+        value={query}
+        onChange={handleInputChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full"
+      />
+      {showDropdown && (
+        <div
+          ref={dropdownRef}
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl z-[100] max-h-64 overflow-y-auto"
+        >
+          {loading ? (
+            <div className="px-4 py-3 text-sm text-gray-400">Loading airports...</div>
+          ) : (
+            suggestions.map((airport, idx) => (
+              <div
+                key={`${airport.code}-${idx}`}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => handleSelect(airport)}
+                className="px-4 py-2.5 hover:bg-gold/5 cursor-pointer transition-colors border-b border-gray-50 last:border-b-0"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-semibold text-ink">{airport.city}</span>
+                    <span className="text-xs text-gray-400 ml-2">{airport.country}</span>
+                  </div>
+                  <span className="text-xs font-bold text-gold bg-gold/10 px-2 py-0.5 rounded">{airport.code}</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-0.5 truncate">{airport.name}</p>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
 
 const SearchForm = () => {
   const navigate = useNavigate()
@@ -18,6 +146,12 @@ const SearchForm = () => {
 
   const today = new Date().toISOString().split('T')[0]
 
+  // Get IATA code from selected value to exclude from the other dropdown
+  const getCode = (val) => {
+    const match = val.match(/\(([^)]+)\)/)
+    return match ? match[1] : ''
+  }
+
   useEffect(() => {
     if (showPaxDropdown && formRef.current) {
       const rect = formRef.current.getBoundingClientRect()
@@ -28,19 +162,6 @@ const SearchForm = () => {
       })
     }
   }, [showPaxDropdown])
-
-  const airports = [
-    'Toshkent (TAS)',
-    "Farg'ona (FEG)",
-    'Samarqand (SKD)',
-    'Istanbul (IST)',
-    'Dubay (DXB)',
-    'New York (JFK)',
-    'London (LHR)',
-    'Paris (CDG)',
-    'Bangkok (BKK)',
-    'Kuala Lumpur (KUL)'
-  ]
 
   const swapCities = () => {
     const temp = from
@@ -104,23 +225,13 @@ const SearchForm = () => {
       <form onSubmit={handleSubmit} ref={formRef}>
         <div className="flex flex-col lg:flex-row items-stretch bg-white rounded-lg shadow-2xl">
           {/* From */}
-          <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0">
-            <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">From...</label>
-            <input
-              list="airports-from"
-              required
-              autoComplete="off"
-              placeholder="Toshkent (TAS)"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full"
-            />
-            <datalist id="airports-from">
-              {airports.map((airport, idx) => (
-                <option key={idx} value={airport} />
-              ))}
-            </datalist>
-          </div>
+          <AirportDropdown
+            value={from}
+            onChange={setFrom}
+            placeholder="City or Airport"
+            label="From..."
+            excludeCode={getCode(to)}
+          />
 
           {/* Swap button */}
           <button
@@ -132,51 +243,32 @@ const SearchForm = () => {
           </button>
 
           {/* To */}
-          <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0">
-            <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">To...</label>
-            <input
-              list="airports-to"
-              required
-              autoComplete="off"
-              placeholder="Istanbul (IST)"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full"
-            />
-            <datalist id="airports-to">
-              {airports.map((airport, idx) => (
-                <option key={idx} value={airport} />
-              ))}
-            </datalist>
-          </div>
+          <AirportDropdown
+            value={to}
+            onChange={setTo}
+            placeholder="City or Airport"
+            label="To..."
+            excludeCode={getCode(from)}
+          />
 
           {/* Departure */}
-          <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0">
-            <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Departure Date</label>
-            <input
-              required
-              type="date"
-              min={today}
-              value={departureDate}
-              onChange={(e) => setDepartureDate(e.target.value)}
-              placeholder="Select Date"
-              className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full cursor-pointer"
-            />
-          </div>
+          <DatePicker
+            value={departureDate}
+            onChange={setDepartureDate}
+            minDate={today}
+            label="Departure Date"
+            placeholder="Select date"
+          />
 
           {/* Return Date (hidden for one-way) */}
           {tripType === 'round-trip' && (
-            <div className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0">
-              <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Return Date</label>
-              <input
-                type="date"
-                min={departureDate || today}
-                value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-                placeholder="Select Date"
-                className="text-ink font-semibold text-sm bg-transparent outline-none placeholder:text-gray-400 w-full cursor-pointer"
-              />
-            </div>
+            <DatePicker
+              value={returnDate}
+              onChange={setReturnDate}
+              minDate={departureDate || today}
+              label="Return Date"
+              placeholder="Select date"
+            />
           )}
 
           {/* Passengers / Cabin */}

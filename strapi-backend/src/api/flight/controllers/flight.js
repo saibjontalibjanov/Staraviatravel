@@ -3,7 +3,7 @@ const axios = require('axios');
 module.exports = {
   async getFlights(ctx) {
     try {
-      const { departure_id, arrival_id, date } = ctx.query;
+      const { departure_id, arrival_id, date, return_date, cabin } = ctx.query;
       const apiKey = process.env.SERPAPI_KEY;
 
       // Parametrlarni tekshirish
@@ -15,19 +15,34 @@ module.exports = {
         return ctx.internalServerError('SERPAPI_KEY .env faylida topilmadi');
       }
 
+      // Cabin class mapping for SerpAPI
+      const cabinMap = {
+        'economy': 1,
+        'premium economy': 2,
+        'business': 3,
+        'first': 4,
+      };
+      const travelClass = cabinMap[(cabin || 'economy').toLowerCase()] || 1;
+
       // SerpApi'ga murojaat
-      const response = await axios.get('https://serpapi.com/search.json', {
-        params: {
-          engine: 'google_flights',
-          departure_id: departure_id,
-          arrival_id: arrival_id,
-          outbound_date: date,
-          type: 1, // 1 = one-way, 2 = round-trip
-          currency: 'USD',
-          hl: 'en',
-          api_key: apiKey,
-        },
-      });
+      const isRoundTrip = !!return_date;
+      const params = {
+        engine: 'google_flights',
+        departure_id: departure_id,
+        arrival_id: arrival_id,
+        outbound_date: date,
+        type: isRoundTrip ? 1 : 2, // 1 = round-trip, 2 = one-way
+        travel_class: travelClass,
+        currency: 'USD',
+        hl: 'en',
+        api_key: apiKey,
+      };
+
+      if (isRoundTrip) {
+        params.return_date = return_date;
+      }
+
+      const response = await axios.get('https://serpapi.com/search.json', { params });
 
       const data = response.data;
 

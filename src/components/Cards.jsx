@@ -12,7 +12,7 @@ const Cards = ({ deal, handleDealClick }) => {
           alt={deal.destination || deal.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
-        <div className={`absolute top-3 right-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold`}>
+        <div className={`absolute top-3 right-3 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold`}>
           {deal.badge}
         </div>
       </div>

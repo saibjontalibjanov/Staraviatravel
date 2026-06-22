@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Cards from './Cards'
 
 const STRAPI_URL = 'http://localhost:1337';
@@ -17,6 +18,7 @@ const STRAPI_URL = 'http://localhost:1337';
 // }
 
 const HotDeals = () => {
+  const navigate = useNavigate()
   const carouselRef = useRef(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -90,16 +92,7 @@ const HotDeals = () => {
   }
 
   const handleDealClick = (deal) => {
-    if (deal.link) {
-      // Navigate to the external or internal link provided by the API
-      window.location.href = deal.link;
-    } else {
-      // Fallback: Scroll to the search section if no link is provided
-      const flightSection = document.getElementById('parvozlar');
-      if (flightSection) {
-        flightSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
+    navigate(`/business-class?dealId=${deal.id}`)
   }
 
   return (

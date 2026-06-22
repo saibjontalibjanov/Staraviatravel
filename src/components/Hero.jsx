@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import SearchForm from './SearchForm'
 
 const Hero = () => {
@@ -29,7 +30,7 @@ const Hero = () => {
         <header className="relative z-50 flex items-center justify-between gap-4 px-6 py-6 md:px-12 lg:px-8">
           <nav className="hidden md:flex items-center gap-10 text-[15px] font-medium text-white/90">
             <a href="#parvozlar" onClick={(e) => { e.preventDefault(); scrollToSection('parvozlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">HOME</a>
-            <a href="#chegirmalar" onClick={(e) => { e.preventDefault(); scrollToSection('chegirmalar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">BUSINESS CLASS</a>
+            <Link to="/business-class" className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">BUSINESS CLASS</Link>
             <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">HOW TO BOOK</a>
             <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">TESTIMONIALS</a>
             <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">ABOUT US</a>
@@ -47,9 +48,9 @@ const Hero = () => {
           
           {/* Mobile Menu */}
           <div className={`absolute z-50 top-[90px] left-4 right-4 rounded-2xl glass-dark ${mobileMenuOpen ? 'flex' : 'hidden'} flex-col gap-4 p-6 shadow-2xl md:hidden`}>
-            <a href="#parvozlar" onClick={(e) => { e.preventDefault(); scrollToSection('parvozlar') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">HOME</a>
+            <Link to="/" onClick={(e) => { e.preventDefault(); }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">HOME</Link>
             <hr className="border-white/10" />
-            <a href="#chegirmalar" onClick={(e) => { e.preventDefault(); scrollToSection('chegirmalar') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">BUSINESS CLASS</a>
+            <Link to="/business-class" className="mobile-nav-link text-white text-lg font-medium hover:text-gold">BUSINESS CLASS</Link>
             <hr className="border-white/10" />
             <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">AIRLINE OFFERS</a>
             <hr className="border-white/10" />

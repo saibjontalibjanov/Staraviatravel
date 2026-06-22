@@ -482,6 +482,9 @@ export interface ApiCardFlightsCardFlights extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    background: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     badge: Schema.Attribute.Text;
     badgeColor: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;

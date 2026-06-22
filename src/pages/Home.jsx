@@ -150,8 +150,10 @@ const Home = () => {
   const [showPhonePopup, setShowPhonePopup] = useState(false)
 
   return (
-    <div className="bg-paper text-ink font-sans antialiased selection:bg-gold selection:text-white relative overflow-x-hidden">
-      <TopBar onPhoneClick={() => setShowPhonePopup(true)} />
+    <div className="bg-paper text-ink font-sans antialiased selection:bg-gold selection:text-white relative overflow-x-clip">
+      <header className='sticky top-0 z-50 self-start w-full bg-white shadow-md'>
+        <TopBar onPhoneClick={() => setShowPhonePopup(true)}/>
+      </header>
       <main className="w-full">
         <Hero />
         <TrustBar />
@@ -322,4 +324,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;
