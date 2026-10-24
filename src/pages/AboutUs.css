@@ -1,0 +1,124 @@
+.about-page {
+  --about-cream: #faf8f3;
+  --about-gold: #bf8c39;
+  --about-line: #dfc38f;
+  background: var(--about-cream);
+  color: #29251f;
+}
+
+.about-sky {
+  height: clamp(300px, 39vw, 620px);
+  background-image: linear-gradient(to bottom, #f4b64f38, #fae2b347 45%, var(--about-cream) 100%), url('/pictures/about/clouds.jpg');
+  background-size: cover;
+  background-position: center 42%;
+}
+
+.about-introduction {
+  width: min(960px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 70px 0 84px;
+}
+
+.about-heading { text-align: center; }
+.about-page .about-eyebrow {
+  color: #a66d23;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .32em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+.about-heading h1 {
+  margin: 15px 0 20px;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(36px, 3.4vw, 50px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+.about-ornament { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--about-gold); }
+.about-ornament span { height: 1px; width: 43px; background: var(--about-line); }
+.about-ornament svg { width: 7px; height: 7px; }
+.about-subtitle {
+  margin-top: 22px;
+  color: #787166;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.about-story { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; margin-top: 78px; }
+.about-photos { position: relative; padding: 0 34px 62px 0; }
+.about-main-photo { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 5px; }
+.about-inset-photo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 54%;
+  aspect-ratio: 1.27;
+  object-fit: cover;
+  border: 6px solid var(--about-cream);
+  border-radius: 3px;
+  box-shadow: 0 12px 24px #46351c10;
+}
+.about-gold-rule { display: block; width: 50px; height: 2px; background: var(--about-gold); margin-bottom: 23px; }
+.about-story-copy h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(25px, 2.2vw, 32px);
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 23px;
+}
+.about-story-copy p { color: #756e62; font-size: 13px; line-height: 2.1; }
+.about-story-copy p + p { margin-top: 20px; }
+.about-benefits { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--about-line); margin-top: 88px; }
+.about-benefit { padding: 42px 30px 38px; text-align: center; }
+.about-benefit + .about-benefit { border-left: 1px solid var(--about-line); }
+.about-benefit > svg { color: var(--about-gold); font-size: 20px; margin-bottom: 16px; }
+.about-benefit h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 19px; font-weight: 400; margin-bottom: 12px; }
+.about-benefit p { color: #787166; font-size: 12px; line-height: 1.9; }
+
+.about-mission { background: #fff; padding: 98px 32px 106px; text-align: center; }
+.about-mission-inner { max-width: 710px; margin: 0 auto; }
+.about-mission blockquote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(25px, 2.5vw, 35px);
+  line-height: 1.65;
+  font-weight: 400;
+  margin: 28px 0 26px;
+}
+.about-mission-inner > p { color: #787166; font-size: 13px; line-height: 2.1; max-width: 580px; margin: 0 auto; }
+.about-contact {
+  position: relative;
+  color: white;
+  background: linear-gradient(90deg, #4e2905c9, #32250fa6), url('/pictures/about/flight-sunset.jpg') center 45% / cover;
+  padding: 80px 32px;
+}
+.about-contact-inner { max-width: 960px; margin: 0 auto; display: flex; gap: 40px; justify-content: space-between; align-items: center; }
+.about-contact h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(24px, 2.3vw, 32px); line-height: 1.5; font-weight: 400; }
+.about-contact p { color: #f3e6d0; font-size: 13px; line-height: 1.9; margin-top: 8px; }
+.about-contact-button { display: inline-flex; gap: 24px; align-items: center; justify-content: center; flex-shrink: 0; background: #dbad57; color: #30220e; border-radius: 5px; font-size: 13px; font-weight: 500; padding: 16px 28px; transition: background-color .2s; }
+.about-contact-button:hover { background: #edc879; }
+.about-contact-button:focus-visible { outline: 3px solid white; outline-offset: 5px; }
+
+@media (max-width: 767px) {
+  .about-sky { height: 280px; }
+  .about-introduction { width: min(520px, calc(100% - 40px)); padding: 40px 0 56px; }
+  .about-story { grid-template-columns: 1fr; gap: 42px; margin-top: 48px; }
+  .about-photos { max-width: 400px; width: 100%; margin: 0 auto; }
+  .about-story-copy { padding: 0 4px; }
+  .about-story-copy h2 { font-size: 28px; }
+  .about-story-copy p { font-size: 14px; }
+  .about-benefits { grid-template-columns: 1fr; margin-top: 48px; }
+  .about-benefit { padding: 30px 26px; }
+  .about-benefit + .about-benefit { border-left: 0; border-top: 1px solid var(--about-line); }
+  .about-benefit p { font-size: 13px; max-width: 300px; margin: 0 auto; }
+  .about-mission { padding: 64px 24px; }
+  .about-contact { padding: 52px 24px; }
+  .about-contact-inner { flex-direction: column; align-items: flex-start; gap: 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-contact-button { transition: none; }
+}

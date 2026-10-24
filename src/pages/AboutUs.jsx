@@ -1,163 +1,82 @@
+import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowRight, faCoins, faGlobe, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
 import { useLanguage } from '../i18n/LanguageContext'
-import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faPlane,
-  faCheckCircle,
-  faGlobe,
-  faThumbsUp,
-  faStar,
-  faPaperPlane,
-} from "@fortawesome/free-solid-svg-icons";
-import BgImage from "../../addes/picture/bg-img.jpg";
-import TopBar from "../components/TopBar";
-import Staravia from "../../pictures/icons/staravia-logo-2.png"
-import Business from "../../pictures/seats/business-seat.jpg"
-import Premium from "../../pictures/seats/premiumeco-seat.jpg"
-import Economy from "../../pictures/seats/economy-seat.jpg"
-import First from "../../pictures/seats/firstclass-seat.jpg"
+import TopBar from '../components/TopBar'
+import PhonePopup from '../components/PhonePopup'
+import BusinessSeat from '../../pictures/seats/business-seat.jpg'
+import FirstClass from '../../pictures/seats/firstclass-seat.jpg'
+import './AboutUs.css'
+
+const benefits = [
+  { icon: faCoins, title: 'Transparent fares', description: 'Every fare and service is explained clearly, so you know exactly what to expect.' },
+  { icon: faGlobe, title: 'International destinations', description: 'We find the right option for you across airlines and destinations worldwide.' },
+  { icon: faHeart, title: 'A personal approach', description: 'Every question matters. Every journey begins with listening to you.' },
+]
 
 export default function AboutUs() {
   const { t } = useLanguage()
+  const [showPhonePopup, setShowPhonePopup] = useState(false)
 
   return (
-    <>
-        <TopBar />
-        <section className="relative overflow-hidden py-24">
-        {/* Background */}
-        <div className="absolute inset-0">
-            <img
-            src={BgImage}
-            alt=""
-            className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]"></div>
-        </div>
+    <div className="about-page">
+      <TopBar onPhoneClick={() => setShowPhonePopup(true)} />
+      <main id="about">
+        <div className="about-sky" aria-hidden="true" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
-            {/* Top Label */}
-            <div className="flex items-center justify-center gap-6 mb-8">
-            <div className="w-20 h-px bg-[#C8A45D]"></div>
+        <section className="about-introduction" aria-labelledby="about-title">
+          <header className="about-heading">
+            <p className="about-eyebrow">STARAVIA</p>
+            <h1 id="about-title">{t('About Us')}</h1>
+            <div className="about-ornament" aria-hidden="true"><span /><FontAwesomeIcon icon={faStar} /><span /></div>
+            <p className="about-subtitle">{t('We turn every flight into a reliable, thoughtful journey.')}</p>
+          </header>
 
-            <div className="flex flex-col items-center">
-                <img src={Staravia} className="w-24 mb-3" alt="" />
-
-                <span className="tracking-[6px] text-[#C8A45D] text-sm uppercase"> {t("Staravia Travel")} </span>
+          <div className="about-story">
+            <div className="about-photos">
+              <img className="about-main-photo" src={BusinessSeat} alt={t('A comfortable premium cabin seat beside an aircraft window')} width="512" height="640" />
+              <img className="about-inset-photo" src={FirstClass} alt={t('An inviting first-class cabin with warm interiors')} width="736" height="736" loading="lazy" />
             </div>
-
-            <div className="w-20 h-px bg-[#C8A45D]"></div>
+            <div className="about-story-copy">
+              <span className="about-gold-rule" aria-hidden="true" />
+              <h2>{t('Comfortable flights, trusted tickets, and heartfelt service')}</h2>
+              <p>{t('STARAVIA is a brand specializing in international airline tickets and VIP travel services. We bring comfortable flights, reliable ticketing, and a genuinely warm welcome together in one place.')}</p>
+              <p>{t('A business trip, a family holiday, or a well-earned break — we carefully plan every itinerary around your time, budget, and wishes.')}</p>
             </div>
+          </div>
 
-            {/* Main Grid */}
-            <div className="grid lg:grid-cols-[320px_1fr_320px] gap-10 items-center">
-            {/* LEFT */}
-            <div className="relative hidden lg:block h-[650px]">
-                <div className="absolute top-0 left-0">
-                <img
-                    src={Business}
-                    className="w-[300px] h-[460px] object-cover border border-[#D4AF37]"
-                    alt="Team member"
-                />
-                </div>
-
-                <div className="absolute bottom-0 left-10">
-                <img
-                    src={Economy}
-                    className="w-[220px] h-[220px] object-cover border border-[#D4AF37]"
-                    alt="Team member"
-                />
-                </div>
-            </div>
-
-            {/* CENTER */}
-            <div className="text-center">
-                <h2 className="font-serif text-6xl md:text-7xl mb-8 leading-tight">
-                <span className="text-[#C8A45D]">{t("StarAvia")} </span>
-                <br />
-                <span className="text-[#0D2240]">{t("Travel")}</span>
-                </h2>
-
-                <div className="flex items-center justify-center gap-4 mb-10">
-                <div className="w-20 h-px bg-[#C8A45D]"></div>
-                <FontAwesomeIcon icon={faStar} className="text-[#C8A45D] text-xl" />
-                <div className="w-20 h-px bg-[#C8A45D]"></div>
-                </div>
-
-                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10"> {t("StarAviaTravel is an official airline retailer since 2014, offering personalized one-on-one service and exclusive deals on business and first-class flights. With privately negotiated rates from over 70 major carriers, our dedicated Personal Travel Agents ensure tailored itineraries to meet individual preferences.")} </p>
-
-                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10 mt-6"> {t("Unlike online platforms, we prioritize direct interaction with live experts, boasting years of industry experience. Benefit from our access to privately negotiated fares, major airline relationships, and consistent client praise for our personalized service.")} </p>
-            </div>
-
-            {/* RIGHT */}
-            <div className="relative hidden lg:block h-[650px]">
-                <div className="absolute top-10 right-0">
-                <img
-                    src={First}
-                    className="w-[300px] h-[360px] object-cover border border-[#D4AF37]"
-                    alt="Team member"
-                />
-                </div>
-
-                <div className="absolute bottom-0 right-10">
-                <img
-                    src={Premium}
-                    className="w-[220px] h-[220px] object-cover border border-[#D4AF37]"
-                    alt="Team member"
-                />
-                </div>
-            </div>
-            </div>
-
-            {/* Airplane */}
-            <div className="absolute top-20 right-32 hidden xl:block">
-              
-            </div>
-
-            {/* Benefits */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mt-24">
-            <div className="text-center">
-                <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
-                  <FontAwesomeIcon icon={faUser} className="text-2xl text-[#C8A45D]" />
-                </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Personalized Service")} </h3>
-                <p className="text-gray-700 leading-8"> {t("One-on-one support from dedicated travel experts.")} </p>
-            </div>
-
-            <div className="text-center">
-                <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
-                  <FontAwesomeIcon icon={faPlane} className="text-2xl text-[#C8A45D]" />
-                </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Exclusive Deals")} </h3>
-                <p className="text-gray-700 leading-8"> {t("Privately negotiated business and first-class fares.")} </p>
-            </div>
-
-            <div className="text-center">
-                <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
-                  <FontAwesomeIcon icon={faCheckCircle} className="text-2xl text-[#C8A45D]" />
-                </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Trusted Experience")} </h3>
-                <p className="text-gray-700 leading-8"> {t("Proven expertise and customer satisfaction.")} </p>
-            </div>
-
-            <div className="text-center">
-                <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
-                  <FontAwesomeIcon icon={faGlobe} className="text-2xl text-[#C8A45D]" />
-                </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Global Connections")} </h3>
-                <p className="text-gray-700 leading-8"> {t("Strong airline partnerships worldwide.")} </p>
-            </div>
-
-            <div className="text-center">
-                <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
-                  <FontAwesomeIcon icon={faThumbsUp} className="text-2xl text-[#C8A45D]" />
-                </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Client Praise")} </h3>
-                <p className="text-gray-700 leading-8"> {t("Consistently rated highly by travelers.")} </p>
-            </div>
-            </div>
-        </div>
+          <div className="about-benefits">
+            {benefits.map(({ icon, title, description }) => (
+              <article className="about-benefit" key={title}>
+                <FontAwesomeIcon icon={icon} aria-hidden="true" />
+                <h3>{t(title)}</h3>
+                <p>{t(description)}</p>
+              </article>
+            ))}
+          </div>
         </section>
-    </>
-  );
+
+        <section className="about-mission" aria-labelledby="about-mission-title">
+          <div className="about-mission-inner">
+            <h2 className="about-eyebrow" id="about-mission-title">{t('Our mission')}</h2>
+            <blockquote>{t('“To make international travel easy, reliable, and a personal experience for every passenger.”')}</blockquote>
+            <p>{t('For us, every client is a valued guest. From choosing your flight to reaching your destination, our team stays by your side with care, attention, and a sense of responsibility.')}</p>
+          </div>
+        </section>
+
+        <section className="about-contact" aria-labelledby="about-contact-title">
+          <div className="about-contact-inner">
+            <div>
+              <h2 id="about-contact-title">{t('Let’s plan your next journey together')}</h2>
+              <p>{t('Tell us your destination — we’ll take care of the rest.')}</p>
+            </div>
+            <button type="button" className="about-contact-button" onClick={() => setShowPhonePopup(true)}>
+              {t('Get in touch')}<FontAwesomeIcon icon={faArrowRight} aria-hidden="true" />
+            </button>
+          </div>
+        </section>
+      </main>
+      <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
+    </div>
+  )
 }
