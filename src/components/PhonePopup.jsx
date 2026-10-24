@@ -1,3 +1,6 @@
+import useLeadSubmission from '../hooks/useLeadSubmission'
+import LeadFeedback from './LeadFeedback'
+import { callbackPhone } from '../lib/leads'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
@@ -5,16 +8,11 @@ const PhonePopup = ({ isOpen, onClose }) => {
   const { t } = useLanguage()
 
   const [phoneNumber, setPhoneNumber] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const { submit, pending, result, error, reset } = useLeadSubmission()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    setPhoneNumber('')
-    setTimeout(() => {
-      setSubmitted(false)
-      onClose()
-    }, 2000)
+    await submit({ source: 'callback', phone: callbackPhone(phoneNumber) })
   }
 
   if (!isOpen) return null
@@ -24,7 +22,8 @@ const PhonePopup = ({ isOpen, onClose }) => {
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-auto overflow-hidden max-h-[90vh] flex flex-col">
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={() => { if (!pending) { reset(); onClose() } }}
+          disabled={pending}
           className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-colors group z-20 shadow-lg"
         >
           <svg
@@ -52,7 +51,7 @@ const PhonePopup = ({ isOpen, onClose }) => {
 
           {/* Right Side - Content Area */}
           <div className="flex-1 p-5 md:p-7 flex flex-col justify-center overflow-y-auto">
-            {submitted ? (
+            {result ? (
               <div className="text-center py-8">
                 <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
                   <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,6 +60,7 @@ const PhonePopup = ({ isOpen, onClose }) => {
                 </div>
                 <h3 className="text-xl font-bold text-ink mb-2">{t("Request Received!")}</h3>
                 <p className="text-gray-600 text-sm">{t("We'll call you back within a few minutes.")}</p>
+                <LeadFeedback result={result} />
               </div>
             ) : (
               <>
@@ -127,6 +127,8 @@ const PhonePopup = ({ isOpen, onClose }) => {
                     />
                     <button
                       type="submit"
+                      disabled={pending}
+                      aria-label={t(pending ? 'Sending…' : 'Submit Request')}
                       className="bg-[#059669] hover:bg-[#047857] text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center flex-shrink-0"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,6 +141,7 @@ const PhonePopup = ({ isOpen, onClose }) => {
                       </svg>
                     </button>
                   </div>
+                  <LeadFeedback error={error} />
                 </form>
 
                 {/* Disclaimer Text */}

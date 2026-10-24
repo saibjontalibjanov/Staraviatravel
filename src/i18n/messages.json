@@ -1318,5 +1318,25 @@
     "en": "An inviting first-class cabin with warm interiors",
     "uz": "Iliq ranglarda bezatilgan shinam birinchi toifa saloni",
     "ru": "Уютный салон первого класса в тёплых тонах"
+  },
+  "Client ID": {
+    "en": "Client ID",
+    "uz": "Mijoz ID raqami",
+    "ru": "ID клиента"
+  },
+  "Sending…": {
+    "en": "Sending…",
+    "uz": "Yuborilmoqda…",
+    "ru": "Отправка…"
+  },
+  "Too many requests. Please try again later.": {
+    "en": "Too many requests. Please try again later.",
+    "uz": "So‘rovlar juda ko‘p. Keyinroq qayta urinib ko‘ring.",
+    "ru": "Слишком много заявок. Попробуйте позже."
+  },
+  "Could not send your application. Please check your details and try again.": {
+    "en": "Could not send your application. Please check your details and try again.",
+    "uz": "So‘rovingizni yuborib bo‘lmadi. Ma’lumotlarni tekshiring va qayta urinib ko‘ring.",
+    "ru": "Не удалось отправить заявку. Проверьте данные и попробуйте ещё раз."
   }
 }

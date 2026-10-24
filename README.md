@@ -90,3 +90,29 @@ Run the language checks with Node.js 24:
 node --test tests/language.test.js
 npm run build
 ```
+
+## Client applications and Leads
+
+The callback popup, Business Class quote form, and flight booking popup send applications to `POST /api/leads`. Strapi saves a Lead and returns a unique, randomly generated six-digit `clientId`. The website displays that reference only after a successful save. Failed submissions preserve the form for retry; submit controls are disabled while a request is pending.
+
+Run Strapi on port 1337 (`cd strapi-backend && npm run develop`) and Vite on port 3000 (`npm run dev` from the repository root). Vite forwards `/api/leads` to Strapi. For a separately deployed website, set the frontend's build-time `VITE_API_URL` to the Strapi origin and set Strapi's `CLIENT_ORIGINS` to the website origin(s). Alternatively, forward `/api/leads` through the same-origin web server. Rebuild the frontend after changing `VITE_API_URL`.
+
+After rebuilding/restarting Strapi, sign in to the admin panel:
+
+- **Leads** appears in the sidebar and as a homepage widget showing the latest applications. If an administrator has a saved dashboard layout, use **Add Widget → Leads** to add it to that layout.
+- Client links use `/admin/client=123456`. They require an admin session and Content Manager read permission for Leads. The six-digit number is a reference, not an authentication credential.
+- The Leads page supports search, status filtering, pagination, and automatic refresh every 15 seconds. Details include contact information, source, language, submission date, and any flight details/payment preference supplied.
+- Use **Edit status and notes in Content Manager** to update an application. Statuses are `new`, `contacted`, `qualified`, and `closed`; the client ID remains unchanged.
+- Give staff roles read permission for **Leads**, and update permission if they need to manage statuses/notes, under Strapi **Settings → Administration panel → Roles**. Super Admin already has access.
+
+The public endpoint accepts `{ "data": { "source": "callback", "phone": "+998901234567", "language": "uz" } }`. Sources are `callback`, `quote`, and `booking`. Quotes/bookings also require `firstName`, `lastName`, and `email`; bookings require `paymentMethod` and `termsAccepted: true`. Flight prices are client-supplied quotes, not payment records. Internal status, notes, and IDs cannot be supplied by the public caller. There is no public endpoint to list or read client contact details.
+
+Basic intake throttling allows 20 attempts per IP per 10 minutes in each Strapi process. Configure deployment ingress rate limits for multi-instance hosting and ensure the proxy passes client addresses correctly.
+
+Validation:
+
+```bash
+node --test tests/language.test.js strapi-backend/tests/leads.test.js
+npm run build
+cd strapi-backend && npm run build
+```

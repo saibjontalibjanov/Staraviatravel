@@ -1,3 +1,6 @@
+import useLeadSubmission from '../hooks/useLeadSubmission'
+import LeadFeedback from '../components/LeadFeedback'
+import { callbackPhone } from '../lib/leads'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -8,6 +11,12 @@ const STRAPI_URL = 'http://localhost:1337';
 const BusinessClass = () => {
   const { t } = useLanguage()
 
+  const { submit, pending, result, error } = useLeadSubmission()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    const values = Object.fromEntries(new FormData(event.currentTarget))
+    await submit({ ...values, source: 'quote', phone: callbackPhone(values.phone) })
+  }
   const [searchParams] = useSearchParams();
   const [deals, setDeals] = useState([]);
   const [selectedDeal, setSelectedDeal] = useState(null);
@@ -148,28 +157,36 @@ const BusinessClass = () => {
                 <p className="text-sm text-gray-500 mt-1">{t("or request an offer")}</p>
               </div>
 
-              <form className="space-y-4">
+              {result ? (
+                <div className="py-8 text-center">
+                  <h3 className="text-xl font-bold">{t('Request Received!')}</h3>
+                  <p className="mt-2 text-sm">{t('Our agent will contact you shortly.')}</p>
+                  <LeadFeedback result={result} />
+                </div>
+              ) : <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div className="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder={t("First Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
-                  <input type="text" placeholder={t("Last Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                  <input type="text" name="firstName" placeholder={t("First Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                  <input type="text" name="lastName" placeholder={t("Last Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
                 </div>
 
                 {/* Email */}
-                <input type="email" placeholder={t("Enter e-mail*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                <input type="email" name="email" placeholder={t("Enter e-mail*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
                 
                 {/* Phone */}
                 <div className="flex border border-gray-300 rounded focus-within:border-[#d4a445] overflow-hidden transition-colors">
                   <span className="bg-gray-100 p-3 text-sm border-r border-gray-300 flex items-center">🇺🇿 +998</span>
-                  <input type="tel" placeholder={t("Phone Number*")} className="w-full p-3 text-sm focus:outline-none" required />
+                  <input type="tel" name="phone" placeholder={t("Phone Number*")} className="w-full p-3 text-sm focus:outline-none" required />
                 </div>
 
                 {/* Submit Button */}
                 <button 
-                  type="submit" 
+                  type="submit"
+                  disabled={pending}
                   className="w-full bg-[#d4a445] hover:bg-[#b88c35] text-white font-bold text-lg py-4 rounded transition-all duration-300 mt-4 shadow-lg"
-                > {t("GET FREE QUOTES")} </button>
-              </form>
+                > {t(pending ? 'Sending…' : 'GET FREE QUOTES')} </button>
+                <LeadFeedback error={error} />
+              </form>}
 
               <p className="text-[10px] text-gray-400 mt-4 leading-tight"> {t("*No Spam - only phone-exclusive deals. No purchase necessary. By providing your contact details you agree to be contacted for travel information.")} </p>
 

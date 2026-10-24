@@ -1,3 +1,5 @@
+import useLeadSubmission from '../hooks/useLeadSubmission'
+import LeadFeedback from '../components/LeadFeedback'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
@@ -25,7 +27,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
     paymentMethod: '',
     termsAccepted: false
   })
-  const [submitted, setSubmitted] = useState(false)
+  const { submit, pending, result, error, reset } = useLeadSubmission()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -35,21 +37,15 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    setTimeout(() => {
-      setSubmitted(false)
-      onClose()
-      setFormData({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-        paymentMethod: '',
-        termsAccepted: false
-      })
-    }, 3000)
+    await submit({
+      ...formData,
+      source: 'booking',
+      flightRoute: flightInfo?.route,
+      airline: flightInfo?.airline,
+      quotedPrice: flightInfo?.price,
+    })
   }
 
   if (!isOpen) return null
@@ -59,7 +55,8 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
-          onClick={onClose}
+          onClick={() => { if (!pending) { reset(); onClose() } }}
+          disabled={pending}
           className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
         >
           <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,7 +66,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
 
         {/* Content */}
         <div className="p-6 md:p-8">
-          {submitted ? (
+          {result ? (
             <div className="text-center py-10">
               <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,6 +75,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
               </div>
               <h3 className="text-2xl font-bold text-ink mb-2 font-display">{t("Request Sent!")}</h3>
               <p className="text-gray-600">{t("Our agent will contact you shortly.")}</p>
+              <LeadFeedback result={result} />
             </div>
           ) : (
             <>
@@ -180,8 +178,10 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                 {/* Submit Button */}
                 <button
                   type="submit"
+                  disabled={pending}
                   className="w-full bg-gold hover:bg-gold-dark text-white font-bold text-base py-3.5 rounded-xl transition-colors shadow-md"
-                > {t("Submit Request")} </button>
+                > {t(pending ? 'Sending…' : 'Submit Request')} </button>
+                <LeadFeedback error={error} />
               </form>
             </>
           )}
