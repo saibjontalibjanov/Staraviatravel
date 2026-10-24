@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import TestimonialsCarousel from './Home'
@@ -14,6 +15,8 @@ const STRAPI_URL = 'http://localhost:1337';
 
 // Book Flight Popup Component
 const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
+  const { t } = useLanguage()
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -73,14 +76,14 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-ink mb-2 font-display">Request Sent!</h3>
-              <p className="text-gray-600">Our agent will contact you shortly.</p>
+              <h3 className="text-2xl font-bold text-ink mb-2 font-display">{t("Request Sent!")}</h3>
+              <p className="text-gray-600">{t("Our agent will contact you shortly.")}</p>
             </div>
           ) : (
             <>
               {/* Title */}
-              <h2 className="text-2xl font-bold text-ink font-display mb-1">Book Flight</h2>
-              <p className="text-sm text-gray-500 mb-6">Enter your details and our agent will contact you.</p>
+              <h2 className="text-2xl font-bold text-ink font-display mb-1">{t("Book Flight")}</h2>
+              <p className="text-sm text-gray-500 mb-6">{t("Enter your details and our agent will contact you.")}</p>
 
               {/* Flight Info Card */}
               {flightInfo && (
@@ -101,7 +104,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                     type="text"
                     name="firstName"
                     required
-                    placeholder="First Name"
+                    placeholder={t("First Name")}
                     value={formData.firstName}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
@@ -110,7 +113,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                     type="text"
                     name="lastName"
                     required
-                    placeholder="Last Name"
+                    placeholder={t("Last Name")}
                     value={formData.lastName}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
@@ -124,7 +127,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                     type="tel"
                     name="phone"
                     required
-                    placeholder="Your phone number"
+                    placeholder={t("Your phone number")}
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
@@ -138,7 +141,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                     type="email"
                     name="email"
                     required
-                    placeholder="Your email address"
+                    placeholder={t("Your email address")}
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
@@ -154,11 +157,11 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                   className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink bg-white focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all appearance-none cursor-pointer"
                   style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
                 >
-                  <option value="" disabled>Select payment method</option>
-                  <option value="credit-card">Credit Card</option>
-                  <option value="debit-card">Debit Card</option>
-                  <option value="bank-transfer">Bank Transfer</option>
-                  <option value="cash">Cash</option>
+                  <option value="" disabled>{t("Select payment method")}</option>
+                  <option value="credit-card">{t("Credit Card")}</option>
+                  <option value="debit-card">{t("Debit Card")}</option>
+                  <option value="bank-transfer">{t("Bank Transfer")}</option>
+                  <option value="cash">{t("Cash")}</option>
                 </select>
 
                 {/* Terms Checkbox */}
@@ -171,16 +174,14 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
                     onChange={handleChange}
                     className="w-4 h-4 mt-0.5 rounded border-gray-300 accent-gold cursor-pointer"
                   />
-                  <span className="text-xs text-gray-500">I accept the Terms of Use and Privacy Policy</span>
+                  <span className="text-xs text-gray-500">{t("I accept the Terms of Use and Privacy Policy")}</span>
                 </label>
 
                 {/* Submit Button */}
                 <button
                   type="submit"
                   className="w-full bg-gold hover:bg-gold-dark text-white font-bold text-base py-3.5 rounded-xl transition-colors shadow-md"
-                >
-                  Submit Request
-                </button>
+                > {t("Submit Request")} </button>
               </form>
             </>
           )}
@@ -191,6 +192,8 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
 }
 
 const SearchResults = () => {
+  const { t } = useLanguage()
+
   const [searchParams] = useSearchParams()
   const [showBookPopup, setShowBookPopup] = useState(false)
   const [selectedFlight, setSelectedFlight] = useState(null)
@@ -292,7 +295,7 @@ const SearchResults = () => {
           airline: flight.airline || 'Unknown Airline',
           logo: flight.airlineLogo || null,
           logoText: flight.airline || 'Flight',
-          cabin: cabin + ' class',
+          cabin: cabin,
           tripType: tripType,
           price: flight.price || 0,
           oldPrice: flight.price ? Math.round(flight.price * 1.15) : 0,
@@ -323,10 +326,10 @@ const SearchResults = () => {
   const airlineOffers = offers.length > 1 ? offers.slice(1) : [];
 
   const stats = [
-    { value: '1+', label: 'YEARS IN BUSINESS' },
-    { value: '97%', label: 'SATISFACTION RATE' },
-    { value: '1k+', label: 'CLIENTS SERVED' },
-    { value: '50+', label: 'LIVE AGENTS' }
+    { value: '1+', label: t("YEARS IN BUSINESS") },
+    { value: '97%', label: t("SATISFACTION RATE") },
+    { value: '1k+', label: t("CLIENTS SERVED") },
+    { value: '50+', label: t("LIVE AGENTS") }
   ]
 
   const handleFeaturedClick = () => {
@@ -363,13 +366,13 @@ const SearchResults = () => {
           </>
         ) : error ? (
           <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100">
-            <p className="text-red-600 font-bold mb-2">Xatolik</p>
-            <p className="text-red-500 text-sm">{error}</p>
+            <p className="text-red-600 font-bold mb-2">{t("Xatolik")}</p>
+            <p className="text-red-500 text-sm">{t('Unable to load flights. Please try again later.')}</p>
           </div>
         ) : offers.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg">Ushbu yo'nalish bo'yicha chiptalar topilmadi.</p>
-            <Link to="/" className="text-gold hover:underline mt-4 inline-block">Yangi qidiruv</Link>
+            <p className="text-gray-500 text-lg">{t("Ushbu yo'nalish bo'yicha chiptalar topilmadi.")}</p>
+            <Link to="/" className="text-gold hover:underline mt-4 inline-block">{t("Yangi qidiruv")}</Link>
           </div>
         ) : (
           <>
@@ -391,7 +394,7 @@ const SearchResults = () => {
                       <span className="bg-gray-100 border border-gray-300 text-xs font-bold text-ink px-2 py-0.5 rounded">{toCode}</span>
                     </div>
                     <p className="text-sm text-gray-500">
-                      {cabin} | {tripType} | {passengers} Passenger{passengers > 1 ? 's' : ''}
+                      {t(cabin === 'First' ? 'First class' : cabin)} | {t(tripType === 'round-trip' ? 'Round-Trip' : 'One-Way')} | {t('Passengers: {count}').replace('{count}', passengers)}
                     </p>
                   </div>
 
@@ -400,12 +403,10 @@ const SearchResults = () => {
                     <div>
                       {/* Urgency Badge */}
                       <div className="inline-flex items-center gap-1.5 bg-gold/10 border border-gold/30 text-gold-dark px-3 py-1 rounded-full text-xs font-bold mb-2">
-                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg>
-                        Hurry! Limited Seats!
-                      </div>
+                        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg> {t("Hurry! Limited Seats!")} </div>
                       <div className="flex items-baseline gap-3">
                         <div>
-                          <p className="text-xs text-gray-400">Old Price:</p>
+                          <p className="text-xs text-gray-400">{t("Old Price:")}</p>
                           <p className="text-sm text-gray-400 line-through">${featuredDeal?.oldPrice?.toLocaleString()}</p>
                         </div>
                         <div>
@@ -413,8 +414,8 @@ const SearchResults = () => {
                           <span className="text-xs text-gray-500 align-top">*</span>
                         </div>
                         <div className="text-xs text-gray-500">
-                          <p>per</p>
-                          <p>person</p>
+                          <p>{t("per")}</p>
+                          <p>{t("person")}</p>
                         </div>
                       </div>
                     </div>
@@ -423,9 +424,9 @@ const SearchResults = () => {
                     <div className="hidden sm:flex items-center gap-4 pl-6 border-l border-gray-200">
                       <div className="text-center">
                         <div className="border-2 border-ink px-2 py-1 mb-1">
-                          <p className="text-[8px] font-bold text-ink leading-tight">OFFICIAL</p>
-                          <p className="text-[8px] font-bold text-ink leading-tight">AIRLINES</p>
-                          <p className="text-[8px] font-bold text-ink leading-tight">RETAILER</p>
+                          <p className="text-[8px] font-bold text-ink leading-tight">{t("OFFICIAL")}</p>
+                          <p className="text-[8px] font-bold text-ink leading-tight">{t("AIRLINES")}</p>
+                          <p className="text-[8px] font-bold text-ink leading-tight">{t("RETAILER")}</p>
                         </div>
                       </div>
                       <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
@@ -437,7 +438,7 @@ const SearchResults = () => {
 
             {/* Lost Baggage Protection Banner */}
             <div className="bg-gray-100 border border-gray-200 rounded-lg py-3 px-6 mb-8 text-center">
-              <p className="text-sm font-bold text-ink">Lost Baggage Protection</p>
+              <p className="text-sm font-bold text-ink">{t("Lost Baggage Protection")}</p>
             </div>
 
             {/* Stats Bar */}
@@ -482,13 +483,13 @@ const SearchResults = () => {
                           {offer.logo ? (
                             <img src={offer.logo} alt={offer.airline} className="h-full w-auto object-contain" />
                           ) : (
-                            <span className="text-lg font-bold text-ink">{offer.logoText}</span>
+                            <span className="text-lg font-bold text-ink">{t(offer.logoText)}</span>
                           )}
                         </div>
 
                         {/* Trip Details */}
                         <p className="text-sm text-gray-500 mb-4">
-                          {offer.cabin} | {offer.tripType}
+                          {t(offer.cabin === 'First' ? 'First class' : offer.cabin)} | {t(offer.tripType === 'round-trip' ? 'Round-Trip' : 'One-Way')}
                         </p>
 
                         {/* Price + Arrow */}
@@ -517,13 +518,13 @@ const SearchResults = () => {
                       {offer.logo ? (
                         <img src={offer.logo} alt={offer.airline} className="h-full w-auto object-contain" />
                       ) : (
-                        <span className="text-lg font-bold text-ink">{offer.logoText}</span>
+                        <span className="text-lg font-bold text-ink">{t(offer.logoText)}</span>
                       )}
                     </div>
 
                     {/* Trip Details */}
                     <p className="text-sm text-gray-500 mb-4">
-                      {offer.cabin} | {offer.tripType}
+                      {t(offer.cabin === 'First' ? 'First class' : offer.cabin)} | {t(offer.tripType === 'round-trip' ? 'Round-Trip' : 'One-Way')}
                     </p>
 
                     {/* Price + Arrow */}
@@ -540,9 +541,7 @@ const SearchResults = () => {
             )}
 
             {/* Disclaimer */}
-            <p className="text-[10px] text-gray-400 mt-6 leading-relaxed">
-              *Prices are per person, subject to availability and may change without notice. Additional taxes and fees may apply. Contact our travel agents for the most up-to-date pricing.
-            </p>
+            <p className="text-[10px] text-gray-400 mt-6 leading-relaxed"> {t("*Prices are per person, subject to availability and may change without notice. Additional taxes and fees may apply. Contact our travel agents for the most up-to-date pricing.")} </p>
 
           </>
         )}
@@ -552,7 +551,7 @@ const SearchResults = () => {
       <button
         onClick={() => setShowPhonePopup(true)}
         className="phone-btn fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
-        aria-label="Call Us"
+        aria-label={t("Call Us")}
       >
         <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />

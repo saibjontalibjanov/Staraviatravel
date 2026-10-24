@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef } from 'react'
 import TopBar from '../components/TopBar'
 import Hero from '../components/Hero'
@@ -58,17 +59,19 @@ const ImageCarousel = ({ images }) => {
 
 // Testimonials Carousel Component
 const TestimonialsCarousel = () => {
+  const { t } = useLanguage()
+
   const scrollRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
 
   const testimonials = [
-    { name: 'Aziza K.', location: 'Tashkent, Uzbekistan', text: 'Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!', img: 1 },
-    { name: 'Rustam B.', location: 'Samarkand, Uzbekistan', text: 'We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent.', img: 11 },
-    { name: 'Malika O.', location: 'Bukhara, Uzbekistan', text: 'The support center works great. When my flight changed, they resolved the issue immediately.', img: 5 },
-    { name: 'Dilshod M.', location: 'Tashkent, Uzbekistan', text: 'Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional.', img: 12 },
-    { name: 'Nilufar S.', location: 'Andijan, Uzbekistan', text: 'Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route.', img: 9 },
-    { name: 'Sardor T.', location: 'Namangan, Uzbekistan', text: 'Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle.', img: 14 },
+    { name: 'Aziza K.', location: t("Tashkent, Uzbekistan"), text: t("Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!"), img: 1 },
+    { name: 'Rustam B.', location: t("Samarkand, Uzbekistan"), text: t("We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent."), img: 11 },
+    { name: 'Malika O.', location: t("Bukhara, Uzbekistan"), text: t("The support center works great. When my flight changed, they resolved the issue immediately."), img: 5 },
+    { name: 'Dilshod M.', location: t("Tashkent, Uzbekistan"), text: t("Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional."), img: 12 },
+    { name: 'Nilufar S.', location: t("Andijan, Uzbekistan"), text: t("Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route."), img: 9 },
+    { name: 'Sardor T.', location: t("Namangan, Uzbekistan"), text: t("Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle."), img: 14 },
   ]
 
   const checkScroll = () => {
@@ -93,9 +96,8 @@ const TestimonialsCarousel = () => {
       <div className="mx-auto max-w-[1500px]">
         <div className="flex items-center justify-between mb-12">
           <div className="text-center flex-1">
-            <span className="text-gold font-semibold tracking-wider uppercase text-sm">Our Clients</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2">
-              What Our Clients <span className="italic text-gold">Say</span>
+            <span className="text-gold font-semibold tracking-wider uppercase text-sm">{t("Our Clients")}</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2"> {t("What Our Clients")} <span className="italic text-gold">{t("Say")}</span>
             </h2>
           </div>
           {/* Carousel Navigation - always visible */}
@@ -147,6 +149,8 @@ const TestimonialsCarousel = () => {
 }
 
 const Home = () => {
+  const { t } = useLanguage()
+
   const [showPhonePopup, setShowPhonePopup] = useState(false)
 
   return (
@@ -174,15 +178,10 @@ const Home = () => {
                 ]}
               />
               <div>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-ink leading-tight">
-                  STARAVIA Travel is Trusted<br/>by Over <span className="text-gold">188K+ Travelers</span>
+                <h2 className="font-display text-4xl md:text-5xl font-bold text-ink leading-tight"> {t("STARAVIA Travel is Trusted")}<br/>{t("by Over")} <span className="text-gold">{t("188K+ Travelers")}</span>
                 </h2>
-                <p className="mt-6 text-ink/70 text-lg leading-relaxed">
-                  Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.
-                </p>
-                <p className="mt-4 text-ink/60 leading-relaxed">
-                  If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!
-                </p>
+                <p className="mt-6 text-ink/70 text-lg leading-relaxed"> {t("Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.")} </p>
+                <p className="mt-4 text-ink/60 leading-relaxed"> {t("If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!")} </p>
               </div>
             </div>
 
@@ -190,13 +189,9 @@ const Home = () => {
             <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
               <div className="order-2 lg:order-1">
                 <div className="border-l-4 border-gold pl-6">
-                  <h3 className="font-display text-3xl md:text-4xl font-bold text-ink mb-4">
-                    Expert First &amp; Business Class<br/>Travel Management
-                  </h3>
+                  <h3 className="font-display text-3xl md:text-4xl font-bold text-ink mb-4"> {t("Expert First & Business Class")}<br/>{t("Travel Management")} </h3>
                 </div>
-                <p className="mt-6 text-ink/70 leading-relaxed">
-                  At Staravia Travel, you get your Personal Travel Manager - your own flight personal shopper, providing a bespoke plus travel search. Save your valuable time and avoid stress into your dedicated travel expert to take care of all your arrangements. Our team will work with you to offer you more with your preferences and priorities top of mind.
-                </p>
+                <p className="mt-6 text-ink/70 leading-relaxed"> {t("At Staravia Travel, you get your Personal Travel Manager - your own flight personal shopper, providing a bespoke plus travel search. Save your valuable time and avoid stress into your dedicated travel expert to take care of all your arrangements. Our team will work with you to offer you more with your preferences and priorities top of mind.")} </p>
               </div>
               <div className="relative group order-1 lg:order-2">
                 <ImageCarousel 
@@ -213,21 +208,13 @@ const Home = () => {
             <div className="grid lg:grid-cols-2 gap-12">
               <div className="bg-[#f0ebe1] rounded-3xl p-8">
                 <div className="w-16 h-1 bg-gold mb-6"></div>
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-ink mb-4">
-                  Real People Instead of Online Engines
-                </h3>
-                <p className="text-ink/70 leading-relaxed">
-                  There are no website booking engines here. With Staravia Travel, you deal with a real person who understands your needs. We make each quote different from the others to provide attractive ticket prices.
-                </p>
+                <h3 className="font-display text-2xl md:text-3xl font-bold text-ink mb-4"> {t("Real People Instead of Online Engines")} </h3>
+                <p className="text-ink/70 leading-relaxed"> {t("There are no website booking engines here. With Staravia Travel, you deal with a real person who understands your needs. We make each quote different from the others to provide attractive ticket prices.")} </p>
               </div>
               <div className="bg-[#f0ebe1] rounded-3xl p-8">
                 <div className="w-16 h-1 bg-gold mb-6"></div>
-                <h3 className="font-display text-2xl md:text-3xl font-bold text-ink mb-4">
-                  After-Hours Support Until You Return
-                </h3>
-                <p className="text-ink/70 leading-relaxed">
-                  Every customer receives more than expert travel advice and unbeatable prices. Our free after-hours assistance means unexpected changes can always be handled with schedule and immediate offers.
-                </p>
+                <h3 className="font-display text-2xl md:text-3xl font-bold text-ink mb-4"> {t("After-Hours Support Until You Return")} </h3>
+                <p className="text-ink/70 leading-relaxed"> {t("Every customer receives more than expert travel advice and unbeatable prices. Our free after-hours assistance means unexpected changes can always be handled with schedule and immediate offers.")} </p>
               </div>
             </div>
           </div>
@@ -269,23 +256,18 @@ const Home = () => {
               
               <div className="text-center lg:text-left">
                 <div className="inline-flex items-center justify-center mb-8">
-                  <span className="bg-gradient-to-r from-gold to-gold-dark text-white px-8 py-3 rounded-full text-sm font-bold tracking-widest shadow-glow border border-gold-dark/20">
-                    SAVE UP TO 50%
-                  </span>
+                  <span className="bg-gradient-to-r from-gold to-gold-dark text-white px-8 py-3 rounded-full text-sm font-bold tracking-widest shadow-glow border border-gold-dark/20"> {t("SAVE UP TO 50%")} </span>
                 </div>
                 
-                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-ink leading-tight mb-6">
-                  Exclusive <span className="text-gold italic">Deals</span>
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-ink leading-tight mb-6"> {t("Exclusive")} <span className="text-gold italic">{t("Deals")}</span>
                 </h2>
                 
-                <p className="text-ink/70 text-lg leading-relaxed mb-10 max-w-md mx-auto lg:mx-0 font-light">
-                  Call now and let our professional travel concierge secure your premium ticket at the most competitive price
-                </p>
+                <p className="text-ink/70 text-lg leading-relaxed mb-10 max-w-md mx-auto lg:mx-0 font-light"> {t("Call now and let our professional travel concierge secure your premium ticket at the most competitive price")} </p>
                 
                 <div className="inline-flex flex-col sm:flex-row items-center gap-6 bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-soft border border-gold/10">
                   <div className="text-left">
-                    <p className="text-ink font-bold text-xl mb-1 font-display">Interested?</p>
-                    <p className="text-ink/60 text-sm font-light">Experience luxury travel consultation</p>
+                    <p className="text-ink font-bold text-xl mb-1 font-display">{t("Interested?")}</p>
+                    <p className="text-ink/60 text-sm font-light">{t("Experience luxury travel consultation")}</p>
                   </div>
                   <button
                     onClick={() => setShowPhonePopup(true)}

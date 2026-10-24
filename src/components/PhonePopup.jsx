@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
 const PhonePopup = ({ isOpen, onClose }) => {
+  const { t } = useLanguage()
+
   const [phoneNumber, setPhoneNumber] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
@@ -56,13 +59,13 @@ const PhonePopup = ({ isOpen, onClose }) => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-ink mb-2">Request Received!</h3>
-                <p className="text-gray-600 text-sm">We'll call you back within a few minutes.</p>
+                <h3 className="text-xl font-bold text-ink mb-2">{t("Request Received!")}</h3>
+                <p className="text-gray-600 text-sm">{t("We'll call you back within a few minutes.")}</p>
               </div>
             ) : (
               <>
                 {/* Title */}
-                <h2 className="text-xl md:text-2xl font-bold text-ink text-center mb-4">Call to speak 24/7</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-ink text-center mb-4">{t("Call to speak 24/7")}</h2>
 
                 {/* Phone Number Button */}
                 <a
@@ -91,23 +94,21 @@ const PhonePopup = ({ isOpen, onClose }) => {
                     />
                   </div>
                   <div className="text-left">
-                    <p className="text-lg font-bold text-ink leading-tight">SCAN</p>
-                    <p className="text-lg font-bold text-ink leading-tight">TO CALL</p>
+                    <p className="text-lg font-bold text-ink leading-tight">{t("SCAN")}</p>
+                    <p className="text-lg font-bold text-ink leading-tight">{t("TO CALL")}</p>
                   </div>
                 </div>
 
                 {/* Divider */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="flex-1 border-t border-gray-300"></div>
-                  <span className="text-gray-500 font-medium text-sm">OR</span>
+                  <span className="text-gray-500 font-medium text-sm">{t("OR")}</span>
                   <div className="flex-1 border-t border-gray-300"></div>
                 </div>
 
                 {/* Request Callback Section */}
-                <h3 className="text-lg font-bold text-ink text-center mb-2">Request a Free Callback</h3>
-                <p className="text-center text-gray-600 text-xs mb-3">
-                  Get a call from travel expert and free advice within minutes.
-                </p>
+                <h3 className="text-lg font-bold text-ink text-center mb-2">{t("Request a Free Callback")}</h3>
+                <p className="text-center text-gray-600 text-xs mb-3"> {t("Get a call from travel expert and free advice within minutes.")} </p>
 
                 {/* Phone Input Form */}
                 <form onSubmit={handleSubmit} className="mb-3">
@@ -121,7 +122,7 @@ const PhonePopup = ({ isOpen, onClose }) => {
                       required
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="Enter Phone"
+                      placeholder={t("Enter Phone")}
                       className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm font-medium text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all min-w-0"
                     />
                     <button
@@ -141,12 +142,9 @@ const PhonePopup = ({ isOpen, onClose }) => {
                 </form>
 
                 {/* Disclaimer Text */}
-                <p className="text-[9px] text-gray-400 leading-relaxed text-center">
-                  *One of our Travel Agents will call you back within the next{' '}
-                  <span className="font-semibold text-gray-600">few minutes</span>. By submitting your phone number you
-                  agree to be contacted for travel information via automated phone and text messages.{' '}
-                  <span className="font-semibold text-gray-600">
-                    No Spam &amp; <span className="underline">100% Data Safety</span>
+                <p className="text-[9px] text-gray-400 leading-relaxed text-center"> {t("*One of our Travel Agents will call you back within the next")}{' '}
+                  <span className="font-semibold text-gray-600">{t("few minutes")}</span>{t(". By submitting your phone number you agree to be contacted for travel information via automated phone and text messages.")}{' '}
+                  <span className="font-semibold text-gray-600"> {t("No Spam &")} <span className="underline">{t("100% Data Safety")}</span>
                   </span>
                   .
                 </p>

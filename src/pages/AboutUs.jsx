@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +19,8 @@ import Economy from "../../pictures/seats/economy-seat.jpg"
 import First from "../../pictures/seats/firstclass-seat.jpg"
 
 export default function AboutUs() {
+  const { t } = useLanguage()
+
   return (
     <>
         <TopBar />
@@ -40,9 +43,7 @@ export default function AboutUs() {
             <div className="flex flex-col items-center">
                 <img src={Staravia} className="w-24 mb-3" alt="" />
 
-                <span className="tracking-[6px] text-[#C8A45D] text-sm uppercase">
-                Staravia Travel
-                </span>
+                <span className="tracking-[6px] text-[#C8A45D] text-sm uppercase"> {t("Staravia Travel")} </span>
             </div>
 
             <div className="w-20 h-px bg-[#C8A45D]"></div>
@@ -72,9 +73,9 @@ export default function AboutUs() {
             {/* CENTER */}
             <div className="text-center">
                 <h2 className="font-serif text-6xl md:text-7xl mb-8 leading-tight">
-                <span className="text-[#C8A45D]">StarAvia </span>
+                <span className="text-[#C8A45D]">{t("StarAvia")} </span>
                 <br />
-                <span className="text-[#0D2240]">Travel</span>
+                <span className="text-[#0D2240]">{t("Travel")}</span>
                 </h2>
 
                 <div className="flex items-center justify-center gap-4 mb-10">
@@ -83,20 +84,9 @@ export default function AboutUs() {
                 <div className="w-20 h-px bg-[#C8A45D]"></div>
                 </div>
 
-                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10">
-                StarAviaTravel is an official airline retailer since 2014, offering
-                personalized one-on-one service and exclusive deals on business and
-                first-class flights. With privately negotiated rates from over 70
-                major carriers, our dedicated Personal Travel Agents ensure tailored
-                itineraries to meet individual preferences.
-                </p>
+                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10"> {t("StarAviaTravel is an official airline retailer since 2014, offering personalized one-on-one service and exclusive deals on business and first-class flights. With privately negotiated rates from over 70 major carriers, our dedicated Personal Travel Agents ensure tailored itineraries to meet individual preferences.")} </p>
 
-                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10 mt-6">
-                Unlike online platforms, we prioritize direct interaction with live
-                experts, boasting years of industry experience. Benefit from our
-                access to privately negotiated fares, major airline relationships,
-                and consistent client praise for our personalized service.
-                </p>
+                <p className="max-w-3xl mx-auto text-gray-800 text-lg leading-10 mt-6"> {t("Unlike online platforms, we prioritize direct interaction with live experts, boasting years of industry experience. Benefit from our access to privately negotiated fares, major airline relationships, and consistent client praise for our personalized service.")} </p>
             </div>
 
             {/* RIGHT */}
@@ -130,60 +120,40 @@ export default function AboutUs() {
                 <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
                   <FontAwesomeIcon icon={faUser} className="text-2xl text-[#C8A45D]" />
                 </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3">
-                Personalized Service
-                </h3>
-                <p className="text-gray-700 leading-8">
-                One-on-one support from dedicated travel experts.
-                </p>
+                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Personalized Service")} </h3>
+                <p className="text-gray-700 leading-8"> {t("One-on-one support from dedicated travel experts.")} </p>
             </div>
 
             <div className="text-center">
                 <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
                   <FontAwesomeIcon icon={faPlane} className="text-2xl text-[#C8A45D]" />
                 </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3">
-                Exclusive Deals
-                </h3>
-                <p className="text-gray-700 leading-8">
-                Privately negotiated business and first-class fares.
-                </p>
+                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Exclusive Deals")} </h3>
+                <p className="text-gray-700 leading-8"> {t("Privately negotiated business and first-class fares.")} </p>
             </div>
 
             <div className="text-center">
                 <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
                   <FontAwesomeIcon icon={faCheckCircle} className="text-2xl text-[#C8A45D]" />
                 </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3">
-                Trusted Experience
-                </h3>
-                <p className="text-gray-700 leading-8">
-                Proven expertise and customer satisfaction.
-                </p>
+                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Trusted Experience")} </h3>
+                <p className="text-gray-700 leading-8"> {t("Proven expertise and customer satisfaction.")} </p>
             </div>
 
             <div className="text-center">
                 <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
                   <FontAwesomeIcon icon={faGlobe} className="text-2xl text-[#C8A45D]" />
                 </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3">
-                Global Connections
-                </h3>
-                <p className="text-gray-700 leading-8">
-                Strong airline partnerships worldwide.
-                </p>
+                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Global Connections")} </h3>
+                <p className="text-gray-700 leading-8"> {t("Strong airline partnerships worldwide.")} </p>
             </div>
 
             <div className="text-center">
                 <div className="w-20 h-20 rounded-full border-2 border-[#C8A45D] flex items-center justify-center mx-auto mb-5">
                   <FontAwesomeIcon icon={faThumbsUp} className="text-2xl text-[#C8A45D]" />
                 </div>
-                <h3 className="font-semibold text-[#0D2240] text-xl mb-3">
-                Client Praise
-                </h3>
-                <p className="text-gray-700 leading-8">
-                Consistently rated highly by travelers.
-                </p>
+                <h3 className="font-semibold text-[#0D2240] text-xl mb-3"> {t("Client Praise")} </h3>
+                <p className="text-gray-700 leading-8"> {t("Consistently rated highly by travelers.")} </p>
             </div>
             </div>
         </div>

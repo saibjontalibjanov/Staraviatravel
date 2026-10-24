@@ -1,9 +1,12 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import SearchForm from './SearchForm'
 
 const Hero = () => {
+  const { t } = useLanguage()
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -29,16 +32,19 @@ const Hero = () => {
         {/* NAVBAR */}
         <header className="relative z-50 flex items-center justify-between gap-4 px-6 py-6 md:px-12 lg:px-8">
           <nav className="hidden md:flex items-center gap-10 text-[15px] font-medium text-white/90">
-            <a href="#parvozlar" onClick={(e) => { e.preventDefault(); scrollToSection('parvozlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">HOME</a>
-            <Link to="/business-class" className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">BUSINESS CLASS</Link>
-            <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">HOW TO BOOK</a>
-            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">TESTIMONIALS</a>
-            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full"><Link to='/about-us'>ABOUT US</Link></a>
+            <a href="#parvozlar" onClick={(e) => { e.preventDefault(); scrollToSection('parvozlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">{t("HOME")}</a>
+            <Link to="/business-class" className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">{t("BUSINESS CLASS")}</Link>
+            <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">{t("HOW TO BOOK")}</a>
+            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">{t("TESTIMONIALS")}</a>
+            <Link to="/about-us" className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">{t("ABOUT US")}</Link>
           </nav>
           
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleMobileMenu}
+              aria-label={t(mobileMenuOpen ? 'Close navigation' : 'Open navigation')}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
               className="md:hidden text-white focus:outline-none p-2 rounded-lg bg-black/20 backdrop-blur-md"
             >
               <svg className={`w-7 h-7 ${mobileMenuOpen ? 'hidden' : 'block'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
@@ -47,16 +53,16 @@ const Hero = () => {
           </div>
           
           {/* Mobile Menu */}
-          <div className={`absolute z-50 top-[90px] left-4 right-4 rounded-2xl glass-dark ${mobileMenuOpen ? 'flex' : 'hidden'} flex-col gap-4 p-6 shadow-2xl md:hidden`}>
-            <Link to="/" onClick={(e) => { e.preventDefault(); }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">HOME</Link>
+          <div id="mobile-navigation" className={`absolute z-50 top-[90px] left-4 right-4 rounded-2xl glass-dark ${mobileMenuOpen ? 'flex' : 'hidden'} flex-col gap-4 p-6 shadow-2xl md:hidden`}>
+            <Link to="/" onClick={(e) => { e.preventDefault(); }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">{t("HOME")}</Link>
             <hr className="border-white/10" />
-            <Link to="/business-class" className="mobile-nav-link text-white text-lg font-medium hover:text-gold">BUSINESS CLASS</Link>
+            <Link to="/business-class" className="mobile-nav-link text-white text-lg font-medium hover:text-gold">{t("BUSINESS CLASS")}</Link>
             <hr className="border-white/10" />
-            <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">AIRLINE OFFERS</a>
+            <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">{t("AIRLINE OFFERS")}</a>
             <hr className="border-white/10" />
-            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">TESTIMONIALS</a>
+            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">{t("TESTIMONIALS")}</a>
             <hr className="border-white/10" />
-            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">ABOUT US</a>
+            <Link to="/about-us" onClick={() => setMobileMenuOpen(false)} className="mobile-nav-link text-white text-lg font-medium hover:text-gold">{t("ABOUT US")}</Link>
             <hr className="border-white/10" />
             <a 
               href="tel:+998901234567"
@@ -71,8 +77,7 @@ const Hero = () => {
         {/* HERO CONTENT */}
         <div className="flex-1 flex flex-col items-center justify-center px-6 pb-10 pt-6 md:px-12 lg:px-8 text-center">
           {/* Title */}
-          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight max-w-3xl">
-            Business &amp; First Class <span className="text-gold">Tickets</span>
+          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight max-w-3xl"> {t("Business & First Class")} <span className="text-gold">{t("Tickets")}</span>
           </h1>
 
           {/* Alliance logos row */}
@@ -81,8 +86,8 @@ const Hero = () => {
             <div className="flex items-center gap-2.5">
               <img src="/pictures/star-alliance.png" alt="Star Alliance" className="w-8 h-8" />
               <div className="text-left">
-                <div className="text-white font-bold text-sm tracking-wide leading-none">STAR ALLIANCE</div>
-                <div className="text-white/50 text-[10px] mt-0.5">28 airlines</div>
+                <div className="text-white font-bold text-sm tracking-wide leading-none">{t("STAR ALLIANCE")}</div>
+                <div className="text-white/50 text-[10px] mt-0.5">{t("28 airlines")}</div>
               </div>
             </div>
 
@@ -92,8 +97,8 @@ const Hero = () => {
             <div className="flex items-center gap-2.5">
               <img src="/pictures/skyteam.png" alt="SkyTeam" className="w-8 h-8" />
               <div className="text-left">
-                <div className="text-white font-bold text-sm tracking-wide leading-none">SKYTEAM</div>
-                <div className="text-white/50 text-[10px] mt-0.5">19 airlines</div>
+                <div className="text-white font-bold text-sm tracking-wide leading-none">{t("SKYTEAM")}</div>
+                <div className="text-white/50 text-[10px] mt-0.5">{t("19 airlines")}</div>
               </div>
             </div>
 
@@ -103,8 +108,8 @@ const Hero = () => {
             <div className="flex items-center gap-2.5">
               <img src="/pictures/oneworld.png" alt="Oneworld" className="w-25 h-8" />
               <div className="text-left">
-                <div className="text-white font-bold text-sm tracking-wide leading-none">ONEWORLD</div>
-                <div className="text-white/50 text-[10px] mt-0.5">13 airlines</div>
+                <div className="text-white font-bold text-sm tracking-wide leading-none">{t("ONEWORLD")}</div>
+                <div className="text-white/50 text-[10px] mt-0.5">{t("13 airlines")}</div>
               </div>
             </div>
           </div>
@@ -113,25 +118,24 @@ const Hero = () => {
           <SearchForm />
 
           {/* Savings tagline */}
-          <p className="mt-6 text-gold-soft italic text-sm md:text-base font-medium">
-            "Start your journey with <span className="font-bold text-gold not-italic">Staravia</span>"
+          <p className="mt-6 text-gold-soft italic text-sm md:text-base font-medium"> {t("\"Start your journey with")} <span className="font-bold text-gold not-italic">{t("Staravia")}</span>"
           </p>
 
           {/* Trust badges */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-8 md:gap-14">
             <div className="flex flex-col items-center text-center">
-              <div className="text-white font-black text-2xl leading-none font-display">TAC</div>
-              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">Travel Assistance Company</div>
+              <div className="text-white font-black text-2xl leading-none font-display">{t("TAC")}</div>
+              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">{t("Travel Assistance Company")}</div>
             </div>
             <div className="w-px h-8 bg-white/20 hidden sm:block"></div>
             <div className="flex flex-col items-center text-center">
               <div className="text-white font-black text-2xl leading-none font-display">24·7</div>
-              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">Live Concierge</div>
+              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">{t("Live Concierge")}</div>
             </div>
             <div className="w-px h-8 bg-white/20 hidden sm:block"></div>
             <div className="flex flex-col items-center text-center">
               <div className="text-white font-black text-2xl leading-none font-display">200+</div>
-              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">Airlines</div>
+              <div className="text-white/50 text-[10px] uppercase tracking-widest mt-0.5">{t("Airlines")}</div>
             </div>
           </div>
         </div>

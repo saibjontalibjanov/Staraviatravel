@@ -1,0 +1,1232 @@
+{
+  "Cookies": {
+    "en": "Cookies",
+    "ru": "Файлы cookie",
+    "uz": "Cookie fayllari"
+  },
+  "We use cookies to improve your experience and provide personalized services.": {
+    "en": "We use cookies to improve your experience and provide personalized services.",
+    "ru": "Мы используем cookie, чтобы улучшить ваш опыт и предоставлять персональные услуги.",
+    "uz": "Tajribangizni yaxshilash va shaxsiy xizmatlar ko‘rsatish uchun cookie fayllaridan foydalanamiz."
+  },
+  "Accept All": {
+    "en": "Accept All",
+    "ru": "Принять все",
+    "uz": "Barchasini qabul qilish"
+  },
+  "Decline": {
+    "en": "Decline",
+    "ru": "Отклонить",
+    "uz": "Rad etish"
+  },
+  "Clear": {
+    "en": "Clear",
+    "ru": "Очистить",
+    "uz": "Tozalash"
+  },
+  "Today": {
+    "en": "Today",
+    "ru": "Сегодня",
+    "uz": "Bugun"
+  },
+  "How do I purchase a ticket?": {
+    "en": "How do I purchase a ticket?",
+    "ru": "Как купить билет?",
+    "uz": "Chiptani qanday sotib olaman?"
+  },
+  "Fill in the form above and click \"Search Flights\". Our agents will contact you and offer the best available options.": {
+    "en": "Fill in the form above and click \"Search Flights\". Our agents will contact you and offer the best available options.",
+    "ru": "Заполните форму выше и нажмите «Поиск». Наши агенты свяжутся с вами и предложат лучшие варианты.",
+    "uz": "Yuqoridagi shaklni to‘ldiring va «Qidirish» tugmasini bosing. Agentlarimiz siz bilan bog‘lanib, eng yaxshi variantlarni taklif qilishadi."
+  },
+  "How is payment made?": {
+    "en": "How is payment made?",
+    "ru": "Как производится оплата?",
+    "uz": "To‘lov qanday amalga oshiriladi?"
+  },
+  "You can pay by cash, bank card, or bank transfer. All payments are 100% secure.": {
+    "en": "You can pay by cash, bank card, or bank transfer. All payments are 100% secure.",
+    "ru": "Вы можете оплатить наличными, банковской картой или переводом. Все платежи полностью защищены.",
+    "uz": "Naqd pul, bank kartasi yoki bank o‘tkazmasi orqali to‘lashingiz mumkin. Barcha to‘lovlar to‘liq himoyalangan."
+  },
+  "Can I cancel my ticket?": {
+    "en": "Can I cancel my ticket?",
+    "ru": "Можно ли отменить билет?",
+    "uz": "Chiptani bekor qilsam bo‘ladimi?"
+  },
+  "Yes, tickets can be cancelled or changed according to airline rules. Please contact us for more details.": {
+    "en": "Yes, tickets can be cancelled or changed according to airline rules. Please contact us for more details.",
+    "ru": "Да, билеты можно отменить или изменить по правилам авиакомпании. Свяжитесь с нами для уточнения.",
+    "uz": "Ha, chiptalar aviakompaniya qoidalariga muvofiq bekor qilinadi yoki o‘zgartiriladi. Tafsilotlar uchun biz bilan bog‘laning."
+  },
+  "Is there a fee for extra baggage?": {
+    "en": "Is there a fee for extra baggage?",
+    "ru": "Нужно ли платить за дополнительный багаж?",
+    "uz": "Qo‘shimcha bagaj uchun to‘lov bormi?"
+  },
+  "Baggage allowances vary by ticket class and airline. Our agents will provide you with detailed information.": {
+    "en": "Baggage allowances vary by ticket class and airline. Our agents will provide you with detailed information.",
+    "ru": "Нормы багажа зависят от класса билета и авиакомпании. Наши агенты предоставят подробную информацию.",
+    "uz": "Bagaj me’yorlari chipta toifasi va aviakompaniyaga bog‘liq. Agentlarimiz batafsil ma’lumot berishadi."
+  },
+  "What documents do I need for international flights?": {
+    "en": "What documents do I need for international flights?",
+    "ru": "Какие документы нужны для международных рейсов?",
+    "uz": "Xalqaro reyslar uchun qanday hujjatlar kerak?"
+  },
+  "You'll need a valid passport with at least 6 months validity, and possibly a visa depending on your destination. Our travel experts can guide you through all documentation requirements.": {
+    "en": "You'll need a valid passport with at least 6 months validity, and possibly a visa depending on your destination. Our travel experts can guide you through all documentation requirements.",
+    "ru": "Нужен паспорт со сроком действия не менее 6 месяцев, а также, в зависимости от направления, виза. Наши специалисты помогут разобраться в требованиях.",
+    "uz": "Amal qilish muddati kamida 6 oy bo‘lgan pasport va manzilga qarab viza kerak bo‘lishi mumkin. Mutaxassislarimiz barcha hujjat talablari bo‘yicha yordam berishadi."
+  },
+  "How far in advance should I book my flight?": {
+    "en": "How far in advance should I book my flight?",
+    "ru": "За сколько времени лучше бронировать рейс?",
+    "uz": "Reysni qancha oldin band qilish kerak?"
+  },
+  "For the best prices, we recommend booking 2-3 months in advance for international flights and 3-4 weeks for domestic flights. However, we can also assist with last-minute bookings.": {
+    "en": "For the best prices, we recommend booking 2-3 months in advance for international flights and 3-4 weeks for domestic flights. However, we can also assist with last-minute bookings.",
+    "ru": "Для лучших цен рекомендуем бронировать международные рейсы за 2–3 месяца, внутренние — за 3–4 недели. Мы также поможем со срочным бронированием.",
+    "uz": "Eng yaxshi narxlar uchun xalqaro reyslarni 2–3 oy, ichki reyslarni 3–4 hafta oldin band qilishni tavsiya etamiz. Shoshilinch band qilishda ham yordam beramiz."
+  },
+  "What's the difference between Business and First Class?": {
+    "en": "What's the difference between Business and First Class?",
+    "ru": "Чем отличается бизнес-класс от первого класса?",
+    "uz": "Biznes va birinchi toifa o‘rtasida qanday farq bor?"
+  },
+  "First Class offers more privacy, fully-flat beds, exclusive lounges, and premium dining. Business Class provides lie-flat seats, priority boarding, and excellent service at a more accessible price point.": {
+    "en": "First Class offers more privacy, fully-flat beds, exclusive lounges, and premium dining. Business Class provides lie-flat seats, priority boarding, and excellent service at a more accessible price point.",
+    "ru": "Первый класс предлагает больше уединения, полноценные кровати, отдельные залы и изысканное питание. Бизнес-класс — раскладывающиеся кресла, приоритетную посадку и отличный сервис по более доступной цене.",
+    "uz": "Birinchi toifada ko‘proq maxfiylik, to‘liq yotoqlar, maxsus zallar va yuqori sifatli taomlar mavjud. Biznes toifada esa yotadigan o‘rindiqlar, ustuvor chiqish va qulayroq narxda ajoyib xizmat taklif etiladi."
+  },
+  "Do you offer travel insurance?": {
+    "en": "Do you offer travel insurance?",
+    "ru": "Вы предлагаете туристическую страховку?",
+    "uz": "Sayohat sug‘urtasini taklif qilasizmi?"
+  },
+  "Yes, we can arrange comprehensive travel insurance covering medical emergencies, trip cancellation, lost baggage, and more. Contact our agents for detailed coverage options.": {
+    "en": "Yes, we can arrange comprehensive travel insurance covering medical emergencies, trip cancellation, lost baggage, and more. Contact our agents for detailed coverage options.",
+    "ru": "Да, мы можем оформить комплексную страховку на случай медицинских экстренных ситуаций, отмены поездки, потери багажа и других рисков. Уточните варианты у наших агентов.",
+    "uz": "Ha, tibbiy favqulodda holatlar, safar bekor bo‘lishi, bagaj yo‘qolishi va boshqa xavflarni qamrab oluvchi sug‘urta rasmiylashtiramiz. Tafsilotlar uchun agentlarimizga murojaat qiling."
+  },
+  "Can I select my seat in advance?": {
+    "en": "Can I select my seat in advance?",
+    "ru": "Можно ли заранее выбрать место?",
+    "uz": "O‘rindiqni oldindan tanlasam bo‘ladimi?"
+  },
+  "Yes, seat selection is available for most airlines. Premium and Business Class tickets often include free seat selection, while Economy may have additional fees depending on the airline.": {
+    "en": "Yes, seat selection is available for most airlines. Premium and Business Class tickets often include free seat selection, while Economy may have additional fees depending on the airline.",
+    "ru": "Да, большинство авиакомпаний предлагают выбор места. В премиум- и бизнес-классе он часто бесплатный, а в экономклассе может взиматься дополнительная плата.",
+    "uz": "Ha, aksariyat aviakompaniyalarda o‘rindiq tanlash mumkin. Premium va biznes toifalarda bu ko‘pincha bepul, ekonom toifada esa qo‘shimcha to‘lov bo‘lishi mumkin."
+  },
+  "What happens if my flight is delayed or cancelled?": {
+    "en": "What happens if my flight is delayed or cancelled?",
+    "ru": "Что делать, если рейс задержан или отменён?",
+    "uz": "Reys kechiksa yoki bekor qilinsa nima bo‘ladi?"
+  },
+  "If your flight is delayed or cancelled, we'll assist you in rebooking on the next available flight. Airlines may provide compensation depending on the circumstances. Our 24/7 support team is always ready to help.": {
+    "en": "If your flight is delayed or cancelled, we'll assist you in rebooking on the next available flight. Airlines may provide compensation depending on the circumstances. Our 24/7 support team is always ready to help.",
+    "ru": "Мы поможем перебронировать билет на ближайший доступный рейс. В зависимости от обстоятельств авиакомпания может выплатить компенсацию. Наша поддержка работает круглосуточно.",
+    "uz": "Biz eng yaqin mavjud reysga qayta band qilishda yordam beramiz. Vaziyatga qarab aviakompaniya tovon to‘lashi mumkin. Yordam xizmatimiz kechayu kunduz ishlaydi."
+  },
+  "Are there any hidden fees when booking?": {
+    "en": "Are there any hidden fees when booking?",
+    "ru": "Есть ли скрытые комиссии?",
+    "uz": "Yashirin to‘lovlar bormi?"
+  },
+  "No hidden fees! We provide transparent pricing that includes all taxes and fees. Any additional costs (such as baggage fees or seat selection) will be clearly communicated before you confirm your booking.": {
+    "en": "No hidden fees! We provide transparent pricing that includes all taxes and fees. Any additional costs (such as baggage fees or seat selection) will be clearly communicated before you confirm your booking.",
+    "ru": "Скрытых комиссий нет! Наши цены включают все налоги и сборы. О дополнительных расходах, например за багаж или выбор места, сообщаем до подтверждения бронирования.",
+    "uz": "Yashirin to‘lovlar yo‘q! Narxlar barcha soliq va yig‘imlarni o‘z ichiga oladi. Bagaj yoki o‘rindiq tanlash kabi qo‘shimcha xarajatlar haqida band qilishni tasdiqlashdan oldin xabar beramiz."
+  },
+  "How do I receive my tickets?": {
+    "en": "How do I receive my tickets?",
+    "ru": "Как я получу билеты?",
+    "uz": "Chiptalarni qanday olaman?"
+  },
+  "After booking confirmation and payment, your e-ticket will be sent to your email within 24 hours. You can also access your booking through our customer portal or contact our agents for assistance.": {
+    "en": "After booking confirmation and payment, your e-ticket will be sent to your email within 24 hours. You can also access your booking through our customer portal or contact our agents for assistance.",
+    "ru": "После подтверждения и оплаты электронный билет придёт на вашу почту в течение 24 часов. Вы также можете открыть бронирование в личном кабинете или обратиться к нашим агентам.",
+    "uz": "Tasdiqlash va to‘lovdan so‘ng elektron chipta 24 soat ichida pochtangizga yuboriladi. Band qilishingizni shaxsiy kabinetda ko‘rishingiz yoki agentlarimizga murojaat qilishingiz mumkin."
+  },
+  "FAQ": {
+    "en": "FAQ",
+    "ru": "FAQ",
+    "uz": "Ko‘p so‘raladigan savollar"
+  },
+  "Frequently Asked": {
+    "en": "Frequently Asked",
+    "ru": "Частые",
+    "uz": "Ko‘p so‘raladigan"
+  },
+  "Questions": {
+    "en": "Questions",
+    "ru": "вопросы",
+    "uz": "savollar"
+  },
+  "Call Us": {
+    "en": "Call Us",
+    "ru": "Позвонить нам",
+    "uz": "Bizga qo‘ng‘iroq qiling"
+  },
+  "Back to top": {
+    "en": "Back to top",
+    "ru": "Наверх",
+    "uz": "Yuqoriga"
+  },
+  "STARAVIA": {
+    "en": "STARAVIA",
+    "ru": "STARAVIA",
+    "uz": "STARAVIA"
+  },
+  "The most convenient and affordable flights to your dream destinations. Start your journey with us.": {
+    "en": "The most convenient and affordable flights to your dream destinations. Start your journey with us.",
+    "ru": "Удобные и доступные рейсы по направлениям вашей мечты. Начните путешествие с нами.",
+    "uz": "Orzuingizdagi manzillarga qulay va hamyonbop reyslar. Sayohatingizni biz bilan boshlang."
+  },
+  "Instagram": {
+    "en": "Instagram",
+    "ru": "Instagram",
+    "uz": "Instagram"
+  },
+  "Telegram": {
+    "en": "Telegram",
+    "ru": "Telegram",
+    "uz": "Telegram"
+  },
+  "Facebook": {
+    "en": "Facebook",
+    "ru": "Facebook",
+    "uz": "Facebook"
+  },
+  "Company": {
+    "en": "Company",
+    "ru": "Компания",
+    "uz": "Kompaniya"
+  },
+  "About Us": {
+    "en": "About Us",
+    "ru": "О нас",
+    "uz": "Biz haqimizda"
+  },
+  "Careers": {
+    "en": "Careers",
+    "ru": "Карьера",
+    "uz": "Karyera"
+  },
+  "Partners": {
+    "en": "Partners",
+    "ru": "Партнёры",
+    "uz": "Hamkorlar"
+  },
+  "News": {
+    "en": "News",
+    "ru": "Новости",
+    "uz": "Yangiliklar"
+  },
+  "Support": {
+    "en": "Support",
+    "ru": "Поддержка",
+    "uz": "Yordam"
+  },
+  "Terms & Conditions": {
+    "en": "Terms & Conditions",
+    "ru": "Условия обслуживания",
+    "uz": "Xizmat shartlari"
+  },
+  "Privacy Policy": {
+    "en": "Privacy Policy",
+    "ru": "Политика конфиденциальности",
+    "uz": "Maxfiylik siyosati"
+  },
+  "Contact": {
+    "en": "Contact",
+    "ru": "Контакты",
+    "uz": "Aloqa"
+  },
+  "Newsletter": {
+    "en": "Newsletter",
+    "ru": "Рассылка",
+    "uz": "Xabarnoma"
+  },
+  "Get the latest deals and hot offers delivered to your inbox.": {
+    "en": "Get the latest deals and hot offers delivered to your inbox.",
+    "ru": "Получайте последние скидки и специальные предложения на почту.",
+    "uz": "Eng yangi chegirmalar va maxsus takliflarni pochtangizga oling."
+  },
+  "Your email address": {
+    "en": "Your email address",
+    "ru": "Ваш адрес электронной почты",
+    "uz": "Elektron pochta manzilingiz"
+  },
+  "✓ Successfully subscribed!": {
+    "en": "✓ Successfully subscribed!",
+    "ru": "✓ Вы успешно подписались!",
+    "uz": "✓ Obuna bo‘ldingiz!"
+  },
+  "Our address:": {
+    "en": "Our address:",
+    "ru": "Наш адрес:",
+    "uz": "Manzilimiz:"
+  },
+  "Uzbekistan, Andijan": {
+    "en": "Uzbekistan, Andijan",
+    "ru": "Узбекистан, Андижан",
+    "uz": "O‘zbekiston, Andijon"
+  },
+  "© 2026 STARAVIA. All rights reserved.": {
+    "en": "© 2026 STARAVIA. All rights reserved.",
+    "ru": "© 2026 STARAVIA. Все права защищены.",
+    "uz": "© 2026 STARAVIA. Barcha huquqlar himoyalangan."
+  },
+  "Terms of Use": {
+    "en": "Terms of Use",
+    "ru": "Условия использования",
+    "uz": "Foydalanish shartlari"
+  },
+  "HOME": {
+    "en": "HOME",
+    "ru": "ГЛАВНАЯ",
+    "uz": "BOSH SAHIFA"
+  },
+  "BUSINESS CLASS": {
+    "en": "BUSINESS CLASS",
+    "ru": "БИЗНЕС-КЛАСС",
+    "uz": "BIZNES TOIFA"
+  },
+  "HOW TO BOOK": {
+    "en": "HOW TO BOOK",
+    "ru": "КАК ЗАБРОНИРОВАТЬ",
+    "uz": "QANDAY BAND QILISH"
+  },
+  "TESTIMONIALS": {
+    "en": "TESTIMONIALS",
+    "ru": "ОТЗЫВЫ",
+    "uz": "MIJOZLAR FIKRI"
+  },
+  "ABOUT US": {
+    "en": "ABOUT US",
+    "ru": "О НАС",
+    "uz": "BIZ HAQIMIZDA"
+  },
+  "AIRLINE OFFERS": {
+    "en": "AIRLINE OFFERS",
+    "ru": "ПРЕДЛОЖЕНИЯ АВИАКОМПАНИЙ",
+    "uz": "AVIAKOMPANIYA TAKLIFLARI"
+  },
+  "Business & First Class": {
+    "en": "Business & First Class",
+    "ru": "Билеты бизнес- и первого класса",
+    "uz": "Biznes va birinchi toifa"
+  },
+  "Tickets": {
+    "en": "Tickets",
+    "ru": "на самолёт",
+    "uz": "chiptalari"
+  },
+  "STAR ALLIANCE": {
+    "en": "STAR ALLIANCE",
+    "ru": "STAR ALLIANCE",
+    "uz": "STAR ALLIANCE"
+  },
+  "28 airlines": {
+    "en": "28 airlines",
+    "ru": "28 авиакомпаний",
+    "uz": "28 aviakompaniya"
+  },
+  "SKYTEAM": {
+    "en": "SKYTEAM",
+    "ru": "SKYTEAM",
+    "uz": "SKYTEAM"
+  },
+  "19 airlines": {
+    "en": "19 airlines",
+    "ru": "19 авиакомпаний",
+    "uz": "19 aviakompaniya"
+  },
+  "ONEWORLD": {
+    "en": "ONEWORLD",
+    "ru": "ONEWORLD",
+    "uz": "ONEWORLD"
+  },
+  "13 airlines": {
+    "en": "13 airlines",
+    "ru": "13 авиакомпаний",
+    "uz": "13 aviakompaniya"
+  },
+  "\"Start your journey with": {
+    "en": "\"Start your journey with",
+    "ru": "«Начните путешествие с",
+    "uz": "“Sayohatingizni boshlang:"
+  },
+  "Staravia": {
+    "en": "Staravia",
+    "ru": "Staravia",
+    "uz": "Staravia"
+  },
+  "TAC": {
+    "en": "TAC",
+    "ru": "TAC",
+    "uz": "TAC"
+  },
+  "Travel Assistance Company": {
+    "en": "Travel Assistance Company",
+    "ru": "Компания помощи путешественникам",
+    "uz": "Sayohatchilarga yordam kompaniyasi"
+  },
+  "Live Concierge": {
+    "en": "Live Concierge",
+    "ru": "Персональный помощник",
+    "uz": "Shaxsiy yordamchi"
+  },
+  "Airlines": {
+    "en": "Airlines",
+    "ru": "Авиакомпании",
+    "uz": "Aviakompaniyalar"
+  },
+  "Special Offers": {
+    "en": "Special Offers",
+    "ru": "Специальные предложения",
+    "uz": "Maxsus takliflar"
+  },
+  "Hot": {
+    "en": "Hot",
+    "ru": "Горячие",
+    "uz": "Qaynoq"
+  },
+  "Deals": {
+    "en": "Deals",
+    "ru": "предложения",
+    "uz": "takliflar"
+  },
+  "Loading hot deals...": {
+    "en": "Loading hot deals...",
+    "ru": "Загрузка предложений…",
+    "uz": "Takliflar yuklanmoqda…"
+  },
+  "No hot deals available at the moment.": {
+    "en": "No hot deals available at the moment.",
+    "ru": "Сейчас специальных предложений нет.",
+    "uz": "Hozircha maxsus takliflar mavjud emas."
+  },
+  "Request Received!": {
+    "en": "Request Received!",
+    "ru": "Заявка получена!",
+    "uz": "So‘rov qabul qilindi!"
+  },
+  "We'll call you back within a few minutes.": {
+    "en": "We'll call you back within a few minutes.",
+    "ru": "Мы перезвоним вам через несколько минут.",
+    "uz": "Bir necha daqiqa ichida sizga qo‘ng‘iroq qilamiz."
+  },
+  "Call to speak 24/7": {
+    "en": "Call to speak 24/7",
+    "ru": "Звоните круглосуточно",
+    "uz": "Kechayu kunduz qo‘ng‘iroq qiling"
+  },
+  "SCAN": {
+    "en": "SCAN",
+    "ru": "СКАНИРУЙТЕ",
+    "uz": "SKANERLANG"
+  },
+  "TO CALL": {
+    "en": "TO CALL",
+    "ru": "ДЛЯ ЗВОНКА",
+    "uz": "QO‘NG‘IROQ UCHUN"
+  },
+  "OR": {
+    "en": "OR",
+    "ru": "ИЛИ",
+    "uz": "YOKI"
+  },
+  "Request a Free Callback": {
+    "en": "Request a Free Callback",
+    "ru": "Заказать бесплатный звонок",
+    "uz": "Bepul qo‘ng‘iroq buyurtma qilish"
+  },
+  "Get a call from travel expert and free advice within minutes.": {
+    "en": "Get a call from travel expert and free advice within minutes.",
+    "ru": "Наш специалист перезвонит и бесплатно проконсультирует вас через несколько минут.",
+    "uz": "Mutaxassisimiz bir necha daqiqada qo‘ng‘iroq qilib, bepul maslahat beradi."
+  },
+  "Enter Phone": {
+    "en": "Enter Phone",
+    "ru": "Введите номер телефона",
+    "uz": "Telefon raqamingizni kiriting"
+  },
+  "*One of our Travel Agents will call you back within the next": {
+    "en": "*One of our Travel Agents will call you back within the next",
+    "ru": "*Наш туристический агент перезвонит вам в ближайшие",
+    "uz": "*Sayohat agentimiz sizga yaqin"
+  },
+  "few minutes": {
+    "en": "few minutes",
+    "ru": "несколько минут",
+    "uz": "bir necha daqiqada qo‘ng‘iroq qiladi"
+  },
+  ". By submitting your phone number you agree to be contacted for travel information via automated phone and text messages.": {
+    "en": ". By submitting your phone number you agree to be contacted for travel information via automated phone and text messages.",
+    "ru": ". Отправляя номер телефона, вы соглашаетесь получать информацию о путешествиях через автоматические звонки и сообщения.",
+    "uz": ". Telefon raqamingizni yuborish orqali avtomatik qo‘ng‘iroqlar va xabarlar orqali sayohat ma’lumotlarini olishga rozilik bildirasiz."
+  },
+  "No Spam &": {
+    "en": "No Spam &",
+    "ru": "Без спама и",
+    "uz": "Spam yo‘q va"
+  },
+  "100% Data Safety": {
+    "en": "100% Data Safety",
+    "ru": "100% защита данных",
+    "uz": "Ma’lumotlar to‘liq himoyalangan"
+  },
+  "Loading airports...": {
+    "en": "Loading airports...",
+    "ru": "Загрузка аэропортов…",
+    "uz": "Aeroportlar yuklanmoqda…"
+  },
+  "Round-Trip": {
+    "en": "Round-Trip",
+    "ru": "Туда и обратно",
+    "uz": "Borish va qaytish"
+  },
+  "One-Way": {
+    "en": "One-Way",
+    "ru": "В одну сторону",
+    "uz": "Bir tomonga"
+  },
+  "City or Airport": {
+    "en": "City or Airport",
+    "ru": "Город или аэропорт",
+    "uz": "Shahar yoki aeroport"
+  },
+  "From...": {
+    "en": "From...",
+    "ru": "Откуда…",
+    "uz": "Qayerdan…"
+  },
+  "To...": {
+    "en": "To...",
+    "ru": "Куда…",
+    "uz": "Qayerga…"
+  },
+  "Departure Date": {
+    "en": "Departure Date",
+    "ru": "Дата вылета",
+    "uz": "Jo‘nash sanasi"
+  },
+  "Select date": {
+    "en": "Select date",
+    "ru": "Выберите дату",
+    "uz": "Sanani tanlang"
+  },
+  "Return Date": {
+    "en": "Return Date",
+    "ru": "Дата возвращения",
+    "uz": "Qaytish sanasi"
+  },
+  "Passengers / Cabin": {
+    "en": "Passengers / Cabin",
+    "ru": "Пассажиры / Класс",
+    "uz": "Yo‘lovchilar / Toifa"
+  },
+  "Search": {
+    "en": "Search",
+    "ru": "Поиск",
+    "uz": "Qidirish"
+  },
+  "Passengers": {
+    "en": "Passengers",
+    "ru": "Пассажиры",
+    "uz": "Yo‘lovchilar"
+  },
+  "Class": {
+    "en": "Class",
+    "ru": "Класс",
+    "uz": "Toifa"
+  },
+  "Economy": {
+    "en": "Economy",
+    "ru": "Эконом",
+    "uz": "Ekonom"
+  },
+  "Premium Economy": {
+    "en": "Premium Economy",
+    "ru": "Премиум-эконом",
+    "uz": "Premium ekonom"
+  },
+  "Business": {
+    "en": "Business",
+    "ru": "Бизнес",
+    "uz": "Biznes"
+  },
+  "First class": {
+    "en": "First class",
+    "ru": "Первый класс",
+    "uz": "Birinchi toifa"
+  },
+  "Tashkent, Uzbekistan": {
+    "en": "Tashkent, Uzbekistan",
+    "ru": "Ташкент, Узбекистан",
+    "uz": "Toshkent, O‘zbekiston"
+  },
+  "Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!": {
+    "en": "Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!",
+    "ru": "Найти билет на сайте было очень легко. Агенты нашли мне самый дешёвый и удобный рейс. Большое спасибо!",
+    "uz": "Sayt orqali chipta topish juda oson bo‘ldi. Agentlar menga eng arzon va qulay reysni topishdi. Katta rahmat!"
+  },
+  "Samarkand, Uzbekistan": {
+    "en": "Samarkand, Uzbekistan",
+    "ru": "Самарканд, Узбекистан",
+    "uz": "Samarqand, O‘zbekiston"
+  },
+  "We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent.": {
+    "en": "We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent.",
+    "ru": "Мы купили билеты для семейного отдыха в Дубае. Цены были очень доступными, а обслуживание — отличным.",
+    "uz": "Oilaviy dam olish uchun Dubayga chiptalar oldik. Narxlar juda qulay, xizmat sifati esa a’lo edi."
+  },
+  "Bukhara, Uzbekistan": {
+    "en": "Bukhara, Uzbekistan",
+    "ru": "Бухара, Узбекистан",
+    "uz": "Buxoro, O‘zbekiston"
+  },
+  "The support center works great. When my flight changed, they resolved the issue immediately.": {
+    "en": "The support center works great. When my flight changed, they resolved the issue immediately.",
+    "ru": "Поддержка работает отлично. Когда мой рейс изменился, вопрос решили сразу.",
+    "uz": "Yordam markazi ajoyib ishlaydi. Reysim o‘zgarganda, muammoni darhol hal qilishdi."
+  },
+  "Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional.": {
+    "en": "Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional.",
+    "ru": "Отличный сервис! Забронировал бизнес-класс до Лондона по прекрасной цене. Помощник был очень профессионален.",
+    "uz": "Ajoyib xizmat! Londonga biznes toifa chiptasini juda yaxshi narxda band qildim. Yordamchi juda professional edi."
+  },
+  "Andijan, Uzbekistan": {
+    "en": "Andijan, Uzbekistan",
+    "ru": "Андижан, Узбекистан",
+    "uz": "Andijon, O‘zbekiston"
+  },
+  "Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route.": {
+    "en": "Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route.",
+    "ru": "Лучшее турагентство в Узбекистане! Помогли с документами на визу и нашли идеальный маршрут.",
+    "uz": "O‘zbekistondagi eng yaxshi sayohat agentligi! Viza hujjatlarida yordam berib, ajoyib yo‘nalish topishdi."
+  },
+  "Namangan, Uzbekistan": {
+    "en": "Namangan, Uzbekistan",
+    "ru": "Наманган, Узбекистан",
+    "uz": "Namangan, O‘zbekiston"
+  },
+  "Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle.": {
+    "en": "Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle.",
+    "ru": "Очень отзывчивая поддержка. Дважды менял даты полёта, и всё сделали быстро и без хлопот.",
+    "uz": "Yordam xizmati juda tez javob beradi. Reys sanalarini ikki marta o‘zgartirdim, hammasini muammosiz hal qilishdi."
+  },
+  "Our Clients": {
+    "en": "Our Clients",
+    "ru": "Наши клиенты",
+    "uz": "Mijozlarimiz"
+  },
+  "What Our Clients": {
+    "en": "What Our Clients",
+    "ru": "Что говорят",
+    "uz": "Mijozlarimiz"
+  },
+  "Say": {
+    "en": "Say",
+    "ru": "наши клиенты",
+    "uz": "nima deydi"
+  },
+  "ACCREDITED": {
+    "en": "ACCREDITED",
+    "ru": "АККРЕДИТОВАННОЕ",
+    "uz": "AKKREDITATSIYADAN O‘TGAN"
+  },
+  "AGENCY": {
+    "en": "AGENCY",
+    "ru": "АГЕНТСТВО",
+    "uz": "AGENTLIK"
+  },
+  "Certified Travel Agency": {
+    "en": "Certified Travel Agency",
+    "ru": "Сертифицированное турагентство",
+    "uz": "Sertifikatlangan sayohat agentligi"
+  },
+  "We are an officially accredited travel agency, authorized to provide premium flight booking services with guaranteed security and reliability.": {
+    "en": "We are an officially accredited travel agency, authorized to provide premium flight booking services with guaranteed security and reliability.",
+    "ru": "Мы — официально аккредитованное турагентство, уполномоченное оказывать надёжные и безопасные услуги бронирования премиальных рейсов.",
+    "uz": "Biz yuqori toifali reyslarni xavfsiz va ishonchli band qilish xizmatlarini ko‘rsatishga vakolatli, rasmiy akkreditatsiyadan o‘tgan sayohat agentligimiz."
+  },
+  "Verified & Trusted": {
+    "en": "Verified & Trusted",
+    "ru": "Проверено и надёжно",
+    "uz": "Tekshirilgan va ishonchli"
+  },
+  "LIVE CONCIERGE": {
+    "en": "LIVE CONCIERGE",
+    "ru": "ПЕРСОНАЛЬНЫЙ ПОМОЩНИК",
+    "uz": "SHAXSIY YORDAMCHI"
+  },
+  "24/7 Customer Support": {
+    "en": "24/7 Customer Support",
+    "ru": "Круглосуточная поддержка",
+    "uz": "Kechayu kunduz yordam"
+  },
+  "Our dedicated team is available around the clock to assist you with bookings, changes, and any travel-related inquiries.": {
+    "en": "Our dedicated team is available around the clock to assist you with bookings, changes, and any travel-related inquiries.",
+    "ru": "Наша команда круглосуточно поможет с бронированием, изменениями и любыми вопросами о путешествии.",
+    "uz": "Jamoamiz band qilish, o‘zgartirishlar va sayohatga oid barcha savollarda kechayu kunduz yordam beradi."
+  },
+  "Always Available": {
+    "en": "Always Available",
+    "ru": "Всегда на связи",
+    "uz": "Doim aloqada"
+  },
+  "SECURE": {
+    "en": "SECURE",
+    "ru": "БЕЗОПАСНАЯ",
+    "uz": "XAVFSIZ"
+  },
+  "PAYMENT": {
+    "en": "PAYMENT",
+    "ru": "ОПЛАТА",
+    "uz": "TO‘LOV"
+  },
+  "100% Secure Transactions": {
+    "en": "100% Secure Transactions",
+    "ru": "Полностью безопасные платежи",
+    "uz": "To‘liq xavfsiz to‘lovlar"
+  },
+  "All payments are encrypted with SSL technology. We accept major credit cards and ensure your financial information is completely protected.": {
+    "en": "All payments are encrypted with SSL technology. We accept major credit cards and ensure your financial information is completely protected.",
+    "ru": "Все платежи защищены SSL-шифрованием. Мы принимаем основные банковские карты и обеспечиваем защиту ваших финансовых данных.",
+    "uz": "Barcha to‘lovlar SSL orqali shifrlanadi. Asosiy bank kartalarini qabul qilamiz va moliyaviy ma’lumotlaringizni to‘liq himoya qilamiz."
+  },
+  "SSL Encrypted": {
+    "en": "SSL Encrypted",
+    "ru": "SSL-шифрование",
+    "uz": "SSL shifrlash"
+  },
+  "100% Secure Payment": {
+    "en": "100% Secure Payment",
+    "ru": "Безопасная оплата",
+    "uz": "Xavfsiz to‘lov"
+  },
+  "Travel Assistant": {
+    "en": "Travel Assistant",
+    "ru": "Помощник в путешествии",
+    "uz": "Sayohat yordamchisi"
+  },
+  "24/7 Support": {
+    "en": "24/7 Support",
+    "ru": "Поддержка 24/7",
+    "uz": "24/7 yordam"
+  },
+  "Cheap and Luxury flights": {
+    "en": "Cheap and Luxury flights",
+    "ru": "Доступные и роскошные перелёты",
+    "uz": "Hamyonbop va hashamatli parvozlar"
+  },
+  "All Around The World": {
+    "en": "All Around The World",
+    "ru": "По всему миру",
+    "uz": "Butun dunyo bo‘ylab"
+  },
+  "Staravia Travel": {
+    "en": "Staravia Travel",
+    "ru": "Staravia Travel",
+    "uz": "Staravia Travel"
+  },
+  "StarAvia": {
+    "en": "StarAvia",
+    "ru": "StarAvia",
+    "uz": "StarAvia"
+  },
+  "Travel": {
+    "en": "Travel",
+    "ru": "Путешествия",
+    "uz": "Sayohat"
+  },
+  "StarAviaTravel is an official airline retailer since 2014, offering personalized one-on-one service and exclusive deals on business and first-class flights. With privately negotiated rates from over 70 major carriers, our dedicated Personal Travel Agents ensure tailored itineraries to meet individual preferences.": {
+    "en": "StarAviaTravel is an official airline retailer since 2014, offering personalized one-on-one service and exclusive deals on business and first-class flights. With privately negotiated rates from over 70 major carriers, our dedicated Personal Travel Agents ensure tailored itineraries to meet individual preferences.",
+    "ru": "StarAviaTravel — официальный продавец авиабилетов с 2014 года. Мы предлагаем персональное обслуживание и эксклюзивные предложения бизнес- и первого класса. Благодаря особым тарифам более 70 крупных авиакомпаний наши персональные агенты подбирают маршруты под ваши предпочтения.",
+    "uz": "StarAviaTravel 2014-yildan beri rasmiy aviachipta sotuvchisi bo‘lib, shaxsiy xizmat va biznes hamda birinchi toifa uchun maxsus takliflarni taqdim etadi. 70 dan ortiq yirik aviakompaniya bilan kelishilgan narxlar orqali agentlarimiz istaklaringizga mos yo‘nalishlar tanlaydi."
+  },
+  "Unlike online platforms, we prioritize direct interaction with live experts, boasting years of industry experience. Benefit from our access to privately negotiated fares, major airline relationships, and consistent client praise for our personalized service.": {
+    "en": "Unlike online platforms, we prioritize direct interaction with live experts, boasting years of industry experience. Benefit from our access to privately negotiated fares, major airline relationships, and consistent client praise for our personalized service.",
+    "ru": "Мы делаем ставку на прямое общение с опытными специалистами. Пользуйтесь особыми тарифами, нашими связями с ведущими авиакомпаниями и персональным сервисом, который высоко ценят клиенты.",
+    "uz": "Biz tajribali mutaxassislar bilan bevosita muloqotga ustuvorlik beramiz. Maxsus narxlar, yirik aviakompaniyalar bilan hamkorlik va mijozlar qadrlaydigan shaxsiy xizmatimizdan foydalaning."
+  },
+  "Personalized Service": {
+    "en": "Personalized Service",
+    "ru": "Персональный сервис",
+    "uz": "Shaxsiy xizmat"
+  },
+  "One-on-one support from dedicated travel experts.": {
+    "en": "One-on-one support from dedicated travel experts.",
+    "ru": "Индивидуальная поддержка специалистов по путешествиям.",
+    "uz": "Sayohat mutaxassislaridan shaxsiy yordam."
+  },
+  "Exclusive Deals": {
+    "en": "Exclusive Deals",
+    "ru": "Эксклюзивные предложения",
+    "uz": "Maxsus takliflar"
+  },
+  "Privately negotiated business and first-class fares.": {
+    "en": "Privately negotiated business and first-class fares.",
+    "ru": "Особые тарифы бизнес- и первого класса.",
+    "uz": "Biznes va birinchi toifa uchun maxsus kelishilgan narxlar."
+  },
+  "Trusted Experience": {
+    "en": "Trusted Experience",
+    "ru": "Проверенный опыт",
+    "uz": "Ishonchli tajriba"
+  },
+  "Proven expertise and customer satisfaction.": {
+    "en": "Proven expertise and customer satisfaction.",
+    "ru": "Профессионализм и довольные клиенты.",
+    "uz": "Tasdiqlangan malaka va mamnun mijozlar."
+  },
+  "Global Connections": {
+    "en": "Global Connections",
+    "ru": "Международные связи",
+    "uz": "Global aloqalar"
+  },
+  "Strong airline partnerships worldwide.": {
+    "en": "Strong airline partnerships worldwide.",
+    "ru": "Надёжные партнёры среди авиакомпаний по всему миру.",
+    "uz": "Dunyo bo‘ylab aviakompaniyalar bilan mustahkam hamkorlik."
+  },
+  "Client Praise": {
+    "en": "Client Praise",
+    "ru": "Признание клиентов",
+    "uz": "Mijozlar e’tirofi"
+  },
+  "Consistently rated highly by travelers.": {
+    "en": "Consistently rated highly by travelers.",
+    "ru": "Путешественники неизменно ставят нам высокие оценки.",
+    "uz": "Sayohatchilarning doimiy yuqori baholari."
+  },
+  "🔥 This Month's Best Deal": {
+    "en": "🔥 This Month's Best Deal",
+    "ru": "🔥 Лучшее предложение месяца",
+    "uz": "🔥 Oyning eng yaxshi taklifi"
+  },
+  "Old price:": {
+    "en": "Old price:",
+    "ru": "Старая цена:",
+    "uz": "Eski narx:"
+  },
+  "✦ Official": {
+    "en": "✦ Official",
+    "ru": "✦ Официальный",
+    "uz": "✦ Rasmiy"
+  },
+  "Retailer": {
+    "en": "Retailer",
+    "ru": "продавец",
+    "uz": "Sotuvchi"
+  },
+  "Lost Baggage Protection": {
+    "en": "Lost Baggage Protection",
+    "ru": "Защита от потери багажа",
+    "uz": "Bagaj yo‘qolishidan himoya"
+  },
+  "$2000 Coverage for $45.95": {
+    "en": "$2000 Coverage for $45.95",
+    "ru": "Покрытие $2000 за $45.95",
+    "uz": "$45.95 evaziga $2000 qoplama"
+  },
+  "Last month we saved clients": {
+    "en": "Last month we saved clients",
+    "ru": "В прошлом месяце мы сэкономили клиентам",
+    "uz": "O‘tgan oy mijozlarimiz uchun tejadik:"
+  },
+  "over $1,700,000": {
+    "en": "over $1,700,000",
+    "ru": "более $1 700 000",
+    "uz": "$1 700 000 dan ortiq"
+  },
+  "— Want to save more? —": {
+    "en": "— Want to save more? —",
+    "ru": "— Хотите сэкономить больше? —",
+    "uz": "— Ko‘proq tejashni istaysizmi? —"
+  },
+  "CALL US Toll-FREE": {
+    "en": "CALL US Toll-FREE",
+    "ru": "ЗВОНИТЕ БЕСПЛАТНО",
+    "uz": "BEPUL QO‘NG‘IROQ QILING"
+  },
+  "to Get the Best Unpublished Fares": {
+    "en": "to Get the Best Unpublished Fares",
+    "ru": "и узнайте лучшие закрытые тарифы",
+    "uz": "eng yaxshi maxsus narxlarni bilib oling"
+  },
+  "and Save $100 Extra": {
+    "en": "and Save $100 Extra",
+    "ru": "и сэкономьте ещё $100",
+    "uz": "va yana $100 tejang"
+  },
+  "or request an offer": {
+    "en": "or request an offer",
+    "ru": "или запросите предложение",
+    "uz": "yoki taklif so‘rang"
+  },
+  "First Name*": {
+    "en": "First Name*",
+    "ru": "Имя*",
+    "uz": "Ism*"
+  },
+  "Last Name*": {
+    "en": "Last Name*",
+    "ru": "Фамилия*",
+    "uz": "Familiya*"
+  },
+  "Enter e-mail*": {
+    "en": "Enter e-mail*",
+    "ru": "Электронная почта*",
+    "uz": "Elektron pochta*"
+  },
+  "Phone Number*": {
+    "en": "Phone Number*",
+    "ru": "Номер телефона*",
+    "uz": "Telefon raqami*"
+  },
+  "GET FREE QUOTES": {
+    "en": "GET FREE QUOTES",
+    "ru": "ПОЛУЧИТЬ БЕСПЛАТНОЕ ПРЕДЛОЖЕНИЕ",
+    "uz": "BEPUL TAKLIF OLISH"
+  },
+  "*No Spam - only phone-exclusive deals. No purchase necessary. By providing your contact details you agree to be contacted for travel information.": {
+    "en": "*No Spam - only phone-exclusive deals. No purchase necessary. By providing your contact details you agree to be contacted for travel information.",
+    "ru": "*Без спама — только эксклюзивные предложения по телефону. Покупка не обязательна. Предоставляя контакты, вы соглашаетесь получать информацию о путешествиях.",
+    "uz": "*Spam yo‘q — faqat telefon orqali maxsus takliflar. Xarid qilish shart emas. Aloqa ma’lumotlarini berib, sayohat haqida axborot olishga rozilik bildirasiz."
+  },
+  "70%* OFF": {
+    "en": "70%* OFF",
+    "ru": "СКИДКА 70%*",
+    "uz": "70%* CHEGIRMA"
+  },
+  "Phone-Only Deals": {
+    "en": "Phone-Only Deals",
+    "ru": "Предложения по телефону",
+    "uz": "Telefon orqali takliflar"
+  },
+  "2M+": {
+    "en": "2M+",
+    "ru": "2M+",
+    "uz": "2M+"
+  },
+  "Clients": {
+    "en": "Clients",
+    "ru": "Клиенты",
+    "uz": "Mijozlar"
+  },
+  "Live Experts": {
+    "en": "Live Experts",
+    "ru": "Живые специалисты",
+    "uz": "Mutaxassislar"
+  },
+  "STARAVIA Travel is Trusted": {
+    "en": "STARAVIA Travel is Trusted",
+    "ru": "STARAVIA Travel доверяют",
+    "uz": "STARAVIA Travel’ga ishonadi"
+  },
+  "by Over": {
+    "en": "by Over",
+    "ru": "более",
+    "uz": "ko‘proq:"
+  },
+  "188K+ Travelers": {
+    "en": "188K+ Travelers",
+    "ru": "188 тысяч путешественников",
+    "uz": "188 mingdan ortiq sayohatchi"
+  },
+  "Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.": {
+    "en": "Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.",
+    "ru": "Добро пожаловать в Staravia Travel! Мы предоставляем каждому клиенту отличный персональный сервис круглосуточно и ежедневно. Мы отточили каждый этап, чтобы ваше путешествие прошло максимально гладко от начала до конца.",
+    "uz": "Staravia Travel’ga xush kelibsiz! Har bir mijozga haftaning har kuni, kechayu kunduz ajoyib shaxsiy xizmat ko‘rsatamiz. Sayohatingiz boshidan oxirigacha qulay o‘tishi uchun har bir bosqichni mukammallashtirdik."
+  },
+  "If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!": {
+    "en": "If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!",
+    "ru": "Мы помогаем организовать комфортное личное или деловое путешествие с отличным соотношением цены и качества. Обращайтесь к нам! Наши специалисты ответят на вопросы по телефону или почте. Будем рады помочь!",
+    "uz": "Shaxsiy yoki ish safaringizni qulay va maqbul narxda tashkil qilishga yordam beramiz. Biz bilan bog‘laning! Mutaxassislarimiz telefon yoki pochta orqali savollaringizga javob berishadi. Yordam berishdan mamnunmiz!"
+  },
+  "Expert First & Business Class": {
+    "en": "Expert First & Business Class",
+    "ru": "Эксперты первого и бизнес-класса",
+    "uz": "Birinchi va biznes toifa mutaxassislari"
+  },
+  "Travel Management": {
+    "en": "Travel Management",
+    "ru": "Организация путешествий",
+    "uz": "Sayohatlarni boshqarish"
+  },
+  "At Staravia Travel, you get your Personal Travel Manager - your own flight personal shopper, providing a bespoke plus travel search. Save your valuable time and avoid stress into your dedicated travel expert to take care of all your arrangements. Our team will work with you to offer you more with your preferences and priorities top of mind.": {
+    "en": "At Staravia Travel, you get your Personal Travel Manager - your own flight personal shopper, providing a bespoke plus travel search. Save your valuable time and avoid stress into your dedicated travel expert to take care of all your arrangements. Our team will work with you to offer you more with your preferences and priorities top of mind.",
+    "ru": "В Staravia Travel у вас будет персональный менеджер, который подберёт рейсы именно для вас. Экономьте время и избегайте стресса: доверьте все приготовления специалисту. Наша команда учтёт ваши пожелания и приоритеты.",
+    "uz": "Staravia Travel’da siz uchun mos reyslarni tanlaydigan shaxsiy sayohat menejeringiz bo‘ladi. Vaqtingizni tejang va tashvishlardan xalos bo‘ling: barcha tayyorgarlikni mutaxassisga topshiring. Jamoamiz istak va ustuvorliklaringizni hisobga oladi."
+  },
+  "Real People Instead of Online Engines": {
+    "en": "Real People Instead of Online Engines",
+    "ru": "Живые люди вместо поисковых систем",
+    "uz": "Qidiruv tizimlari o‘rniga haqiqiy insonlar"
+  },
+  "There are no website booking engines here. With Staravia Travel, you deal with a real person who understands your needs. We make each quote different from the others to provide attractive ticket prices.": {
+    "en": "There are no website booking engines here. With Staravia Travel, you deal with a real person who understands your needs. We make each quote different from the others to provide attractive ticket prices.",
+    "ru": "В Staravia Travel вы общаетесь с человеком, который понимает ваши потребности. Мы подбираем каждое предложение индивидуально, чтобы предложить привлекательные цены.",
+    "uz": "Staravia Travel’da ehtiyojlaringizni tushunadigan inson bilan muloqot qilasiz. Qulay chipta narxlarini taklif qilish uchun har bir taklifni alohida tayyorlaymiz."
+  },
+  "After-Hours Support Until You Return": {
+    "en": "After-Hours Support Until You Return",
+    "ru": "Поддержка до вашего возвращения",
+    "uz": "Qaytguningizcha yordam beramiz"
+  },
+  "Every customer receives more than expert travel advice and unbeatable prices. Our free after-hours assistance means unexpected changes can always be handled with schedule and immediate offers.": {
+    "en": "Every customer receives more than expert travel advice and unbeatable prices. Our free after-hours assistance means unexpected changes can always be handled with schedule and immediate offers.",
+    "ru": "Вы получаете не только профессиональные советы и выгодные цены. Наша бесплатная поддержка вне рабочего времени поможет справиться с неожиданными изменениями и быстро найти решения.",
+    "uz": "Siz nafaqat professional maslahat va qulay narxlarni olasiz. Ish vaqtidan tashqari bepul yordamimiz kutilmagan o‘zgarishlarni hal qilish va tezkor yechim topishga yordam beradi."
+  },
+  "SAVE UP TO 50%": {
+    "en": "SAVE UP TO 50%",
+    "ru": "ЭКОНОМИЯ ДО 50%",
+    "uz": "50% GACHA TEJANG"
+  },
+  "Exclusive": {
+    "en": "Exclusive",
+    "ru": "Эксклюзивные",
+    "uz": "Maxsus"
+  },
+  "Call now and let our professional travel concierge secure your premium ticket at the most competitive price": {
+    "en": "Call now and let our professional travel concierge secure your premium ticket at the most competitive price",
+    "ru": "Позвоните, и наш профессиональный помощник найдёт вам премиальный билет по самой выгодной цене",
+    "uz": "Qo‘ng‘iroq qiling — professional yordamchimiz sizga yuqori toifali chiptani eng qulay narxda topadi"
+  },
+  "Interested?": {
+    "en": "Interested?",
+    "ru": "Заинтересовались?",
+    "uz": "Qiziqdingizmi?"
+  },
+  "Experience luxury travel consultation": {
+    "en": "Experience luxury travel consultation",
+    "ru": "Консультация по премиальным путешествиям",
+    "uz": "Hashamatli sayohat bo‘yicha maslahat"
+  },
+  "Request Sent!": {
+    "en": "Request Sent!",
+    "ru": "Заявка отправлена!",
+    "uz": "So‘rov yuborildi!"
+  },
+  "Our agent will contact you shortly.": {
+    "en": "Our agent will contact you shortly.",
+    "ru": "Наш агент скоро свяжется с вами.",
+    "uz": "Agentimiz tez orada siz bilan bog‘lanadi."
+  },
+  "Book Flight": {
+    "en": "Book Flight",
+    "ru": "Забронировать рейс",
+    "uz": "Reysni band qilish"
+  },
+  "Enter your details and our agent will contact you.": {
+    "en": "Enter your details and our agent will contact you.",
+    "ru": "Оставьте данные, и наш агент свяжется с вами.",
+    "uz": "Ma’lumotlaringizni kiriting, agentimiz siz bilan bog‘lanadi."
+  },
+  "First Name": {
+    "en": "First Name",
+    "ru": "Имя",
+    "uz": "Ism"
+  },
+  "Last Name": {
+    "en": "Last Name",
+    "ru": "Фамилия",
+    "uz": "Familiya"
+  },
+  "Your phone number": {
+    "en": "Your phone number",
+    "ru": "Ваш номер телефона",
+    "uz": "Telefon raqamingiz"
+  },
+  "Select payment method": {
+    "en": "Select payment method",
+    "ru": "Выберите способ оплаты",
+    "uz": "To‘lov usulini tanlang"
+  },
+  "Credit Card": {
+    "en": "Credit Card",
+    "ru": "Кредитная карта",
+    "uz": "Kredit karta"
+  },
+  "Debit Card": {
+    "en": "Debit Card",
+    "ru": "Дебетовая карта",
+    "uz": "Debet karta"
+  },
+  "Bank Transfer": {
+    "en": "Bank Transfer",
+    "ru": "Банковский перевод",
+    "uz": "Bank o‘tkazmasi"
+  },
+  "Cash": {
+    "en": "Cash",
+    "ru": "Наличные",
+    "uz": "Naqd pul"
+  },
+  "I accept the Terms of Use and Privacy Policy": {
+    "en": "I accept the Terms of Use and Privacy Policy",
+    "ru": "Я принимаю условия использования и политику конфиденциальности",
+    "uz": "Foydalanish shartlari va maxfiylik siyosatiga roziman"
+  },
+  "Submit Request": {
+    "en": "Submit Request",
+    "ru": "Отправить заявку",
+    "uz": "So‘rov yuborish"
+  },
+  "YEARS IN BUSINESS": {
+    "en": "YEARS IN BUSINESS",
+    "ru": "ЛЕТ НА РЫНКЕ",
+    "uz": "YILLIK TAJRIBA"
+  },
+  "SATISFACTION RATE": {
+    "en": "SATISFACTION RATE",
+    "ru": "УРОВЕНЬ УДОВЛЕТВОРЁННОСТИ",
+    "uz": "MAMNUNLIK DARAJASI"
+  },
+  "CLIENTS SERVED": {
+    "en": "CLIENTS SERVED",
+    "ru": "ОБСЛУЖЕНО КЛИЕНТОВ",
+    "uz": "XIZMAT KO‘RSATILGAN MIJOZLAR"
+  },
+  "LIVE AGENTS": {
+    "en": "LIVE AGENTS",
+    "ru": "ЖИВЫЕ АГЕНТЫ",
+    "uz": "MUTAXASSISLAR"
+  },
+  "Xatolik": {
+    "en": "Error",
+    "ru": "Ошибка",
+    "uz": "Xatolik"
+  },
+  "Ushbu yo'nalish bo'yicha chiptalar topilmadi.": {
+    "en": "No flights found for this route.",
+    "ru": "Билеты по этому направлению не найдены.",
+    "uz": "Ushbu yo‘nalish bo‘yicha chiptalar topilmadi."
+  },
+  "Yangi qidiruv": {
+    "en": "New search",
+    "ru": "Новый поиск",
+    "uz": "Yangi qidiruv"
+  },
+  "Passenger": {
+    "en": "Passenger",
+    "ru": "Пассажир",
+    "uz": "Yo‘lovchi"
+  },
+  "Hurry! Limited Seats!": {
+    "en": "Hurry! Limited Seats!",
+    "ru": "Спешите! Места ограничены!",
+    "uz": "Shoshiling! Joylar cheklangan!"
+  },
+  "Old Price:": {
+    "en": "Old Price:",
+    "ru": "Старая цена:",
+    "uz": "Eski narx:"
+  },
+  "per": {
+    "en": "per",
+    "ru": "за",
+    "uz": "har bir"
+  },
+  "person": {
+    "en": "person",
+    "ru": "человека",
+    "uz": "kishi uchun"
+  },
+  "OFFICIAL": {
+    "en": "OFFICIAL",
+    "ru": "ОФИЦИАЛЬНЫЙ",
+    "uz": "RASMIY"
+  },
+  "AIRLINES": {
+    "en": "AIRLINES",
+    "ru": "АВИАКОМПАНИИ",
+    "uz": "AVIAKOMPANIYA"
+  },
+  "RETAILER": {
+    "en": "RETAILER",
+    "ru": "ПРОДАВЕЦ",
+    "uz": "SOTUVCHISI"
+  },
+  "*Prices are per person, subject to availability and may change without notice. Additional taxes and fees may apply. Contact our travel agents for the most up-to-date pricing.": {
+    "en": "*Prices are per person, subject to availability and may change without notice. Additional taxes and fees may apply. Contact our travel agents for the most up-to-date pricing.",
+    "ru": "*Цены указаны за человека, зависят от наличия и могут измениться без предупреждения. Возможны дополнительные налоги и сборы. Актуальные цены уточняйте у наших агентов.",
+    "uz": "*Narxlar bir kishi uchun ko‘rsatilgan, mavjudlikka bog‘liq va ogohlantirishsiz o‘zgarishi mumkin. Qo‘shimcha soliq va yig‘imlar bo‘lishi mumkin. Amaldagi narxlarni agentlarimizdan aniqlang."
+  },
+  "Preparing for Takeoff": {
+    "en": "Preparing for Takeoff",
+    "ru": "Подготовка к взлёту",
+    "uz": "Parvozga tayyorgarlik"
+  },
+  "Retrieving the best routes and prices...": {
+    "en": "Retrieving the best routes and prices...",
+    "ru": "Подбираем лучшие маршруты и цены…",
+    "uz": "Eng yaxshi yo‘nalishlar va narxlar qidirilmoqda…"
+  },
+  "Website language": {
+    "en": "Website language",
+    "uz": "Til",
+    "ru": "Язык сайта"
+  },
+  "Premium Business Class Flights & Airline Tickets": {
+    "en": "Premium Business Class Flights & Airline Tickets",
+    "uz": "Biznes toifadagi yuqori sifatli parvozlar va aviachiptalar",
+    "ru": "Премиальные рейсы и билеты бизнес-класса"
+  },
+  "50-77% Off Discounted Business Class": {
+    "en": "50-77% Off Discounted Business Class",
+    "uz": "Biznes toifaga 50–77% chegirma",
+    "ru": "Скидки 50–77% на бизнес-класс"
+  },
+  "Discounted business class flights - 2026 from USA to Europe, Asia, Philippines, Africa, India etc. The cheapest business class flights with top airlines' offers and deals.": {
+    "en": "Discounted business class flights - 2026 from USA to Europe, Asia, Philippines, Africa, India etc. The cheapest business class flights with top airlines' offers and deals.",
+    "uz": "2026-yilda AQShdan Yevropa, Osiyo, Filippin, Afrika, Hindiston va boshqa yo‘nalishlarga chegirmali biznes toifa parvozlari. Yetakchi aviakompaniyalardan eng qulay takliflar.",
+    "ru": "Бизнес-класс со скидкой: рейсы 2026 года из США в Европу, Азию, Филиппины, Африку, Индию и другие страны. Выгодные предложения ведущих авиакомпаний."
+  },
+  "Failed to load hot deals. Please try again later.": {
+    "en": "Failed to load hot deals. Please try again later.",
+    "uz": "Maxsus takliflarni yuklab bo‘lmadi. Keyinroq qayta urinib ko‘ring.",
+    "ru": "Не удалось загрузить предложения. Попробуйте позже."
+  },
+  "Unable to load flights. Please try again later.": {
+    "en": "Unable to load flights. Please try again later.",
+    "uz": "Parvozlarni yuklab bo‘lmadi. Keyinroq qayta urinib ko‘ring.",
+    "ru": "Не удалось загрузить рейсы. Попробуйте позже."
+  },
+  "Unknown Airline": {
+    "en": "Unknown Airline",
+    "uz": "Noma’lum aviakompaniya",
+    "ru": "Неизвестная авиакомпания"
+  },
+  "Flight": {
+    "en": "Flight",
+    "uz": "Parvoz",
+    "ru": "Рейс"
+  },
+  "Passengers: {count}": {
+    "en": "Passengers: {count}",
+    "uz": "Yo‘lovchilar: {count}",
+    "ru": "Пассажиры: {count}"
+  },
+  "Open navigation": {
+    "en": "Open navigation",
+    "uz": "Menyuni ochish",
+    "ru": "Открыть меню"
+  },
+  "Close navigation": {
+    "en": "Close navigation",
+    "uz": "Menyuni yopish",
+    "ru": "Закрыть меню"
+  },
+  "STARAVIA™ | Premium and Luxury classes": {
+    "en": "STARAVIA™ | Premium and Luxury classes",
+    "uz": "STARAVIA™ | Biznes va birinchi toifa",
+    "ru": "STARAVIA™ | Бизнес- и первый класс"
+  }
+}

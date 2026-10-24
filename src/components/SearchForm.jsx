@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
@@ -5,6 +6,8 @@ import DatePicker from './DatePicker'
 
 // Airport autocomplete dropdown component
 const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) => {
+  const { t } = useLanguage()
+
   const [query, setQuery] = useState(value)
   const [suggestions, setSuggestions] = useState([])
   const [showDropdown, setShowDropdown] = useState(false)
@@ -104,7 +107,7 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
           className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-2xl z-[100] max-h-64 overflow-y-auto"
         >
           {loading ? (
-            <div className="px-4 py-3 text-sm text-gray-400">Loading airports...</div>
+            <div className="px-4 py-3 text-sm text-gray-400">{t("Loading airports...")}</div>
           ) : (
             suggestions.map((airport, idx) => (
               <div
@@ -131,6 +134,8 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
 }
 
 const SearchForm = () => {
+  const { t } = useLanguage()
+
   const navigate = useNavigate()
   const [tripType, setTripType] = useState('one-way')
   const [from, setFrom] = useState('')
@@ -205,9 +210,7 @@ const SearchForm = () => {
               ? 'text-white border-b-2 border-gold font-semibold'
               : 'text-white/60 hover:text-white'
           }`}
-        >
-          Round-Trip
-        </button>
+        > {t("Round-Trip")} </button>
         <button
           type="button"
           onClick={() => setTripType('one-way')}
@@ -216,9 +219,7 @@ const SearchForm = () => {
               ? 'text-white border-b-2 border-gold font-semibold'
               : 'text-white/60 hover:text-white'
           }`}
-        >
-          One-Way
-        </button>
+        > {t("One-Way")} </button>
       </div>
 
       {/* Main search form */}
@@ -228,8 +229,8 @@ const SearchForm = () => {
           <AirportDropdown
             value={from}
             onChange={setFrom}
-            placeholder="City or Airport"
-            label="From..."
+            placeholder={t("City or Airport")}
+            label={t("From...")}
             excludeCode={getCode(to)}
           />
 
@@ -246,8 +247,8 @@ const SearchForm = () => {
           <AirportDropdown
             value={to}
             onChange={setTo}
-            placeholder="City or Airport"
-            label="To..."
+            placeholder={t("City or Airport")}
+            label={t("To...")}
             excludeCode={getCode(from)}
           />
 
@@ -256,8 +257,8 @@ const SearchForm = () => {
             value={departureDate}
             onChange={setDepartureDate}
             minDate={today}
-            label="Departure Date"
-            placeholder="Select date"
+            label={t("Departure Date")}
+            placeholder={t("Select date")}
           />
 
           {/* Return Date (hidden for one-way) */}
@@ -266,18 +267,18 @@ const SearchForm = () => {
               value={returnDate}
               onChange={setReturnDate}
               minDate={departureDate || today}
-              label="Return Date"
-              placeholder="Select date"
+              label={t("Return Date")}
+              placeholder={t("Select date")}
             />
           )}
 
           {/* Passengers / Cabin */}
           <div ref={paxRef} className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer">
-            <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">Passengers / Cabin</label>
+            <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">{t("Passengers / Cabin")}</label>
             <div
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowPaxDropdown(!showPaxDropdown) }}
               className="text-ink font-semibold text-sm text-left">
-              {passengers} | {cabin}
+              {passengers} | {t(cabin === 'First' ? 'First class' : cabin)}
             </div>
           </div>
 
@@ -286,9 +287,7 @@ const SearchForm = () => {
             type="submit"
             className="bg-gold hover:bg-gold-dark transition-colors text-white font-bold text-xs uppercase tracking-widest px-6 py-3 lg:py-0 flex items-center justify-center gap-2 flex-shrink-0"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            Search
-          </button>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> {t("Search")} </button>
         </div>
       </form>
 
@@ -303,7 +302,7 @@ const SearchForm = () => {
           >
             {/* Passengers */}
             <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-ink">Passengers</span>
+              <span className="text-sm font-medium text-ink">{t("Passengers")}</span>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -325,13 +324,13 @@ const SearchForm = () => {
 
             {/* Class */}
             <div>
-              <p className="text-sm font-medium text-ink mb-2">Class</p>
+              <p className="text-sm font-medium text-ink mb-2">{t("Class")}</p>
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { label: 'Economy', value: 'Economy' },
-                  { label: 'Premium Economy', value: 'Premium Economy' },
-                  { label: 'Business', value: 'Business' },
-                  { label: 'First class', value: 'First' }
+                  { label: t("Economy"), value: 'Economy' },
+                  { label: t("Premium Economy"), value: 'Premium Economy' },
+                  { label: t("Business"), value: 'Business' },
+                  { label: t("First class"), value: 'First' }
                 ].map((item) => (
                   <button
                     key={item.value}

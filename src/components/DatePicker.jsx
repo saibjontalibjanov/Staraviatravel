@@ -1,9 +1,9 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
 
-const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
 const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
+  const { t, locale } = useLanguage()
+
   const [isOpen, setIsOpen] = useState(false)
   const [viewDate, setViewDate] = useState(() => {
     if (value) return new Date(value + 'T00:00:00')
@@ -11,6 +11,8 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
     return new Date()
   })
   const containerRef = useRef(null)
+  const days = Array.from({ length: 7 }, (_, index) =>
+    new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(new Date(2024, 0, 1 + index)))
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -80,7 +82,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
   const formatDisplay = (val) => {
     if (!val) return ''
     const d = new Date(val + 'T00:00:00')
-    return `${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(d)
   }
 
   // Can we go to previous month?
@@ -106,7 +108,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
         <span className={`text-sm font-semibold ${value ? 'text-ink' : 'text-gray-400'}`}>
-          {value ? formatDisplay(value) : placeholder || 'Select date'}
+          {value ? formatDisplay(value) : placeholder || t('Select date')}
         </span>
       </div>
 
@@ -125,7 +127,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"/>
               </svg>
             </button>
-            <span className="text-sm font-bold text-ink">{MONTHS[month]} {year}</span>
+            <span className="text-sm font-bold text-ink">{new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(viewDate)}</span>
             <button
               type="button"
               onClick={nextMonth}
@@ -139,7 +141,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
 
           {/* Day Headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {DAYS.map(day => (
+            {days.map(day => (
               <div key={day} className="text-center text-[10px] font-bold text-gray-400 uppercase py-1">
                 {day}
               </div>
@@ -178,9 +180,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
               type="button"
               onClick={() => { onChange(''); setIsOpen(false) }}
               className="text-xs font-medium text-gray-400 hover:text-red-500 transition-colors"
-            >
-              Clear
-            </button>
+            > {t("Clear")} </button>
             <button
               type="button"
               onClick={() => {
@@ -192,9 +192,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
                 }
               }}
               className="text-xs font-semibold text-gold hover:text-gold-dark transition-colors"
-            >
-              Today
-            </button>
+            > {t("Today")} </button>
           </div>
         </div>
       )}

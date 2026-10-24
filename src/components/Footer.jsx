@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
 const Footer = () => {
+  const { t } = useLanguage()
+
   const [email, setEmail] = useState('')
   const [showMessage, setShowMessage] = useState(false)
 
@@ -17,15 +20,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Company Info */}
           <div>
-            <span className="font-display text-3xl font-bold tracking-widest text-gold mb-6 block">STARAVIA</span>
-            <p className="text-white/60 text-sm leading-relaxed mb-6">
-              The most convenient and affordable flights to your dream destinations. Start your journey with us.
-            </p>
+            <span className="font-display text-3xl font-bold tracking-widest text-gold mb-6 block">{t("STARAVIA")}</span>
+            <p className="text-white/60 text-sm leading-relaxed mb-6"> {t("The most convenient and affordable flights to your dream destinations. Start your journey with us.")} </p>
             <div className="flex gap-4">
               {/* Instagram */}
               <a
                 href="#"
-                aria-label="Instagram"
+                aria-label={t("Instagram")}
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -35,7 +36,7 @@ const Footer = () => {
               {/* Telegram */}
               <a
                 href="#"
-                aria-label="Telegram"
+                aria-label={t("Telegram")}
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -45,7 +46,7 @@ const Footer = () => {
               {/* Facebook */}
               <a
                 href="#"
-                aria-label="Facebook"
+                aria-label={t("Facebook")}
                 className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -57,69 +58,53 @@ const Footer = () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="text-lg font-bold mb-6">Company</h4>
+            <h4 className="text-lg font-bold mb-6">{t("Company")}</h4>
             <ul className="space-y-3 text-white/60 text-sm">
               <li>
-                <a href="#biz-haqimizda" className="hover:text-gold transition-colors">
-                  About Us
-                </a>
+                <a href="#biz-haqimizda" className="hover:text-gold transition-colors"> {t("About Us")} </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  Careers
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("Careers")} </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  Partners
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("Partners")} </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  News
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("News")} </a>
               </li>
             </ul>
           </div>
 
           {/* Support Links */}
           <div>
-            <h4 className="text-lg font-bold mb-6">Support</h4>
+            <h4 className="text-lg font-bold mb-6">{t("Support")}</h4>
             <ul className="space-y-3 text-white/60 text-sm">
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  FAQ
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("FAQ")} </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  Terms & Conditions
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("Terms & Conditions")} </a>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors">
-                  Privacy Policy
-                </a>
+                <a href="#" className="hover:text-gold transition-colors"> {t("Privacy Policy")} </a>
               </li>
               <li>
-                <a href="https://wa.me/998901234567" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
-                  Contact
-                </a>
+                <a href="https://wa.me/998901234567" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors"> {t("Contact")} </a>
               </li>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-lg font-bold mb-6">Newsletter</h4>
-            <p className="text-white/60 text-sm mb-4">Get the latest deals and hot offers delivered to your inbox.</p>
+            <h4 className="text-lg font-bold mb-6">{t("Newsletter")}</h4>
+            <p className="text-white/60 text-sm mb-4">{t("Get the latest deals and hot offers delivered to your inbox.")}</p>
             <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Your email address"
+                placeholder={t("Your email address")}
                 className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors"
               />
               <button
@@ -130,11 +115,11 @@ const Footer = () => {
               </button>
             </form>
             {showMessage && (
-              <p className="text-green-400 text-xs mt-2">✓ Successfully subscribed!</p>
+              <p className="text-green-400 text-xs mt-2">{t("✓ Successfully subscribed!")}</p>
             )}
             <div className="mt-6">
-              <p className="text-white/40 text-xs mb-3">Our address:</p>
-              <p className="text-white/60 text-sm">Uzbekistan, Andijan</p>
+              <p className="text-white/40 text-xs mb-3">{t("Our address:")}</p>
+              <p className="text-white/60 text-sm">{t("Uzbekistan, Andijan")}</p>
               <a
                 href="https://wa.me/998901234567"
                 target="_blank"
@@ -149,14 +134,10 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
-          <p>© 2026 STARAVIA. All rights reserved.</p>
+          <p>{t("© 2026 STARAVIA. All rights reserved.")}</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-gold transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-gold transition-colors">
-              Terms of Use
-            </a>
+            <a href="#" className="hover:text-gold transition-colors"> {t("Privacy Policy")} </a>
+            <a href="#" className="hover:text-gold transition-colors"> {t("Terms of Use")} </a>
           </div>
         </div>
       </div>

@@ -1,17 +1,20 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import React from 'react'
 
 const Testimonials = () => {
+  const { t } = useLanguage()
+
   const scrollRef = useRef(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
 
   const testimonials = [
-    { name: 'Aziza K.', location: 'Tashkent, Uzbekistan', text: 'Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!', img: 1 },
-    { name: 'Rustam B.', location: 'Samarkand, Uzbekistan', text: 'We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent.', img: 11 },
-    { name: 'Malika O.', location: 'Bukhara, Uzbekistan', text: 'The support center works great. When my flight changed, they resolved the issue immediately.', img: 5 },
-    { name: 'Dilshod M.', location: 'Tashkent, Uzbekistan', text: 'Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional.', img: 12 },
-    { name: 'Nilufar S.', location: 'Andijan, Uzbekistan', text: 'Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route.', img: 9 },
-    { name: 'Sardor T.', location: 'Namangan, Uzbekistan', text: 'Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle.', img: 14 },
+    { name: 'Aziza K.', location: t("Tashkent, Uzbekistan"), text: t("Finding a ticket through the website was so easy. The agents found me the cheapest and most convenient flight. Thank you so much!"), img: 1 },
+    { name: 'Rustam B.', location: t("Samarkand, Uzbekistan"), text: t("We bought tickets for a family holiday to Dubai. The prices were very affordable and the service quality was excellent."), img: 11 },
+    { name: 'Malika O.', location: t("Bukhara, Uzbekistan"), text: t("The support center works great. When my flight changed, they resolved the issue immediately."), img: 5 },
+    { name: 'Dilshod M.', location: t("Tashkent, Uzbekistan"), text: t("Excellent service! Booked my business class ticket to London at an amazing price. The concierge was very professional."), img: 12 },
+    { name: 'Nilufar S.', location: t("Andijan, Uzbekistan"), text: t("Best travel agency in Uzbekistan! They helped me with visa documents and found the perfect flight route."), img: 9 },
+    { name: 'Sardor T.', location: t("Namangan, Uzbekistan"), text: t("Very responsive customer service. I changed my flight dates twice and they handled everything smoothly without any hassle."), img: 14 },
   ]
 
   const checkScroll = () => {
@@ -36,9 +39,8 @@ const Testimonials = () => {
       <div className="mx-auto max-w-[1500px]">
         <div className="flex items-center justify-between mb-12">
           <div className="text-center flex-1">
-            <span className="text-gold font-semibold tracking-wider uppercase text-sm">Our Clients</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2">
-              What Our Clients <span className="italic text-gold">Say</span>
+            <span className="text-gold font-semibold tracking-wider uppercase text-sm">{t("Our Clients")}</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2"> {t("What Our Clients")} <span className="italic text-gold">{t("Say")}</span>
             </h2>
           </div>
           {/* Carousel Navigation - always visible */}

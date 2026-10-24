@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect } from 'react'
 
 const CookieBanner = () => {
+  const { t } = useLanguage()
+
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -35,25 +38,19 @@ const CookieBanner = () => {
       <div className="flex items-start gap-4">
         <span className="text-3xl">🍪</span>
         <div>
-          <h4 className="font-display text-lg font-bold text-ink">Cookies</h4>
-          <p className="text-sm text-ink/70 mt-1 leading-relaxed">
-            We use cookies to improve your experience and provide personalized services.
-          </p>
+          <h4 className="font-display text-lg font-bold text-ink">{t("Cookies")}</h4>
+          <p className="text-sm text-ink/70 mt-1 leading-relaxed"> {t("We use cookies to improve your experience and provide personalized services.")} </p>
         </div>
       </div>
       <div className="mt-5 flex gap-3">
         <button
           onClick={handleAccept}
           className="flex-1 bg-ink text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-gold transition-colors"
-        >
-          Accept All
-        </button>
+        > {t("Accept All")} </button>
         <button
           onClick={handleReject}
           className="px-4 py-2.5 rounded-xl text-sm font-medium text-ink hover:bg-gray-100 transition-colors border border-gray-200"
-        >
-          Decline
-        </button>
+        > {t("Decline")} </button>
       </div>
     </div>
   )

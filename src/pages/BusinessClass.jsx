@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TopBar from '../components/TopBar';
@@ -5,6 +6,8 @@ import TopBar from '../components/TopBar';
 const STRAPI_URL = 'http://localhost:1337';
 
 const BusinessClass = () => {
+  const { t } = useLanguage()
+
   const [searchParams] = useSearchParams();
   const [deals, setDeals] = useState([]);
   const [selectedDeal, setSelectedDeal] = useState(null);
@@ -58,11 +61,11 @@ const BusinessClass = () => {
     || 'https://images.unsplash.com/photo-1540339832862-4745ea9fb375?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80';
 
   // Use selected deal's texts or defaults
-  const displayTitle = selectedDeal?.title || 'Premium Business Class Flights & Airline Tickets';
-  const displayBadge = selectedDeal?.badge || '50-77% Off Discounted Business Class';
+  const displayTitle = selectedDeal?.title || t('Premium Business Class Flights & Airline Tickets');
+  const displayBadge = selectedDeal?.badge || t('50-77% Off Discounted Business Class');
   const displayPrice = selectedDeal?.price || '$1,985';
   const displayOldPrice = selectedDeal?.oldPrice || '$4,963';
-  const displayType = selectedDeal?.type || 'Discounted business class flights - 2026 from USA to Europe, Asia, Philippines, Africa, India etc. The cheapest business class flights with top airlines\' offers and deals.';
+  const displayType = selectedDeal?.type || t('Discounted business class flights - 2026 from USA to Europe, Asia, Philippines, Africa, India etc. The cheapest business class flights with top airlines\' offers and deals.');
 
   const handleCardClick = (deal) => {
     setSelectedDeal(deal);
@@ -99,12 +102,10 @@ const BusinessClass = () => {
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 border-l-4 border-[#d4a445] pl-6 py-2">
                 <div>
-                  <span className="inline-block bg-[#d4a445] text-black font-bold px-3 py-1 text-sm rounded mb-2">
-                    🔥 This Month's Best Deal
-                  </span>
+                  <span className="inline-block bg-[#d4a445] text-black font-bold px-3 py-1 text-sm rounded mb-2"> {t("🔥 This Month's Best Deal")} </span>
                   <div className="flex items-baseline gap-4">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-sm">Old price:</span>
+                      <span className="text-gray-400 text-sm">{t("Old price:")}</span>
                       <span className="text-gray-400 line-through text-lg">{displayOldPrice}</span>
                     </div>
                     <span className="text-5xl font-bold text-white">{displayPrice}<span className="text-xl text-[#d4a445]">*</span></span>
@@ -114,15 +115,12 @@ const BusinessClass = () => {
                 <div className="hidden sm:block h-16 w-px bg-gray-600 mx-4"></div>
                 
                 <div className="text-sm font-semibold tracking-widest text-gray-300 uppercase leading-relaxed">
-                  <span className="text-[#d4a445]">✦ Official</span><br/>
-                  Airlines<br/>
-                  Retailer
-                </div>
+                  <span className="text-[#d4a445]">{t("✦ Official")}</span><br/> {t("Airlines")}<br/> {t("Retailer")} </div>
               </div>
 
               <div className="mt-12 text-sm text-gray-400 space-y-1">
-                <p><span className="text-[#d4a445] font-semibold">Lost Baggage Protection</span> $2000 Coverage for $45.95</p>
-                <p>Last month we saved clients <span className="text-[#d4a445] font-semibold">over $1,700,000</span></p>
+                <p><span className="text-[#d4a445] font-semibold">{t("Lost Baggage Protection")}</span> {t("$2000 Coverage for $45.95")}</p>
+                <p>{t("Last month we saved clients")} <span className="text-[#d4a445] font-semibold">{t("over $1,700,000")}</span></p>
               </div>
 
               {/* Deal image cards from API */}
@@ -144,55 +142,50 @@ const BusinessClass = () => {
             {/* Right side - Form */}
             <div className="bg-white rounded-md shadow-2xl p-6 sm:p-8">
               <div className="text-center mb-6">
-                <p className="text-xs font-bold text-gray-500 tracking-widest uppercase mb-1">— Want to save more? —</p>
-                <h2 className="text-xl font-bold text-gray-800">
-                  CALL US Toll-FREE <span className="font-normal text-gray-600">to Get the Best Unpublished Fares</span> <span className="text-red-600">and Save $100 Extra</span>
+                <p className="text-xs font-bold text-gray-500 tracking-widest uppercase mb-1">{t("— Want to save more? —")}</p>
+                <h2 className="text-xl font-bold text-gray-800"> {t("CALL US Toll-FREE")} <span className="font-normal text-gray-600">{t("to Get the Best Unpublished Fares")}</span> <span className="text-red-600">{t("and Save $100 Extra")}</span>
                 </h2>
-                <p className="text-sm text-gray-500 mt-1">or request an offer</p>
+                <p className="text-sm text-gray-500 mt-1">{t("or request an offer")}</p>
               </div>
 
               <form className="space-y-4">
                 {/* Name */}
                 <div className="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder="First Name*" className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
-                  <input type="text" placeholder="Last Name*" className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                  <input type="text" placeholder={t("First Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                  <input type="text" placeholder={t("Last Name*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
                 </div>
 
                 {/* Email */}
-                <input type="email" placeholder="Enter e-mail*" className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
+                <input type="email" placeholder={t("Enter e-mail*")} className="w-full border border-gray-300 rounded p-3 text-sm focus:outline-none focus:border-[#d4a445] transition-colors" required />
                 
                 {/* Phone */}
                 <div className="flex border border-gray-300 rounded focus-within:border-[#d4a445] overflow-hidden transition-colors">
                   <span className="bg-gray-100 p-3 text-sm border-r border-gray-300 flex items-center">🇺🇿 +998</span>
-                  <input type="tel" placeholder="Phone Number*" className="w-full p-3 text-sm focus:outline-none" required />
+                  <input type="tel" placeholder={t("Phone Number*")} className="w-full p-3 text-sm focus:outline-none" required />
                 </div>
 
                 {/* Submit Button */}
                 <button 
                   type="submit" 
                   className="w-full bg-[#d4a445] hover:bg-[#b88c35] text-white font-bold text-lg py-4 rounded transition-all duration-300 mt-4 shadow-lg"
-                >
-                  GET FREE QUOTES
-                </button>
+                > {t("GET FREE QUOTES")} </button>
               </form>
 
-              <p className="text-[10px] text-gray-400 mt-4 leading-tight">
-                *No Spam - only phone-exclusive deals. No purchase necessary. By providing your contact details you agree to be contacted for travel information.
-              </p>
+              <p className="text-[10px] text-gray-400 mt-4 leading-tight"> {t("*No Spam - only phone-exclusive deals. No purchase necessary. By providing your contact details you agree to be contacted for travel information.")} </p>
 
               {/* Stats */}
               <div className="flex justify-between items-center mt-6 pt-6 border-t border-gray-100 text-center">
                 <div>
-                  <p className="text-sm font-bold text-gray-800">70%* OFF</p>
-                  <p className="text-[10px] text-gray-500 uppercase">Phone-Only Deals</p>
+                  <p className="text-sm font-bold text-gray-800">{t("70%* OFF")}</p>
+                  <p className="text-[10px] text-gray-500 uppercase">{t("Phone-Only Deals")}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-gray-800">2M+</p>
-                  <p className="text-[10px] text-gray-500 uppercase">Clients</p>
+                  <p className="text-sm font-bold text-gray-800">{t("2M+")}</p>
+                  <p className="text-[10px] text-gray-500 uppercase">{t("Clients")}</p>
                 </div>
                 <div>
                   <p className="text-sm font-bold text-gray-800">500+</p>
-                  <p className="text-[10px] text-gray-500 uppercase">Live Experts</p>
+                  <p className="text-[10px] text-gray-500 uppercase">{t("Live Experts")}</p>
                 </div>
               </div>
             </div>

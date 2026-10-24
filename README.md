@@ -77,3 +77,16 @@ npm run build
 ```
 
 Deploy to any static hosting (Vercel, Netlify, GitHub Pages, etc.)
+
+## Website languages
+
+Uzbek (`uz`) is the default. The navbar selector also offers Russian (`ru`) and English (`en`). The choice is shared across routes and stored locally as `staravia.language`; if storage is unavailable, switching still works for the current visit. Calendar labels follow the selected locale, while search parameters and ISO dates keep their original values.
+
+Static interface translations live in `src/i18n/messages.json`. Use `useLanguage()` from `src/i18n/LanguageContext.jsx` and `t('English source text')` for new copy, adding an entry for each supported language. Airline names, airport data, and promotional content returned by Strapi retain the language supplied by the backend.
+
+Run the language checks with Node.js 24:
+
+```bash
+node --test tests/language.test.js
+npm run build
+```

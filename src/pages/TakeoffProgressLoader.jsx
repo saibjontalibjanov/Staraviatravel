@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import React from 'react';
 
 const TakeoffProgressLoader = () => {
+  const { t } = useLanguage()
+
   const brandColor = '#d4a445';
 
   return (
@@ -11,12 +14,8 @@ const TakeoffProgressLoader = () => {
         <h3 
           className="text-xl font-bold tracking-widest uppercase" 
           style={{ color: brandColor }}
-        >
-          Preparing for Takeoff
-        </h3>
-        <p className="text-sm mt-2 text-slate-500 font-medium">
-          Retrieving the best routes and prices...
-        </p>
+        > {t("Preparing for Takeoff")} </h3>
+        <p className="text-sm mt-2 text-slate-500 font-medium"> {t("Retrieving the best routes and prices...")} </p>
       </div>
 
       {/* Progress Bar Container */}

@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cards from './Cards'
@@ -18,6 +19,8 @@ const STRAPI_URL = 'http://localhost:1337';
 // }
 
 const HotDeals = () => {
+  const { t } = useLanguage()
+
   const navigate = useNavigate()
   const carouselRef = useRef(null)
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -100,8 +103,8 @@ const HotDeals = () => {
       <div className="mx-auto max-w-[1500px]">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="text-gold font-semibold tracking-wider uppercase text-sm">Special Offers</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2">Hot <span className="italic text-gold">Deals</span></h2>
+            <span className="text-gold font-semibold tracking-wider uppercase text-sm">{t("Special Offers")}</span>
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-ink mt-2">{t("Hot")} <span className="italic text-gold">{t("Deals")}</span></h2>
           </div>
           {/* Carousel Navigation */}
           <div className="flex gap-3">
@@ -127,11 +130,11 @@ const HotDeals = () => {
         </div>
 
         {loading ? (
-          <p className="text-center text-ink text-lg">Loading hot deals...</p>
+          <p className="text-center text-ink text-lg">{t("Loading hot deals...")}</p>
         ) : error ? (
-          <p className="text-center text-red-600 text-lg">{error}</p>
+          <p className="text-center text-red-600 text-lg">{t(error)}</p>
         ) : deals.length === 0 ? (
-          <p className="text-center text-ink/70 text-lg">No hot deals available at the moment.</p>
+          <p className="text-center text-ink/70 text-lg">{t("No hot deals available at the moment.")}</p>
         ) : (
           /* Carousel Container */
           <div className="relative overflow-hidden">
