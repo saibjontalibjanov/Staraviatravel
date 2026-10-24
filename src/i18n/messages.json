@@ -1338,5 +1338,15 @@
     "en": "Could not send your application. Please check your details and try again.",
     "uz": "So‘rovingizni yuborib bo‘lmadi. Ma’lumotlarni tekshiring va qayta urinib ko‘ring.",
     "ru": "Не удалось отправить заявку. Проверьте данные и попробуйте ещё раз."
+  },
+  "Main navigation": {
+    "en": "Main navigation",
+    "uz": "Asosiy menyu",
+    "ru": "Основная навигация"
+  },
+  "Mobile navigation": {
+    "en": "Mobile navigation",
+    "uz": "Mobil menyu",
+    "ru": "Мобильная навигация"
   }
 }

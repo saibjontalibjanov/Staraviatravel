@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faCoins, faGlobe, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
 import { useLanguage } from '../i18n/LanguageContext'
 import TopBar from '../components/TopBar'
+import MainNavbar from '../components/MainNavbar'
 import PhonePopup from '../components/PhonePopup'
 import BusinessSeat from '../../pictures/seats/business-seat.jpg'
 import FirstClass from '../../pictures/seats/firstclass-seat.jpg'
@@ -22,16 +23,21 @@ export default function AboutUs() {
     <div className="about-page">
       <TopBar onPhoneClick={() => setShowPhonePopup(true)} />
       <main id="about">
-        <div className="about-sky" aria-hidden="true" />
-
-        <section className="about-introduction" aria-labelledby="about-title">
+        <section className="about-hero" aria-labelledby="about-title">
+          <video autoPlay loop muted playsInline preload="metadata" poster="/pictures/about/clouds.jpg" className="about-hero-video" aria-hidden="true">
+            <source src="/Cover800x312_darken_3mb.mp4" type="video/mp4" />
+          </video>
+          <div className="about-hero-shade" aria-hidden="true" />
+          <div className="about-hero-navigation"><MainNavbar /></div>
           <header className="about-heading">
             <p className="about-eyebrow">STARAVIA</p>
             <h1 id="about-title">{t('About Us')}</h1>
             <div className="about-ornament" aria-hidden="true"><span /><FontAwesomeIcon icon={faStar} /><span /></div>
             <p className="about-subtitle">{t('We turn every flight into a reliable, thoughtful journey.')}</p>
           </header>
+        </section>
 
+        <section className="about-introduction" aria-labelledby="about-story-title">
           <div className="about-story">
             <div className="about-photos">
               <img className="about-main-photo" src={BusinessSeat} alt={t('A comfortable premium cabin seat beside an aircraft window')} width="512" height="640" />
@@ -39,7 +45,7 @@ export default function AboutUs() {
             </div>
             <div className="about-story-copy">
               <span className="about-gold-rule" aria-hidden="true" />
-              <h2>{t('Comfortable flights, trusted tickets, and heartfelt service')}</h2>
+              <h2 id="about-story-title">{t('Comfortable flights, trusted tickets, and heartfelt service')}</h2>
               <p>{t('STARAVIA is a brand specializing in international airline tickets and VIP travel services. We bring comfortable flights, reliable ticketing, and a genuinely warm welcome together in one place.')}</p>
               <p>{t('A business trip, a family holiday, or a well-earned break — we carefully plan every itinerary around your time, budget, and wishes.')}</p>
             </div>

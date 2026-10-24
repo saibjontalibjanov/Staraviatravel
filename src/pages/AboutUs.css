@@ -6,12 +6,16 @@
   color: #29251f;
 }
 
-.about-sky {
-  height: clamp(300px, 39vw, 620px);
-  background-image: linear-gradient(to bottom, #f4b64f38, #fae2b347 45%, var(--about-cream) 100%), url('/pictures/about/clouds.jpg');
-  background-size: cover;
-  background-position: center 42%;
-}
+.about-hero { position: relative; isolation: isolate; min-height: clamp(500px, 70vh, 760px); display: flex; flex-direction: column; background: #23201c; color: #fff; }
+.about-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.about-hero-shade { position: absolute; inset: 0; background: linear-gradient(180deg, #15120f70, #15120f45 40%, #15120f95); z-index: -1; }
+.about-hero-navigation { width: 100%; max-width: 1500px; margin: 0 auto; }
+.about-hero .about-heading { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px 24px 100px; }
+.about-page .about-hero .about-eyebrow { color: #efca7d; }
+.about-hero .about-subtitle { color: #fff8eb; max-width: 650px; font-size: 18px; text-shadow: 0 2px 12px #0008; }
+.about-hero .about-heading h1 { font-size: clamp(42px, 5vw, 72px); text-shadow: 0 2px 18px #0006; }
+.about-hero .about-ornament { color: #efca7d; }
+.about-hero .about-ornament span { background: #efca7d; }
 
 .about-introduction {
   width: min(960px, calc(100% - 64px));
@@ -47,7 +51,7 @@
   line-height: 1.8;
 }
 
-.about-story { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; margin-top: 78px; }
+.about-story { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: center; margin-top: 0; }
 .about-photos { position: relative; padding: 0 34px 62px 0; }
 .about-main-photo { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 5px; }
 .about-inset-photo {
@@ -103,9 +107,11 @@
 .about-contact-button:focus-visible { outline: 3px solid white; outline-offset: 5px; }
 
 @media (max-width: 767px) {
-  .about-sky { height: 280px; }
+  .about-hero { min-height: 500px; }
+  .about-hero .about-heading { padding: 48px 24px 80px; }
+  .about-hero .about-subtitle { font-size: 16px; }
   .about-introduction { width: min(520px, calc(100% - 40px)); padding: 40px 0 56px; }
-  .about-story { grid-template-columns: 1fr; gap: 42px; margin-top: 48px; }
+  .about-story { grid-template-columns: 1fr; gap: 42px; margin-top: 0; }
   .about-photos { max-width: 400px; width: 100%; margin: 0 auto; }
   .about-story-copy { padding: 0 4px; }
   .about-story-copy h2 { font-size: 28px; }
