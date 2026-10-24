@@ -33,7 +33,7 @@ const Hero = () => {
             <Link to="/business-class" className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">BUSINESS CLASS</Link>
             <a href="#biz-haqimizda" onClick={(e) => { e.preventDefault(); scrollToSection('biz-haqimizda') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">HOW TO BOOK</a>
             <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">TESTIMONIALS</a>
-            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full">ABOUT US</a>
+            <a href="#fikrlar" onClick={(e) => { e.preventDefault(); scrollToSection('fikrlar') }} className="relative transition-colors duration-300 hover:text-gold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-gold after:transition-all hover:after:w-full"><Link to='/about-us'>ABOUT US</Link></a>
           </nav>
           
           <div className="flex items-center gap-4">
