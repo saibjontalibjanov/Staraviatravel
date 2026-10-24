@@ -1,3 +1,4 @@
+import TicketSearch from './ticket-search/TicketSearch'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import useLeads, { collectionUrl } from './useLeads'
@@ -17,11 +18,13 @@ function LeadDetail({ clientId }) {
           ['Client ID', lead.clientId], ['Phone', lead.phone], ['Email', lead.email], ['Status', lead.leadStatus],
           ['Application source', lead.source], ['Language', lead.language], ['Received', new Date(lead.createdAt).toLocaleString()],
           ['Website page', lead.pagePath], ['Flight route', lead.flightRoute], ['Airline', lead.airline],
+          ['Departure date', lead.departureDate], ['Return date', lead.returnDate], ['Passengers', lead.passengers], ['Cabin', lead.cabin],
           ['Quoted price (USD)', lead.quotedPrice], ['Payment preference', lead.paymentMethod],
           ['Booking terms accepted', lead.termsAccepted ? 'Yes' : 'No'], ['Agent notes', lead.notes],
         ].map(([name, value]) => <div key={name}><dt>{name}</dt><dd>{value ?? '—'}</dd></div>)}</dl>
         <Link className="leads-button" to={`${collectionUrl}/${lead.documentId}`}>Edit status and notes in Content Manager</Link>
       </section>
+      <TicketSearch lead={lead} key={lead.documentId} />
     </>}
   </main>
 }

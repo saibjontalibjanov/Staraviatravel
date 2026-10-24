@@ -43,6 +43,29 @@ function validateApplication(input) {
     data.paymentMethod = input.paymentMethod;
   }
   if (input.source === 'booking' && (input.termsAccepted !== true || !data.paymentMethod)) throw new IntakeError('Accept the terms and select a payment method.');
+  for (const key of ['departureAirport', 'arrivalAirport']) {
+    if (input[key] !== undefined && input[key] !== '') {
+      if (typeof input[key] !== 'string' || !/^[A-Z]{3}$/.test(input[key])) throw new IntakeError(`Invalid ${key}.`);
+      data[key] = input[key];
+    }
+  }
+  if (data.departureAirport && data.departureAirport === data.arrivalAirport) throw new IntakeError('Departure and arrival must be different.');
+  for (const key of ['departureDate', 'returnDate']) {
+    if (input[key] !== undefined && input[key] !== '') {
+      const value = input[key];
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(Date.parse(value)) || new Date(value).toISOString().slice(0, 10) !== value) throw new IntakeError(`Invalid ${key}.`);
+      data[key] = value;
+    }
+  }
+  if (data.returnDate && data.departureDate && data.returnDate < data.departureDate) throw new IntakeError('Return date must be on or after departure.');
+  if (input.passengers !== undefined) {
+    if (!Number.isInteger(input.passengers) || input.passengers < 1 || input.passengers > 9) throw new IntakeError('Invalid passenger count.');
+    data.passengers = input.passengers;
+  }
+  if (input.cabin !== undefined) {
+    if (!['Economy', 'Premium Economy', 'Business', 'First'].includes(input.cabin)) throw new IntakeError('Invalid cabin class.');
+    data.cabin = input.cabin;
+  }
   data.termsAccepted = input.termsAccepted === true;
   data.leadStatus = 'new';
   return data;

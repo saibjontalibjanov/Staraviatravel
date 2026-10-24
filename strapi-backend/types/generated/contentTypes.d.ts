@@ -525,6 +525,10 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 100;
       }>;
+    arrivalAirport: Schema.Attribute.String;
+    cabin: Schema.Attribute.Enumeration<
+      ['Economy', 'Premium Economy', 'Business', 'First']
+    >;
     clientId: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
@@ -536,6 +540,8 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    departureAirport: Schema.Attribute.String;
+    departureDate: Schema.Attribute.Date;
     email: Schema.Attribute.Email;
     firstName: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
@@ -567,6 +573,14 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 500;
       }>;
+    passengers: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 9;
+          min: 1;
+        },
+        number
+      >;
     paymentMethod: Schema.Attribute.Enumeration<
       ['credit-card', 'debit-card', 'bank-transfer', 'cash']
     >;
@@ -583,6 +597,7 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    returnDate: Schema.Attribute.Date;
     source: Schema.Attribute.Enumeration<['callback', 'quote', 'booking']> &
       Schema.Attribute.Required;
     termsAccepted: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

@@ -69,3 +69,13 @@ test('reference cannot change when an agent edits a lead', () => {
   lifecycle.beforeUpdate(event);
   assert.deepEqual(event.params.data, { leadStatus: 'contacted' });
 });
+
+test('saves structured lead itinerary for agent search autofill', () => {
+  const data = validateApplication({ ...booking, departureAirport: 'TAS', arrivalAirport: 'IST', departureDate: '2026-11-01', returnDate: '2026-11-10', passengers: 2, cabin: 'Business' });
+  assert.equal(data.departureAirport, 'TAS'); assert.equal(data.arrivalAirport, 'IST'); assert.equal(data.departureDate, '2026-11-01'); assert.equal(data.returnDate, '2026-11-10'); assert.equal(data.passengers, 2); assert.equal(data.cabin, 'Business');
+});
+
+test('rejects malformed lead itineraries while allowing absent travel details', () => {
+  for (const fields of [{ departureAirport: 'TASHKENT' }, { departureDate: '2026-02-30' }, { departureAirport: 'TAS', arrivalAirport: 'TAS' }, { passengers: 12 }, { cabin: 'invalid' }, { departureDate: '2026-11-10', returnDate: '2026-11-01' }]) assert.throws(() => validateApplication({ ...callback, ...fields }), IntakeError);
+  assert.equal(validateApplication(callback).departureAirport, undefined);
+});

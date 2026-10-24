@@ -1,23 +1,132 @@
 {
   "kind": "collectionType",
   "collectionName": "leads",
-  "info": { "singularName": "lead", "pluralName": "leads", "displayName": "Leads", "description": "Client applications received from the website" },
-  "options": { "draftAndPublish": false },
+  "info": {
+    "singularName": "lead",
+    "pluralName": "leads",
+    "displayName": "Leads",
+    "description": "Client applications received from the website"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
   "attributes": {
-    "clientId": { "type": "string", "required": true, "unique": true, "regex": "^[1-9][0-9]{5}$", "pluginOptions": { "content-manager": { "editable": false } } },
-    "firstName": { "type": "string", "maxLength": 100 },
-    "lastName": { "type": "string", "maxLength": 100 },
-    "phone": { "type": "string", "required": true, "maxLength": 30 },
-    "email": { "type": "email" },
-    "source": { "type": "enumeration", "enum": ["callback", "quote", "booking"], "required": true },
-    "language": { "type": "enumeration", "enum": ["uz", "ru", "en"], "default": "uz" },
-    "pagePath": { "type": "string", "maxLength": 500 },
-    "flightRoute": { "type": "string", "maxLength": 200 },
-    "airline": { "type": "string", "maxLength": 100 },
-    "quotedPrice": { "type": "decimal", "min": 0 },
-    "paymentMethod": { "type": "enumeration", "enum": ["credit-card", "debit-card", "bank-transfer", "cash"] },
-    "termsAccepted": { "type": "boolean", "default": false },
-    "leadStatus": { "type": "enumeration", "enum": ["new", "contacted", "qualified", "closed"], "default": "new", "required": true },
-    "notes": { "type": "text", "maxLength": 10000 }
+    "clientId": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "regex": "^[1-9][0-9]{5}$",
+      "pluginOptions": {
+        "content-manager": {
+          "editable": false
+        }
+      }
+    },
+    "firstName": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "lastName": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "phone": {
+      "type": "string",
+      "required": true,
+      "maxLength": 30
+    },
+    "email": {
+      "type": "email"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": [
+        "callback",
+        "quote",
+        "booking"
+      ],
+      "required": true
+    },
+    "language": {
+      "type": "enumeration",
+      "enum": [
+        "uz",
+        "ru",
+        "en"
+      ],
+      "default": "uz"
+    },
+    "pagePath": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "flightRoute": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "airline": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "quotedPrice": {
+      "type": "decimal",
+      "min": 0
+    },
+    "paymentMethod": {
+      "type": "enumeration",
+      "enum": [
+        "credit-card",
+        "debit-card",
+        "bank-transfer",
+        "cash"
+      ]
+    },
+    "termsAccepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "leadStatus": {
+      "type": "enumeration",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "closed"
+      ],
+      "default": "new",
+      "required": true
+    },
+    "notes": {
+      "type": "text",
+      "maxLength": 10000
+    },
+    "departureAirport": {
+      "type": "string",
+      "regex": "^[A-Z]{3}$"
+    },
+    "arrivalAirport": {
+      "type": "string",
+      "regex": "^[A-Z]{3}$"
+    },
+    "departureDate": {
+      "type": "date"
+    },
+    "returnDate": {
+      "type": "date"
+    },
+    "passengers": {
+      "type": "integer",
+      "min": 1,
+      "max": 9
+    },
+    "cabin": {
+      "type": "enumeration",
+      "enum": [
+        "Economy",
+        "Premium Economy",
+        "Business",
+        "First"
+      ]
+    }
   }
 }

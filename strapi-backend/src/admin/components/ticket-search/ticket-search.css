@@ -1,0 +1,22 @@
+.ticket-search { scroll-margin-top: 2rem; }
+.ticket-intro { color: #666687; line-height: 1.6; margin-bottom: 2.4rem; }
+.ticket-search-form fieldset { border: 0; padding: 0; margin: 0 0 2.4rem; }
+.ticket-legend { font-weight: 600; margin-bottom: 1.6rem; }
+.ticket-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1.6rem; }
+.ticket-fields label { display: flex; flex-direction: column; gap: .8rem; font-size: 1.4rem; }
+.ticket-fields input, .ticket-fields select { min-width: 0; background: #fff; color: #32324d; border: 1px solid #8e8ea9; border-radius: .4rem; padding: 1.1rem; font: inherit; }
+.ticket-fields input:focus-visible, .ticket-fields select:focus-visible { outline: 2px solid #4945ff; outline-offset: 2px; }
+.ticket-trip-toggle { display: flex; align-items: center; gap: .8rem; margin-bottom: 2rem; }
+.ticket-trip-toggle input { appearance: auto; width: 1.6rem; height: 1.6rem; }
+.ticket-field-hint { color: #666687; font-size: 1.1rem; }
+.ticket-feedback, .ticket-error { margin-top: 2rem; line-height: 1.6; }
+.ticket-error { color: #b72b1a; padding: 1.6rem; background: #fcecea; border-radius: .4rem; }
+.ticket-results { margin-top: 3.2rem; }
+.ticket-results h3 { font-size: 1.8rem; font-weight: 600; margin-bottom: .8rem; }
+.ticket-offer { border: 1px solid #dcdce4; border-radius: .6rem; padding: 2rem; margin-top: 2rem; }
+.ticket-offer header { display: flex; justify-content: space-between; gap: 1.6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.ticket-offer h4 { font-weight: 600; }
+.ticket-offer header strong { font-size: 1.8rem; color: #4945ff; }
+.ticket-offer ol { display: grid; gap: 1.6rem; margin-top: 1.6rem; }
+.ticket-offer li { display: flex; flex-direction: column; gap: .6rem; line-height: 1.5; padding-left: 1.2rem; border-left: 2px solid #c0c0cf; }
+.ticket-disclaimer { color: #666687; line-height: 1.7; font-size: 1.2rem; margin-top: 2.4rem; }

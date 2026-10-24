@@ -1,3 +1,4 @@
+import { itineraryFromSearch, readItineraryDraft } from '../lib/itinerary'
 import { useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
 import { submitLead } from '../lib/leads'
@@ -15,7 +16,14 @@ export default function useLeadSubmission() {
     setPending(true)
     setError('')
     try {
-      const receipt = await submitLead({ ...application, language, pagePath: window.location.pathname })
+      const params = new URLSearchParams(window.location.search)
+      let itinerary = {}
+      if (application.source !== 'booking') {
+        itinerary = params.has('from') || params.has('to')
+          ? itineraryFromSearch(Object.fromEntries(params))
+          : readItineraryDraft()
+      }
+      const receipt = await submitLead({ ...itinerary, ...application, language, pagePath: window.location.pathname })
       setResult(receipt)
       return receipt
     } catch (cause) {

@@ -116,3 +116,21 @@ node --test tests/language.test.js strapi-backend/tests/leads.test.js
 npm run build
 cd strapi-backend && npm run build
 ```
+
+## Agent ticket search
+
+Each Lead detail page (`/admin/client=123456`) includes **Search tickets**, prefilled from that application's airports, departure/return dates, adult passenger count, and cabin class. New website bookings save these fields explicitly. Callback and quote applications include valid itinerary details from the visitor's current search, when available. Older leads can prefill airport codes from their route text; agents enter any dates or other details that were never collected. Editing the search form does not change the saved application.
+
+Agents can also open **Ticket Search** in the admin sidebar at `/admin/plugins/ticket-search` for an independent search. Airport-code suggestions use the repository's airport catalogue. Searches support one-way and round-trip itineraries, 1–9 adults, and Economy, Premium Economy, Business, or First Class. Results show the provider's USD price, flight legs, airlines, departure/arrival times, duration, and stops.
+
+Configure `SERPAPI_KEY` securely **on the Strapi server**, using the existing SerpAPI Google Flights account. Do not put it in frontend `VITE_*` variables. Strapi needs HTTPS access to `serpapi.com`. Without a key, search shows a configuration error; there are no sample fares in the shipped application.
+
+Super Admin has search access automatically. For other agent roles, grant **Search tickets** under the role's **Settings → Ticket Search** permissions, plus Content Manager **Leads → Read** to access lead details. Both airport suggestions and searches require an authenticated admin with search permission. The website and admin share the same backend provider integration.
+
+Round-trip provider responses initially show outbound options. Agents must confirm return selection, the full fare, availability, and fare rules with the provider before quoting or issuing. This feature searches offers; it does not issue tickets or collect payment.
+
+After pulling updates, rebuild/restart Strapi and rebuild the frontend. Run checks with:
+
+```bash
+node --test tests/*.test.js strapi-backend/tests/*.test.js
+```

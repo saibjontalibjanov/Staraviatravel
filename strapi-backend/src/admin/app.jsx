@@ -12,6 +12,13 @@ export default {
       permissions,
       Component: () => import('./components/LeadsPage'),
     })
+    app.addMenuLink({
+      to: 'plugins/ticket-search',
+      icon: User,
+      intlLabel: { id: 'staravia.ticket-search.menu', defaultMessage: 'Ticket Search' },
+      permissions: [{ action: 'api::ticket-search.search' }],
+      Component: () => import('./components/ticket-search/TicketSearchPage'),
+    })
     app.router.addRoute({
       path: ':clientReference',
       lazy: () => import('./components/LeadsPage').then(module => ({ Component: module.default })),

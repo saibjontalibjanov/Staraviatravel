@@ -1,3 +1,4 @@
+import { itineraryFromSearch } from '../lib/itinerary'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -16,7 +17,7 @@ import TakeoffProgressLoader from './TakeoffProgressLoader';
 const STRAPI_URL = 'http://localhost:1337';
 
 // Book Flight Popup Component
-const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
+const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
   const { t } = useLanguage()
 
   const [formData, setFormData] = useState({
@@ -41,6 +42,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo }) => {
     e.preventDefault()
     await submit({
       ...formData,
+      ...itinerary,
       source: 'booking',
       flightRoute: flightInfo?.route,
       airline: flightInfo?.airline,
@@ -263,6 +265,7 @@ const SearchResults = () => {
           arrival_id: toCode,
           date: departureDate,
           cabin: cabin,
+          passengers,
         });
 
         if (tripType === 'round-trip' && returnDate) {
@@ -566,6 +569,7 @@ const SearchResults = () => {
         isOpen={showBookPopup}
         onClose={() => setShowBookPopup(false)}
         flightInfo={selectedFlight}
+        itinerary={itineraryFromSearch({ from: fromCode, to: toCode, departureDate, returnDate, passengers, cabin, tripType })}
       />
       {/* <Testimonials /> */}
       <TrustBar />

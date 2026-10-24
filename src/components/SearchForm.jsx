@@ -1,3 +1,4 @@
+import { saveItineraryDraft } from '../lib/itinerary'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
@@ -148,6 +149,10 @@ const SearchForm = () => {
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
   const paxRef = useRef(null)
   const formRef = useRef(null)
+
+  useEffect(() => {
+    saveItineraryDraft({ from, to, departureDate, returnDate, passengers, cabin, tripType })
+  }, [from, to, departureDate, returnDate, passengers, cabin, tripType])
 
   const today = new Date().toISOString().split('T')[0]
 
