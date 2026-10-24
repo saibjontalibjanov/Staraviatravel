@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "telegram_chats",
+  "info": { "singularName": "telegram-chat", "pluralName": "telegram-chats", "displayName": "Telegram chats" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "content-manager": { "visible": false }, "content-type-builder": { "visible": false } },
+  "attributes": {
+    "chatId": { "type": "string", "required": true, "unique": true },
+    "displayName": { "type": "string", "required": true },
+    "username": { "type": "string" },
+    "chatType": { "type": "enumeration", "enum": ["private", "group", "supergroup"], "default": "private" },
+    "clientId": { "type": "string", "regex": "^[1-9][0-9]{5}$" },
+    "lastMessageAt": { "type": "datetime" },
+    "lastInboundAt": { "type": "datetime" },
+    "lastReadAt": { "type": "datetime" },
+    "preview": { "type": "string", "maxLength": 200 }
+  }
+}

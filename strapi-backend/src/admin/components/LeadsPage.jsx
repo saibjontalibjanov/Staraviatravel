@@ -24,6 +24,7 @@ function LeadDetail({ clientId }) {
         ].map(([name, value]) => <div key={name}><dt>{name}</dt><dd>{value ?? '—'}</dd></div>)}</dl>
         <Link className="leads-button" to={`${collectionUrl}/${lead.documentId}`}>Edit status and notes in Content Manager</Link>
       </section>
+      <p style={{ marginTop: '2rem' }}><Link to={`/plugins/telegram?clientId=${lead.clientId}`}>Telegram conversations for this client</Link></p>
       <TicketSearch lead={lead} key={lead.documentId} />
     </>}
   </main>

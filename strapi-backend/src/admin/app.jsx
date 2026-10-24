@@ -19,6 +19,13 @@ export default {
       permissions: [{ action: 'api::ticket-search.search' }],
       Component: () => import('./components/ticket-search/TicketSearchPage'),
     })
+    app.addMenuLink({
+      to: 'plugins/telegram',
+      icon: User,
+      intlLabel: { id: 'staravia.telegram.menu', defaultMessage: 'Telegram' },
+      permissions: [{ action: 'api::telegram.read' }],
+      Component: () => import('./components/telegram/TelegramPage'),
+    })
     app.router.addRoute({
       path: ':clientReference',
       lazy: () => import('./components/LeadsPage').then(module => ({ Component: module.default })),

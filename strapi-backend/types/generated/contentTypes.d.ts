@@ -638,6 +638,115 @@ export interface ApiSearchResultsSearchResults
   };
 }
 
+export interface ApiTelegramChatTelegramChat
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'telegram_chats';
+  info: {
+    displayName: 'Telegram chats';
+    pluralName: 'telegram-chats';
+    singularName: 'telegram-chat';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    chatId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    chatType: Schema.Attribute.Enumeration<['private', 'group', 'supergroup']> &
+      Schema.Attribute.DefaultTo<'private'>;
+    clientId: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    displayName: Schema.Attribute.String & Schema.Attribute.Required;
+    lastInboundAt: Schema.Attribute.DateTime;
+    lastMessageAt: Schema.Attribute.DateTime;
+    lastReadAt: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::telegram-chat.telegram-chat'
+    > &
+      Schema.Attribute.Private;
+    preview: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    username: Schema.Attribute.String;
+  };
+}
+
+export interface ApiTelegramMessageTelegramMessage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'telegram_messages';
+  info: {
+    displayName: 'Telegram messages';
+    pluralName: 'telegram-messages';
+    singularName: 'telegram-message';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    agentId: Schema.Attribute.String;
+    attempts: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    chatId: Schema.Attribute.String & Schema.Attribute.Required;
+    clientId: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    deliveryStatus: Schema.Attribute.Enumeration<
+      ['received', 'pending', 'sending', 'sent', 'failed', 'unknown']
+    > &
+      Schema.Attribute.Required;
+    direction: Schema.Attribute.Enumeration<['incoming', 'outgoing']> &
+      Schema.Attribute.Required;
+    eventKey: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    lastError: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::telegram-message.telegram-message'
+    > &
+      Schema.Attribute.Private;
+    nextAttemptAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    senderName: Schema.Attribute.String;
+    telegramMessageId: Schema.Attribute.String;
+    text: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 4096;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1153,6 +1262,8 @@ declare module '@strapi/strapi' {
       'api::card-flights.card-flights': ApiCardFlightsCardFlights;
       'api::lead.lead': ApiLeadLead;
       'api::search-results.search-results': ApiSearchResultsSearchResults;
+      'api::telegram-chat.telegram-chat': ApiTelegramChatTelegramChat;
+      'api::telegram-message.telegram-message': ApiTelegramMessageTelegramMessage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

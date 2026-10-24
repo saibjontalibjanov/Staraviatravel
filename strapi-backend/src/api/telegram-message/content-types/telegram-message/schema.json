@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "telegram_messages",
+  "info": { "singularName": "telegram-message", "pluralName": "telegram-messages", "displayName": "Telegram messages" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "content-manager": { "visible": false }, "content-type-builder": { "visible": false } },
+  "attributes": {
+    "eventKey": { "type": "string", "required": true, "unique": true },
+    "chatId": { "type": "string", "required": true },
+    "text": { "type": "text", "required": true, "maxLength": 4096 },
+    "direction": { "type": "enumeration", "enum": ["incoming", "outgoing"], "required": true },
+    "senderName": { "type": "string" },
+    "agentId": { "type": "string" },
+    "telegramMessageId": { "type": "string" },
+    "deliveryStatus": { "type": "enumeration", "enum": ["received", "pending", "sending", "sent", "failed", "unknown"], "required": true },
+    "attempts": { "type": "integer", "default": 0 },
+    "nextAttemptAt": { "type": "datetime" },
+    "lastError": { "type": "string" },
+    "clientId": { "type": "string", "regex": "^[1-9][0-9]{5}$" }
+  }
+}

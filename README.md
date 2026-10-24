@@ -134,3 +134,28 @@ After pulling updates, rebuild/restart Strapi and rebuild the frontend. Run chec
 ```bash
 node --test tests/*.test.js strapi-backend/tests/*.test.js
 ```
+
+## Telegram in Strapi
+
+The **Telegram** sidebar page (`/admin/plugins/telegram`) provides a shared bot inbox, text replies, verified lead links, and delivery status. Each new website application queues a lead notification with its six-digit client ID and an authenticated admin link. Telegram errors do not prevent the lead itself from being saved.
+
+Configure these values securely on the Strapi server (never in frontend variables or committed `.env` files):
+
+| Variable | Purpose |
+| --- | --- |
+| `TELEGRAM_BOT_TOKEN` | Bot token issued by Telegram's BotFather. |
+| `TELEGRAM_WEBHOOK_SECRET` | A random 16–256 character secret containing letters, digits, `_` or `-`. Telegram sends this in its webhook authentication header. |
+| `PUBLIC_STRAPI_URL` | Public HTTPS Strapi origin, for example `https://api.example.com`; used for the webhook and protected lead links. |
+| `TELEGRAM_LEADS_CHAT_ID` | Numeric private/group chat ID that should receive lead notifications. Optional while connecting the inbox. |
+
+Rebuild/restart Strapi after pulling this feature. Super Admin has access automatically. For staff roles, grant **Settings → Telegram → Read conversations** and, where needed, **Reply and link leads**. Only trusted administrators need **Configure webhook**. Linking conversations also requires Content Manager read permission for Leads.
+
+In **Telegram → Connection**, click **Connect webhook**, then send a message to the bot to verify incoming delivery. Strapi must be publicly reachable over HTTPS at `/api/telegram/webhook`, and outbound HTTPS access to `api.telegram.org` must be allowed. Telegram supports one webhook per bot; connecting switches that bot's webhook to this Strapi server. **Check webhook** reports whether it points to this server and whether Telegram reports delivery errors.
+
+A user must start the bot before it can send them private messages. For a notification group, add the bot to that group with permission to send messages. Send a message that Telegram delivers to the bot; the inbox displays the numeric chat ID. Set that ID as `TELEGRAM_LEADS_CHAT_ID` and restart Strapi to enable notifications for subsequent website applications. Group privacy settings determine which group messages Telegram delivers to the bot.
+
+The inbox stores messages received after the webhook is connected; it does not import personal Telegram accounts or older account history. Text replies are supported. Attachments are represented by their type and caption; files are not downloaded. Agents can search conversations, load older messages, and manually link a conversation to a lead after verifying the client's identity. A six-digit reference alone is not identity verification.
+
+Outgoing messages are saved in a database outbox and processed every three seconds. **Queued** means stored, **Sent** means Telegram acknowledged delivery, and failures remain visible. Incoming update IDs and outgoing submission IDs prevent duplicates. Rate-limited sends retry automatically. If a connection timeout leaves delivery uncertain, the message becomes **Delivery unconfirmed** and is not resent automatically. Check the Telegram chat before using **Retry delivery**; unconfirmed retries require explicit confirmation. New lead notifications are queued only when a bot token and notification destination are configured.
+
+Run the backend and frontend checks with `node --test tests/*.test.js strapi-backend/tests/*.test.js`. End-to-end validation used a local Telegram API fixture and an isolated SQLite database; no real recipients were contacted.
