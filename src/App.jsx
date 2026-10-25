@@ -1,3 +1,4 @@
+import Checkout from './pages/Checkout'
 import RouteScroll from './components/RouteScroll'
 import NotFound from './pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
@@ -15,6 +16,7 @@ function App() {
       <Route path="/search-results" element={<SearchResults />} />
       <Route path="/business-class" element={<BusinessClass />} />
       <Route path='/about-us' element={<AboutUs />} />
+      <Route path="/checkout/:token" element={<Checkout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
     </>

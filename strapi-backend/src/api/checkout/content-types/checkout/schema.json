@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "lead_checkouts",
+  "info": { "singularName": "checkout", "pluralName": "checkouts", "displayName": "Lead checkouts" },
+  "options": { "draftAndPublish": false },
+  "pluginOptions": { "content-manager": { "visible": false }, "content-type-builder": { "visible": false } },
+  "attributes": {
+    "lead": { "type": "relation", "relation": "manyToOne", "target": "api::lead.lead" },
+    "token": { "type": "string", "required": true, "unique": true, "private": true },
+    "tokenHash": { "type": "string", "required": true, "unique": true, "private": true },
+    "requestId": { "type": "string", "required": true, "unique": true, "private": true },
+    "snapshot": { "type": "json", "required": true },
+    "amountMinor": { "type": "biginteger", "required": true },
+    "currency": { "type": "enumeration", "enum": ["USD", "UZS"], "required": true },
+    "expiresAt": { "type": "datetime", "required": true },
+    "revokedAt": { "type": "datetime" },
+    "createdByAgent": { "type": "string", "private": true }
+  }
+}

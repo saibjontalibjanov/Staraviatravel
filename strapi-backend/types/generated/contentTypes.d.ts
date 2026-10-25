@@ -509,6 +509,61 @@ export interface ApiCardFlightsCardFlights extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCheckoutCheckout extends Struct.CollectionTypeSchema {
+  collectionName: 'lead_checkouts';
+  info: {
+    displayName: 'Lead checkouts';
+    pluralName: 'checkouts';
+    singularName: 'checkout';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    amountMinor: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    createdByAgent: Schema.Attribute.String & Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<['USD', 'UZS']> &
+      Schema.Attribute.Required;
+    expiresAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    lead: Schema.Attribute.Relation<'manyToOne', 'api::lead.lead'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::checkout.checkout'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    requestId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private &
+      Schema.Attribute.Unique;
+    revokedAt: Schema.Attribute.DateTime;
+    snapshot: Schema.Attribute.JSON & Schema.Attribute.Required;
+    token: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private &
+      Schema.Attribute.Unique;
+    tokenHash: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private &
+      Schema.Attribute.Unique;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLeadLead extends Struct.CollectionTypeSchema {
   collectionName: 'leads';
   info: {
@@ -1296,6 +1351,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::booking.booking': ApiBookingBooking;
       'api::card-flights.card-flights': ApiCardFlightsCardFlights;
+      'api::checkout.checkout': ApiCheckoutCheckout;
       'api::lead.lead': ApiLeadLead;
       'api::newsletter-subscriber.newsletter-subscriber': ApiNewsletterSubscriberNewsletterSubscriber;
       'api::search-results.search-results': ApiSearchResultsSearchResults;

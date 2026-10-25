@@ -1,3 +1,4 @@
+import LeadCheckouts from './checkout/LeadCheckouts'
 import TicketSearch from './ticket-search/TicketSearch'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -25,6 +26,7 @@ function LeadDetail({ clientId }) {
         <Link className="leads-button" to={`${collectionUrl}/${lead.documentId}`}>Edit status and notes in Content Manager</Link>
       </section>
       <p style={{ marginTop: '2rem' }}><Link to={`/plugins/telegram?clientId=${lead.clientId}`}>Telegram conversations for this client</Link></p>
+      <LeadCheckouts lead={lead} key={`checkout-${lead.documentId}`} />
       <TicketSearch lead={lead} key={lead.documentId} />
     </>}
   </main>
