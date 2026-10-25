@@ -1,3 +1,4 @@
+import PassportDetails from './checkout/PassportDetails'
 import LeadCheckouts from './checkout/LeadCheckouts'
 import TicketSearch from './ticket-search/TicketSearch'
 import { useState } from 'react'
@@ -9,6 +10,8 @@ import './leads.css'
 function LeadDetail({ clientId }) {
   const { results, loading, error, refresh } = useLeads(`page=1&pageSize=1&filters[clientId][$eq]=${clientId}`)
   const lead = results[0]
+  const [passports, setPassports] = useState([])
+  const [selectedFare, setSelectedFare] = useState(null)
   return <main className="leads-admin">
     <Link to="/plugins/leads">← All leads</Link>
     <h1>Client {clientId}</h1>
@@ -26,8 +29,9 @@ function LeadDetail({ clientId }) {
         <Link className="leads-button" to={`${collectionUrl}/${lead.documentId}`}>Edit status and notes in Content Manager</Link>
       </section>
       <p style={{ marginTop: '2rem' }}><Link to={`/plugins/telegram?clientId=${lead.clientId}`}>Telegram conversations for this client</Link></p>
-      <LeadCheckouts lead={lead} key={`checkout-${lead.documentId}`} />
-      <TicketSearch lead={lead} key={lead.documentId} />
+      <PassportDetails lead={lead} onSaved={setPassports} />
+      <TicketSearch lead={lead} key={lead.documentId} onSelectFare={setSelectedFare} />
+      <LeadCheckouts lead={lead} passports={passports} selectedFare={selectedFare} key={`checkout-${lead.documentId}`} />
     </>}
   </main>
 }
@@ -68,5 +72,5 @@ export default function LeadsPage() {
   const { clientReference } = useParams()
   if (!clientReference) return <LeadsList />
   const match = /^client=(\d{6})$/.exec(clientReference)
-  return match ? <LeadDetail clientId={match[1]} /> : <main className="leads-admin"><h1>Page not found</h1><Link to="/plugins/leads">All leads</Link></main>
+  return match ? <LeadDetail clientId={match[1]} key={match[1]} /> : <main className="leads-admin"><h1>Page not found</h1><Link to="/plugins/leads">All leads</Link></main>
 }

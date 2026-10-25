@@ -1,5 +1,6 @@
 'use strict';
 const axios = require('axios');
+const airportCities = new Map(require('../api/airport/airports-data.json').map(airport => [airport.code, airport.city]));
 
 class FlightSearchError extends Error {
   constructor(message, status = 400) { super(message); this.status = status; }
@@ -11,6 +12,12 @@ const cabinNames = { economy: 'Economy', 'premium economy': 'Premium Economy', b
 function normalizeSearch(input = {}, now = new Date()) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new FlightSearchError('Invalid search request.');
   if (input.cabin !== undefined && typeof input.cabin !== 'string') throw new FlightSearchError('Choose a supported cabin class.');
+  if (input.tripType === 'multi-city') {
+    if (!Array.isArray(input.multiCity) || input.multiCity.length < 2 || input.multiCity.length > 6) throw new FlightSearchError('Multi-city search needs 2–6 journeys.');
+    const journeys = input.multiCity.map(item => normalizeSearch({ departure_id: item?.departure_id, arrival_id: item?.arrival_id, date: item?.date, cabin: input.cabin, passengers: input.passengers }, now));
+    if (journeys.some((item,index)=>index>0 && item.date<journeys[index-1].date)) throw new FlightSearchError('Multi-city dates must be in order.');
+    return { departure_id: journeys[0].departure_id, arrival_id: journeys.at(-1).arrival_id, date: journeys[0].date, cabin: journeys[0].cabin, passengers: journeys[0].passengers, tripType: 'multi-city', multiCity: journeys.map(({departure_id,arrival_id,date})=>({departure_id,arrival_id,date})) };
+  }
   const departure = typeof input.departure_id === 'string' ? input.departure_id.trim().toUpperCase() : '';
   const arrival = typeof input.arrival_id === 'string' ? input.arrival_id.trim().toUpperCase() : '';
   if (!/^[A-Z]{3}$/.test(departure) || !/^[A-Z]{3}$/.test(arrival)) throw new FlightSearchError('Enter valid three-letter departure and arrival airport codes.');
@@ -31,8 +38,8 @@ function formatFlights(data, search) {
   return offers.filter(offer => Array.isArray(offer.flights) && offer.flights.length).map((offer, index) => {
     const legs = offer.flights.map(leg => ({
       airline: leg.airline || 'Unknown Airline', flightNumber: leg.flight_number || '', cabin: leg.travel_class || search.cabin,
-      departure: { airport: leg.departure_airport?.name || '', code: leg.departure_airport?.id || '', time: leg.departure_airport?.time || '' },
-      arrival: { airport: leg.arrival_airport?.name || '', code: leg.arrival_airport?.id || '', time: leg.arrival_airport?.time || '' },
+      departure: { airport: leg.departure_airport?.name || '', city: airportCities.get(leg.departure_airport?.id) || leg.departure_airport?.name || '', code: leg.departure_airport?.id || '', time: leg.departure_airport?.time || '', terminal: leg.departure_airport?.terminal || '' },
+      arrival: { airport: leg.arrival_airport?.name || '', city: airportCities.get(leg.arrival_airport?.id) || leg.arrival_airport?.name || '', code: leg.arrival_airport?.id || '', time: leg.arrival_airport?.time || '', terminal: leg.arrival_airport?.terminal || '' },
       duration: typeof leg.duration === 'number' ? leg.duration : null,
     }));
     return {
@@ -42,7 +49,9 @@ function formatFlights(data, search) {
       arrival: { ...legs[legs.length - 1].arrival, code: legs[legs.length - 1].arrival.code || search.arrival_id },
       duration: typeof offer.total_duration === 'number' ? offer.total_duration : null,
       stops: legs.length - 1, price: typeof offer.price === 'number' && Number.isFinite(offer.price) ? offer.price : null,
-      cabin: legs[0].cabin, type: search.return_date ? 'round-trip' : 'one-way', legs,
+      cabin: legs[0].cabin, type: search.tripType === 'multi-city' ? 'multi-city' : search.return_date ? 'round-trip' : 'one-way', legs,
+      layovers: Array.isArray(offer.layovers) ? offer.layovers.map(stop => ({ airport: stop.id || '', city: stop.name || '', minutes: typeof stop.duration === 'number' ? stop.duration : null })) : [],
+      baggage: typeof offer.baggage === 'string' ? offer.baggage : '',
     };
   });
 }
@@ -56,8 +65,8 @@ async function searchFlights(input, options = {}) {
   try {
     const response = await (options.http || axios).get('https://serpapi.com/search.json', {
       timeout: 30000,
-      params: { engine: 'google_flights', departure_id: search.departure_id, arrival_id: search.arrival_id, outbound_date: search.date,
-        ...(search.return_date ? { return_date: search.return_date } : {}), type: search.return_date ? 1 : 2,
+      params: { engine: 'google_flights', ...(search.multiCity ? { multi_city_json: JSON.stringify(search.multiCity.map(({departure_id,arrival_id,date})=>({departure_id,arrival_id,date}))) } : { departure_id: search.departure_id, arrival_id: search.arrival_id, outbound_date: search.date }),
+        ...(search.return_date ? { return_date: search.return_date } : {}), type: search.multiCity ? 3 : search.return_date ? 1 : 2,
         adults: search.passengers, travel_class: cabins[cabinKey], currency: 'USD', hl: 'en', api_key: apiKey },
     });
     data = response.data;

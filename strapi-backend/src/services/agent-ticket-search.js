@@ -1,4 +1,5 @@
 'use strict';
+const { randomUUID } = require('node:crypto');
 const airports = require('../api/airport/airports-data.json');
 const { FlightSearchError, searchFlights } = require('./flight-search');
 
@@ -23,7 +24,26 @@ function registerAgentSearchRoutes(strapi) {
       } },
       { method: 'POST', path: '/flights', config: protectedConfig, handler: async ctx => {
         try {
-          ctx.body = await searchFlights(ctx.request.body);
+          const input = ctx.request.body;
+          let lead;
+          if (input?.clientId !== undefined) {
+            if (!ctx.state.userAbility.can('plugin::content-manager.explorer.read', 'api::lead.lead')) { ctx.status = 403; ctx.body = { error: { message: 'Lead read permission is required.' } }; return; }
+            if (!/^[1-9]\d{5}$/.test(String(input.clientId))) throw new FlightSearchError('Invalid lead reference.');
+            lead = await strapi.db.query('api::lead.lead').findOne({ where: { clientId: input.clientId } });
+            if (!lead) throw new FlightSearchError('Lead not found.', 404);
+          }
+          const result = await searchFlights(input);
+          if (lead) {
+            await strapi.db.query('api::ticket-quote.ticket-quote').deleteMany({ where: { expiresAt: { $lt: new Date(Date.now()-86400000).toISOString() } } });
+            for (const flight of result.flights.slice(0, 100)) {
+              if (!(flight.price > 0)) continue;
+              const reference = randomUUID();
+              const expiresAt = new Date(Date.now()+30*60000).toISOString();
+              await strapi.db.query('api::ticket-quote.ticket-quote').create({ data: { reference, expiresAt, lead: lead.id, offer: flight, search: result.search, agentId: String(ctx.state.user.id) } });
+              flight.quoteReference = reference; flight.quoteExpiresAt = expiresAt;
+            }
+          }
+          ctx.body = result;
         } catch (error) {
           ctx.status = error instanceof FlightSearchError ? error.status : 500;
           ctx.body = { error: { status: ctx.status, message: error instanceof FlightSearchError ? error.message : 'Flight search failed. Please try again.' } };

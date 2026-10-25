@@ -1,0 +1,14 @@
+{
+ "kind":"collectionType","collectionName":"agent_ticket_quotes",
+ "info":{"singularName":"ticket-quote","pluralName":"ticket-quotes","displayName":"Agent ticket quotes"},
+ "options":{"draftAndPublish":false},
+ "pluginOptions":{"content-manager":{"visible":false},"content-type-builder":{"visible":false}},
+ "attributes":{
+  "reference":{"type":"string","required":true,"unique":true,"private":true},
+  "lead":{"type":"relation","relation":"manyToOne","target":"api::lead.lead"},
+  "offer":{"type":"json","required":true,"private":true},
+  "search":{"type":"json","required":true,"private":true},
+  "expiresAt":{"type":"datetime","required":true},
+  "agentId":{"type":"string","private":true}
+ }
+}

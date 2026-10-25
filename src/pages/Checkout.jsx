@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { apiUrl } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
+import BillingContact from '../components/checkout/BillingContact'
+import BookingSummary from '../components/checkout/BookingSummary'
 import messages from '../components/checkout/messages'
 import './Checkout.css'
 
@@ -50,11 +52,11 @@ export default function Checkout() {
       <p className="cc-eyebrow">{t.step}</p><h1>{t.title}</h1><p className="cc-subtitle">{t.subtitle}</p>
       {status === 'loading' ? <p className="cc-state" role="status">{t.loading}</p> : status !== 'ready' || expired ? <section className="cc-panel cc-state" role="alert"><h2>{t.unavailable}</h2><p>{t.invalid}</p><button type="button" onClick={() => setAttempt(value => value + 1)}>{t.retry}</button><Link to="/">{t.home} →</Link></section> : <div className="cc-grid">
         <div className="cc-content"><div className="cc-notice">♧ <span>{t.noCharge}</span></div>
-          <section className="cc-panel"><div className="cc-section-title"><span>1</span><div><h2>{t.contact}</h2><p>{t.contactSub}</p></div></div><dl className="cc-details">{[[t.passenger, booking.passengerName], [t.passengers, booking.passengers], [t.cabin, cabin(booking.cabin)], ...(booking.airline ? [[t.airline, booking.airline]] : [])].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section>
+          {booking.passengerDetails?.length ? <BillingContact token={token} booking={booking} t={t} key={token} /> : <section className="cc-panel"><div className="cc-section-title"><span>1</span><div><h2>{t.contact}</h2><p>{t.contactSub}</p></div></div><dl className="cc-details">{[[t.passenger, booking.passengerName], [t.passengers, booking.passengers], [t.cabin, cabin(booking.cabin)], ...(booking.airline ? [[t.airline, booking.airline]] : [])].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section>}
           <section className="cc-panel"><div className="cc-section-title"><span>2</span><div><h2>{t.terms}</h2><p>{t.termsSub}</p></div></div><p className="cc-fare-terms">{booking.fareTerms}</p><label className="cc-accept"><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} />{t.accept}</label></section>
-          <section className="cc-panel cc-payment"><div className="cc-section-title"><span>3</span><div><h2>{t.payment}</h2><p>{t.paymentSub}</p></div></div><div className="cc-payment-placeholder" aria-hidden="true"><span>▣</span><span>VISA</span><span>Mastercard</span><span>UZCARD</span><span>HUMO</span></div><p>{t.note}</p><button type="button" disabled>{t.pending}</button><p className="cc-small">{t.noCharge}</p></section>
+          <section className="cc-panel cc-payment"><div className="cc-section-title"><span>3</span><div><h2>{t.payment}</h2><p>{t.paymentSub}</p></div></div><div className="cc-payment-placeholder" aria-hidden="true"><span>▣</span><span>VISA</span><span>Mastercard</span><span>UZCARD</span><span>HUMO</span></div><p>{t.note}</p>{booking.paymentInformation&&<div className="cc-agent-payment"><h3>{t.paymentInfo}</h3><p>{booking.paymentInformation}</p></div>}<button type="button" disabled>{t.pending}</button><p className="cc-small">{t.noCharge}</p></section>
         </div>
-        <aside className="cc-summary cc-panel" aria-label={t.booking}><p className="cc-eyebrow">{t.booking}</p><h2>{booking.route}</h2><div className="cc-flight"><p>{t.outbound}</p><strong>{date(booking.departureDate)}</strong><span>✈ {booking.route}</span>{booking.airline && <small>{booking.airline} · {cabin(booking.cabin)}</small>}</div>{booking.returnDate && <div className="cc-flight"><p>{t.return}</p><strong>{date(booking.returnDate)}</strong><small>{cabin(booking.cabin)}</small></div>}<dl className="cc-summary-details"><div><dt>{t.passenger}</dt><dd>{booking.passengerName}</dd></div><div><dt>{t.passengers}</dt><dd>{booking.passengers}</dd></div></dl><div className="cc-total"><div><p>{t.total} · {result.currency}</p><small>{t.included}</small></div><strong>{money}</strong></div><p className="cc-valid">{t.valid}<br /><strong>{new Date(result.expiresAt).toLocaleString(locale)}</strong></p><p className="cc-small">♧ {t.secure}</p></aside>
+        <BookingSummary booking={booking} result={result} t={t} locale={locale} money={money} date={date} cabin={cabin} />
       </div>}
     </main><footer className="cc-footer">© {new Date().getFullYear()} StarAviaTravel · {t.footer}</footer>
   </div>

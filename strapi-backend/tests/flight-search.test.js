@@ -50,3 +50,11 @@ test('provider errors are safe and do not expose request configuration or keys',
 test('provider response errors are not reported as successful empty results', async () => {
   await assert.rejects(searchFlights(query, { now, apiKey: 'test-key', http: { get: async () => ({ data: { error: 'Provider error' } }) } }), error => error.status === 502);
 });
+
+test('multi-city search validates ordered journeys and sends the correct provider request', async () => {
+ const multiCity=[{departure_id:'TAS',arrival_id:'IST',date:'2026-11-01'},{departure_id:'IST',arrival_id:'DXB',date:'2026-11-05'}];
+ const result=await searchFlights({...query,tripType:'multi-city',multiCity},{now,apiKey:'test-key',http:{get:async(url,{params})=>{assert.equal(params.type,3);assert.deepEqual(JSON.parse(params.multi_city_json),multiCity);assert.equal(params.departure_id,undefined);return{data:providerData}}}});
+ assert.equal(result.flights[0].type,'multi-city');assert.equal(result.search.multiCity.length,2);
+ assert.throws(()=>normalizeSearch({...query,tripType:'multi-city',multiCity:multiCity.slice(0,1)},now));
+ assert.throws(()=>normalizeSearch({...query,tripType:'multi-city',multiCity:[multiCity[1],multiCity[0]]},now));
+});

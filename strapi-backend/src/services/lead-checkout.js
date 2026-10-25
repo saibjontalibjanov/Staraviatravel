@@ -2,7 +2,7 @@
 const { randomBytes, createHash } = require('node:crypto');
 const UID = 'api::checkout.checkout';
 const action = 'api::checkout.manage';
-class CheckoutError extends Error { constructor(message, status = 400) { super(message); this.status = status; } }
+const { CheckoutError, validate, validatePassports, validateBilling } = require('./checkout-data');
 const hashToken = token => createHash('sha256').update(token).digest('hex');
 const tokenValid = token => typeof token === 'string' && /^[A-Za-z0-9_-]{43}$/.test(token);
 function websiteOrigin() {
@@ -13,54 +13,27 @@ function websiteOrigin() {
   if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(url.hostname))) || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new CheckoutError('PUBLIC_WEBSITE_URL must be an HTTPS origin (HTTP localhost is allowed for development).', 503);
   return url.origin;
 }
-function text(value, max, label, required = false) {
-  if (value == null && !required) return '';
-  if (typeof value !== 'string' || value.trim().length > max || (required && !value.trim())) throw new CheckoutError(`Invalid ${label}.`);
-  return value.trim();
-}
-function date(value, required) {
-  if (!value && !required) return '';
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || !Number.isFinite(Date.parse(value)) || new Date(value).toISOString().slice(0, 10) !== value) throw new CheckoutError('Invalid travel date.');
-  return value;
-}
-function validate(input, lead, now = new Date()) {
-  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new CheckoutError('Invalid checkout details.');
-  if (!['USD', 'UZS'].includes(input.currency)) throw new CheckoutError('Choose USD or UZS.');
-  // Convert a decimal string to minor units without floating-point rounding.
-  if (typeof input.amount !== 'string' || !/^\d{1,9}(\.\d{1,2})?$/.test(input.amount)) throw new CheckoutError('Enter a positive amount with at most two decimal places.');
-  const [whole, fraction = ''] = input.amount.split('.');
-  const amountMinor = Number(whole) * 100 + Number(fraction.padEnd(2, '0'));
-  if (amountMinor < 1 || amountMinor > 99999999999) throw new CheckoutError('Invalid checkout amount.');
-  if (!Number.isInteger(input.expiryDays) || input.expiryDays < 1 || input.expiryDays > 30) throw new CheckoutError('Link validity must be 1–30 days.');
-  if (typeof input.requestId !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input.requestId)) throw new CheckoutError('Invalid creation reference.');
-  const departureDate = date(input.departureDate, true);
-  const returnDate = date(input.returnDate, false);
-  if (departureDate < now.toISOString().slice(0, 10) || (returnDate && returnDate < departureDate)) throw new CheckoutError('Check the departure and return dates.');
-  if (!Number.isInteger(input.passengers) || input.passengers < 1 || input.passengers > 9) throw new CheckoutError('Choose 1–9 passengers.');
-  if (!['uz', 'ru', 'en'].includes(input.language)) throw new CheckoutError('Invalid checkout language.');
-  return {
-    amountMinor: String(amountMinor), currency: input.currency, requestId: input.requestId,
-    expiresAt: new Date(now.getTime() + input.expiryDays * 86400000).toISOString(),
-    snapshot: {
-      route: text(input.route, 200, 'route', true), airline: text(input.airline, 100, 'airline'),
-      passengerName: text(input.passengerName, 200, 'passenger name', true), passengers: input.passengers,
-      departureDate, returnDate, cabin: text(input.cabin, 50, 'cabin', true),
-      fareTerms: text(input.fareTerms, 5000, 'fare and refund terms', true), language: input.language,
-    },
-  };
-}
 function state(row, now = new Date()) { return row.revokedAt ? 'revoked' : new Date(row.expiresAt) <= now ? 'expired' : 'active'; }
 function adminView(row, origin) {
-  return { id: row.id, snapshot: row.snapshot, amountMinor: String(row.amountMinor), currency: row.currency, createdAt: row.createdAt, expiresAt: row.expiresAt, status: state(row), url: state(row) === 'active' ? `${origin}/checkout/${row.token}` : null };
+  return { id: row.id, snapshot: row.snapshot, pricing: row.pricing, billingContact: row.billingContact, amountMinor: String(row.amountMinor), currency: row.currency, createdAt: row.createdAt, expiresAt: row.expiresAt, status: state(row), url: state(row) === 'active' ? `${origin}/checkout/${row.token}` : null };
 }
 function publicView(row) {
-  return { booking: row.snapshot, amountMinor: String(row.amountMinor), currency: row.currency, expiresAt: row.expiresAt, paymentsEnabled: false };
+  return { booking: Object.fromEntries(['version','clientId','route','tripType','journeys','baggage','passengerDetails','passengerName','passengers','departureDate','returnDate','cabin','airline','fareTerms','paymentInformation','language'].filter(key => row.snapshot[key] !== undefined).map(key => [key, row.snapshot[key]])), amountMinor: String(row.amountMinor), currency: row.currency, expiresAt: row.expiresAt, paymentsEnabled: false };
 }
-async function publicCheckout(strapi, token) {
+async function activeCheckout(strapi, token) {
   if (!tokenValid(token)) throw new CheckoutError('Checkout not found or no longer available.', 404);
   const row = await strapi.db.query(UID).findOne({ where: { tokenHash: hashToken(token) }, populate: { lead: true } });
   if (!row || !row.lead || state(row) !== 'active') throw new CheckoutError('Checkout not found or no longer available.', 404);
-  return publicView(row);
+  return row;
+}
+async function publicCheckout(strapi, token) { return publicView(await activeCheckout(strapi, token)); }
+async function saveBilling(strapi, token, input) {
+  const row = await activeCheckout(strapi, token);
+  const billingContact = validateBilling(input, row.snapshot);
+  // Recheck the link at write time so an already-revoked/expired checkout cannot accept details.
+  const result = await strapi.db.query(UID).updateMany({ where: { id: row.id, revokedAt: { $null: true }, expiresAt: { $gt: new Date().toISOString() } }, data: { billingContact } });
+  if (!result.count) throw new CheckoutError('Checkout not found or no longer available.', 404);
+  return { saved: true };
 }
 async function registerCheckoutPermission(strapi) {
   await strapi.admin.services.permission.actionProvider.registerMany([{ section: 'settings', category: 'Checkout', displayName: 'Create and revoke checkout links', uid: 'checkout.manage' }]);
@@ -84,6 +57,15 @@ function registerCheckoutRoutes(strapi) {
     return lead;
   };
   strapi.server.routes({ type: 'admin', prefix: '/admin/lead-checkouts', routes: [
+    { method: 'GET', path: '/:clientId/passports', config, handler: safe(async ctx => {
+      const lead = await findLead(ctx.params.clientId); ctx.body = { passengers: lead.passportDetails || [] };
+    }) },
+    { method: 'PUT', path: '/:clientId/passports', config, handler: safe(async ctx => {
+      const lead = await findLead(ctx.params.clientId);
+      const passengers = validatePassports(ctx.request.body?.passengers);
+      await strapi.db.query('api::lead.lead').update({ where: { id: lead.id }, data: { passportDetails: passengers } });
+      ctx.body = { passengers };
+    }) },
     { method: 'GET', path: '/:clientId', config, handler: safe(async ctx => {
       const lead = await findLead(ctx.params.clientId);
       const rows = await strapi.db.query(UID).findMany({ where: { lead: { id: lead.id } }, orderBy: { id: 'desc' }, limit: 100 });
@@ -94,12 +76,14 @@ function registerCheckoutRoutes(strapi) {
     { method: 'POST', path: '/:clientId', config, handler: safe(async ctx => {
       const origin = websiteOrigin();
       const lead = await findLead(ctx.params.clientId);
-      const data = validate(ctx.request.body, lead);
-      const existing = await strapi.db.query(UID).findOne({ where: { requestId: data.requestId }, populate: { lead: true } });
+      const input = ctx.request.body;
+      const existing = await strapi.db.query(UID).findOne({ where: { requestId: input?.requestId || 'invalid' }, populate: { lead: true } });
       if (existing) {
         if (existing.lead?.id !== lead.id) throw new CheckoutError('Creation reference already used.');
         ctx.body = { checkout: adminView(existing, origin) }; return;
       }
+      const quote = typeof input?.quoteReference === 'string' ? await strapi.db.query('api::ticket-quote.ticket-quote').findOne({ where: { reference: input.quoteReference, lead: { id: lead.id } } }) : null;
+      const data = validate(input, lead, new Date(), quote);
       const token = randomBytes(32).toString('base64url');
       let row;
       try { row = await strapi.db.query(UID).create({ data: { ...data, lead: lead.id, token, tokenHash: hashToken(token), createdByAgent: String(ctx.state.user.id) } }); }
@@ -120,4 +104,4 @@ function registerCheckoutRoutes(strapi) {
     }) },
   ] });
 }
-module.exports = { UID, CheckoutError, validate, hashToken, tokenValid, websiteOrigin, state, publicView, publicCheckout, registerCheckoutPermission, registerCheckoutRoutes };
+module.exports = { UID, CheckoutError, validate, hashToken, tokenValid, websiteOrigin, state, publicView, publicCheckout, saveBilling, registerCheckoutPermission, registerCheckoutRoutes };

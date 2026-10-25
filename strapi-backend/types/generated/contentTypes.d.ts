@@ -529,6 +529,7 @@ export interface ApiCheckoutCheckout extends Struct.CollectionTypeSchema {
   };
   attributes: {
     amountMinor: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    billingContact: Schema.Attribute.JSON & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -543,6 +544,7 @@ export interface ApiCheckoutCheckout extends Struct.CollectionTypeSchema {
       'api::checkout.checkout'
     > &
       Schema.Attribute.Private;
+    pricing: Schema.Attribute.JSON & Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     requestId: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -636,6 +638,14 @@ export interface ApiLeadLead extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    passportDetails: Schema.Attribute.JSON &
+      Schema.Attribute.Private &
+      Schema.Attribute.SetPluginOptions<{
+        'content-manager': {
+          editable: false;
+          visible: false;
+        };
+      }>;
     paymentMethod: Schema.Attribute.Enumeration<
       ['credit-card', 'debit-card', 'bank-transfer', 'cash']
     >;
@@ -832,6 +842,54 @@ export interface ApiTelegramMessageTelegramMessage
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 4096;
       }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiTicketQuoteTicketQuote extends Struct.CollectionTypeSchema {
+  collectionName: 'agent_ticket_quotes';
+  info: {
+    displayName: 'Agent ticket quotes';
+    pluralName: 'ticket-quotes';
+    singularName: 'ticket-quote';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    agentId: Schema.Attribute.String & Schema.Attribute.Private;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    expiresAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    lead: Schema.Attribute.Relation<'manyToOne', 'api::lead.lead'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ticket-quote.ticket-quote'
+    > &
+      Schema.Attribute.Private;
+    offer: Schema.Attribute.JSON &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    reference: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private &
+      Schema.Attribute.Unique;
+    search: Schema.Attribute.JSON &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1357,6 +1415,7 @@ declare module '@strapi/strapi' {
       'api::search-results.search-results': ApiSearchResultsSearchResults;
       'api::telegram-chat.telegram-chat': ApiTelegramChatTelegramChat;
       'api::telegram-message.telegram-message': ApiTelegramMessageTelegramMessage;
+      'api::ticket-quote.ticket-quote': ApiTicketQuoteTicketQuote;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

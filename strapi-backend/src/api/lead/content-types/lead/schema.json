@@ -127,6 +127,16 @@
         "Business",
         "First"
       ]
+    },
+    "passportDetails": {
+      "type": "json",
+      "private": true,
+      "pluginOptions": {
+        "content-manager": {
+          "visible": false,
+          "editable": false
+        }
+      }
     }
   }
 }
