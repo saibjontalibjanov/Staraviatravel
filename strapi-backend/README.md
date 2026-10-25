@@ -1,3 +1,20 @@
+# Staravia Strapi backend
+
+Use Node 24 LTS. Run `npm ci` in this directory, configure `.env` from `.env.example`, then run `npm run develop`.
+
+If an admin package file is missing (for example `@strapi/admin/dist/admin/index.mjs`), stop Strapi and run:
+
+```sh
+npm run repair
+npm run develop
+```
+
+Repair reinstalls the committed dependency tree and clears generated caches. It preserves `.env`, database files and uploads. For production run `npm run build` and then `npm start`; do not run development and production against the same checkout concurrently.
+
+Use `npm run doctor` for dependency diagnostics and `npm test` for backend regression checks. See [the project README](../README.md) for Leads, Ticket Search, Telegram, checkout configuration and permissions.
+
+---
+
 # 🚀 Getting started with Strapi
 
 Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.

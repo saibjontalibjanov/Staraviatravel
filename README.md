@@ -12,8 +12,8 @@ A modern travel agency website built with **Vite + React + Tailwind CSS**, speci
 ## Getting Started
 
 ```bash
-# Install dependencies
-npm install
+# Use Node 24 (see .nvmrc), then install the locked dependencies
+npm ci
 
 # Start development server
 npm run dev
@@ -193,3 +193,21 @@ The client page follows the supplied cream/gold checkout design and supports Uzb
 6. On the client page, the booking badge shows the six-digit Lead ID. The itinerary includes flight times, dates, numbers, terminals where supplied, stops, layovers and seat classes. All passenger names come from the checkout's saved passport snapshot. Billing contact selects one of these names; the server rejects any different name. The billing form saves email, phone, country, city and address to the checkout without modifying pricing or charging a card. Agents can view submitted billing details in checkout history. No passport document identifiers or billing contact details are returned by the public GET endpoint.
 
 Changing a lead's passports or a provider fare does not rewrite a previously shared offer. Revoke the old checkout and generate a new link to publish corrected names, itinerary, baggage or price. Existing older checkout links remain readable in their original format, but need to be recreated to gain passport-bound billing and detailed flight cards.
+
+
+### Repairing an incomplete Strapi admin installation
+
+If Vite reports `Could not resolve @strapi/admin/strapi-admin` and says `dist/admin/index.mjs` is missing, stop the Strapi process and run from the repository root:
+
+```sh
+git pull origin main
+cd strapi-backend
+npm run repair
+npm run develop
+```
+
+Use Node 24 LTS (the repository includes `.nvmrc`; Node 20/22 are also supported). Run the commands inside **strapi-backend**, not the frontend folder. `repair` uses `npm ci --include=dev` with the committed lockfile and clears only generated backend caches/build output. It preserves `.env`, `.tmp/data.db`, custom database files and `public/uploads`. It refuses to run while the configured backend port is still in use. Do not run develop and production start from the same checkout at the same time.
+
+The backend directly pins `@strapi/admin` to the same version as `@strapi/strapi`, and explicitly declares its custom admin icon dependency. `npm run doctor` checks matching package versions and both ESM and CommonJS admin entry files, including a nested admin copy under Strapi. This check runs before development, build and production start. It reports a broken install before the Vite/esbuild failure; it does not mark the missing module external or bypass the admin UI.
+
+For production, use `npm run build` followed by `npm start` after repairing. Repair intentionally removes the old admin build, so production requires a fresh build. `npm test` at the repository root runs the frontend and backend regression tests; backend-only tests can be run with `npm test` inside strapi-backend.
