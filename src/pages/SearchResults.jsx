@@ -1,3 +1,5 @@
+import { airportCode, formatFare, searchError } from '../lib/search'
+import { apiUrl } from '../lib/api'
 import { itineraryFromSearch } from '../lib/itinerary'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
@@ -14,11 +16,11 @@ import PhonePopup from '../components/PhonePopup';
 import TakeoffProgressLoader from './TakeoffProgressLoader';
 
 
-const STRAPI_URL = 'http://localhost:1337';
+
 
 // Book Flight Popup Component
 const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -46,19 +48,20 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
       source: 'booking',
       flightRoute: flightInfo?.route,
       airline: flightInfo?.airline,
-      quotedPrice: flightInfo?.price,
+      quotedPrice: flightInfo?.price ?? undefined,
     })
   }
 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div role="dialog" aria-modal="true" aria-label={t('Book Flight')} className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={() => { if (!pending) { reset(); onClose() } }}
           disabled={pending}
+          aria-label={t('Close')}
           className="absolute top-4 right-4 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors z-10"
         >
           <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +95,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
                     <p className="font-bold text-ink text-sm">{flightInfo.airline}</p>
                     <p className="text-xs text-gray-500">{flightInfo.route}</p>
                   </div>
-                  <p className="text-xl font-bold text-gold">${flightInfo.price.toLocaleString()}</p>
+                  <p className="text-xl font-bold text-gold">{formatFare(flightInfo.price, locale) || t('Price unavailable')}</p>
                 </div>
               )}
 
@@ -194,7 +197,7 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
 }
 
 const SearchResults = () => {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
 
   const [searchParams] = useSearchParams()
   const [showBookPopup, setShowBookPopup] = useState(false)
@@ -202,7 +205,6 @@ const SearchResults = () => {
   const [offers, setOffers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [cityImage, setCityImage] = useState(null)
   const [showPhonePopup, setShowPhonePopup] = useState(false)
   const carouselRef = useRef(null)
 
@@ -216,44 +218,24 @@ const SearchResults = () => {
     }
   }
 
-  const from = searchParams.get('from') || 'Dubai'
-  const to = searchParams.get('to') || 'New York'
-
-  // Robust extraction of IATA codes
-  const getCode = (val, defaultCode) => {
-    if (!val) return defaultCode;
-    const match = val.match(/\(([^)]+)\)/);
-    if (match) return match[1].toUpperCase();
-    if (val.trim().length === 3) return val.trim().toUpperCase();
-    return defaultCode;
-  };
-
-  const fromCode = getCode(searchParams.get('from'), 'DXB');
-  const toCode = getCode(searchParams.get('to'), 'JFK');
+  const from = searchParams.get('from') || ''
+  const to = searchParams.get('to') || ''
+  const fromCode = airportCode(from)
+  const toCode = airportCode(to)
 
   const fromCity = from.replace(/\s*\([^)]*\)/, '')
   const toCity = to.replace(/\s*\([^)]*\)/, '')
   const passengers = searchParams.get('passengers') || '1'
   const cabin = searchParams.get('cabin') || 'Business'
   const tripType = searchParams.get('returnDate') ? 'round-trip' : 'one-way'
-  const departureDate = searchParams.get('departureDate') || new Date().toISOString().split('T')[0]
+  const departureDate = searchParams.get('departureDate') || ''
   const returnDate = searchParams.get('returnDate')
 
+  const invalidSearch = searchError({ from, to, departureDate, returnDate, passengers, cabin, tripType })
+
   useEffect(() => {
-    const fetchCityImage = async () => {
-      try {
-        const res = await fetch(`${STRAPI_URL}/api/flights/city-media?cityName=${toCity}`);
-        const data = await res.json();
-        if (data.images && data.images.length > 0) {
-          setCityImage(data.images[0].original);
-        }
-      } catch (err) {
-        console.error("Shahar rasmini yuklashda xato:", err);
-      }
-    };
-
-    if (toCity) fetchCityImage();
-
+    if (invalidSearch) { setOffers([]); setError(invalidSearch); setLoading(false); return }
+    const controller = new AbortController()
     const fetchOffers = async () => {
       try {
         setLoading(true);
@@ -272,7 +254,7 @@ const SearchResults = () => {
           queryParams.append('return_date', returnDate);
         }
 
-        const response = await fetch(`${STRAPI_URL}/api/flights?${queryParams.toString()}`);
+        const response = await fetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal });
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
@@ -280,7 +262,7 @@ const SearchResults = () => {
         }
 
         const result = await response.json();
-        console.log('Backend raw response:', result);
+        if (controller.signal.aborted) return;
 
         if (result.error) {
           throw new Error(result.error);
@@ -300,8 +282,8 @@ const SearchResults = () => {
           logoText: flight.airline || 'Flight',
           cabin: cabin,
           tripType: tripType,
-          price: flight.price || 0,
-          oldPrice: flight.price ? Math.round(flight.price * 1.15) : 0,
+          price: typeof flight.price === 'number' && Number.isFinite(flight.price) && flight.price >= 0 ? flight.price : null,
+          oldPrice: typeof flight.oldPrice === 'number' && flight.oldPrice > flight.price ? flight.oldPrice : null,
           route: `${fromCity} → ${toCity}`,
           duration: flight.duration,
           stops: flight.stops,
@@ -312,17 +294,14 @@ const SearchResults = () => {
 
         setOffers(formattedOffers);
       } catch (err) {
-        console.error('Fetch error:', err);
-        setError(err.message || 'Chiptalarni yuklashda xatolik yuz berdi.');
+        if (!controller.signal.aborted) { setOffers([]); setError('Unable to load flights. Please try again later.'); }
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
-
-    if (fromCode && toCode) {
-      fetchOffers();
-    }
-  }, [fromCode, toCode, departureDate, returnDate, passengers, cabin, tripType, toCity]);
+    fetchOffers();
+    return () => controller.abort();
+  }, [fromCode, toCode, departureDate, returnDate, passengers, cabin, tripType, toCity, invalidSearch]);
 
   // Dynamic computed values based on API response
   const featuredDeal = offers.length > 0 ? offers[0] : null;
@@ -340,7 +319,7 @@ const SearchResults = () => {
     setSelectedFlight({
       airline: featuredDeal?.airline || 'Featured Deal',
       route: `${fromCity} (${fromCode}) → ${toCity} (${toCode})`,
-      price: featuredDeal?.price || 0
+      price: featuredDeal?.price ?? null
     })
     setShowBookPopup(true)
   }
@@ -370,7 +349,8 @@ const SearchResults = () => {
         ) : error ? (
           <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100">
             <p className="text-red-600 font-bold mb-2">{t("Xatolik")}</p>
-            <p className="text-red-500 text-sm">{t('Unable to load flights. Please try again later.')}</p>
+            <p className="text-red-500 text-sm">{t(error)}</p>
+            <Link to="/" className="text-gold hover:underline mt-4 inline-block">{t('Yangi qidiruv')}</Link>
           </div>
         ) : offers.length === 0 ? (
           <div className="text-center py-20">
@@ -383,6 +363,10 @@ const SearchResults = () => {
             {featuredDeal && (
               <div
                 onClick={handleFeaturedClick}
+                role="button"
+                tabIndex={0}
+                aria-label={t('Book Flight')}
+                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleFeaturedClick() } }}
                 className="border border-gray-200 rounded-lg p-6 mb-6 cursor-pointer hover:border-gold/50 hover:shadow-lg transition-all"
               >
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -408,12 +392,12 @@ const SearchResults = () => {
                       <div className="inline-flex items-center gap-1.5 bg-gold/10 border border-gold/30 text-gold-dark px-3 py-1 rounded-full text-xs font-bold mb-2">
                         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" /></svg> {t("Hurry! Limited Seats!")} </div>
                       <div className="flex items-baseline gap-3">
-                        <div>
+                        {featuredDeal.oldPrice !== null && <div>
                           <p className="text-xs text-gray-400">{t("Old Price:")}</p>
-                          <p className="text-sm text-gray-400 line-through">${featuredDeal?.oldPrice?.toLocaleString()}</p>
-                        </div>
+                          <p className="text-sm text-gray-400 line-through">{formatFare(featuredDeal.oldPrice, locale)}</p>
+                        </div>}
                         <div>
-                          <span className="text-4xl font-bold text-ink">${featuredDeal?.price?.toLocaleString()}</span>
+                          <span className="text-4xl font-bold text-ink">{formatFare(featuredDeal?.price, locale) || t('Price unavailable')}</span>
                           <span className="text-xs text-gray-500 align-top">*</span>
                         </div>
                         <div className="text-xs text-gray-500">
@@ -479,6 +463,10 @@ const SearchResults = () => {
                       <div
                         key={idx}
                         onClick={() => handleOfferClick(offer)}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${t('Book Flight')}: ${offer.airline}`}
+                        onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleOfferClick(offer) } }}
                         className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group w-[300px] flex-shrink-0"
                       >
                         {/* Airline Name/Logo */}
@@ -498,7 +486,7 @@ const SearchResults = () => {
                         {/* Price + Arrow */}
                         <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-2xl font-bold text-ink">${offer?.price?.toLocaleString()}</span>
+                            <span className="text-2xl font-bold text-ink">{formatFare(offer?.price, locale) || t('Price unavailable')}</span>
                             <span className="text-xs text-gray-500 align-top">*</span>
                           </div>
                           <svg className="w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
@@ -514,6 +502,10 @@ const SearchResults = () => {
                   <div
                     key={idx}
                     onClick={() => handleOfferClick(offer)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${t('Book Flight')}: ${offer.airline}`}
+                    onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleOfferClick(offer) } }}
                     className="border border-gray-200 rounded-lg p-5 hover:border-gold/50 hover:shadow-md transition-all cursor-pointer group"
                   >
                     {/* Airline Name/Logo */}
@@ -533,7 +525,7 @@ const SearchResults = () => {
                     {/* Price + Arrow */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="text-2xl font-bold text-ink">${offer?.price?.toLocaleString()}</span>
+                        <span className="text-2xl font-bold text-ink">{formatFare(offer?.price, locale) || t('Price unavailable')}</span>
                         <span className="text-xs text-gray-500 align-top">*</span>
                       </div>
                       <svg className="w-5 h-5 text-gray-400 group-hover:text-gold transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>

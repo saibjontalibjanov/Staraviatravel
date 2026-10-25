@@ -7,25 +7,20 @@ const CookieBanner = () => {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // Check if user has already accepted/rejected cookies
-    const cookieConsent = localStorage.getItem('cookieConsent')
-    if (!cookieConsent) {
-      // Show banner after a short delay
-      setTimeout(() => {
-        setIsVisible(true)
-      }, 1000)
+    let consent
+    try { consent = localStorage.getItem('cookieConsent') } catch { /* Storage can be unavailable. */ }
+    if (!consent) {
+      const timer = setTimeout(() => setIsVisible(true), 1000)
+      return () => clearTimeout(timer)
     }
   }, [])
 
-  const handleAccept = () => {
-    localStorage.setItem('cookieConsent', 'accepted')
+  const saveConsent = value => {
+    try { localStorage.setItem('cookieConsent', value) } catch { /* Dismiss for this visit even without persistence. */ }
     setIsVisible(false)
   }
-
-  const handleReject = () => {
-    localStorage.setItem('cookieConsent', 'rejected')
-    setIsVisible(false)
-  }
+  const handleAccept = () => saveConsent('accepted')
+  const handleReject = () => saveConsent('rejected')
 
   if (!isVisible) return null
 

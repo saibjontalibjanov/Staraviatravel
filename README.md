@@ -159,3 +159,11 @@ The inbox stores messages received after the webhook is connected; it does not i
 Outgoing messages are saved in a database outbox and processed every three seconds. **Queued** means stored, **Sent** means Telegram acknowledged delivery, and failures remain visible. Incoming update IDs and outgoing submission IDs prevent duplicates. Rate-limited sends retry automatically. If a connection timeout leaves delivery uncertain, the message becomes **Delivery unconfirmed** and is not resent automatically. Check the Telegram chat before using **Retry delivery**; unconfirmed retries require explicit confirmation. New lead notifications are queued only when a bot token and notification destination are configured.
 
 Run the backend and frontend checks with `node --test tests/*.test.js strapi-backend/tests/*.test.js`. End-to-end validation used a local Telegram API fixture and an isolated SQLite database; no real recipients were contacted.
+
+## Website API and subscriptions
+
+All website API calls use the build-time `VITE_API_URL` origin, or same-origin `/api` when it is empty. Vite proxies `/api` and `/uploads` to local Strapi during development. Production hosting must forward those paths to Strapi or provide a separate `VITE_API_URL` and allow the website origin in `CLIENT_ORIGINS`.
+
+The public airport picker uses the same bundled airport catalogue as agent search. Published hot-flight cards are publicly readable; draft offers remain private, and content edits require authorization. Search requires actual airport codes and valid dates; missing fares are displayed as unavailable, and no old price is invented.
+
+Newsletter submissions are stored as **Newsletter subscribers** in Strapi. `POST /api/newsletter` validates and normalizes email addresses, is idempotent, and exposes no public subscriber list. This stores opt-in subscriptions; it does not send a mailing campaign. Footer entries without configured destinations are marked as coming soon instead of linking to `#`.

@@ -1,7 +1,7 @@
-const apiUrl = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+import { apiUrl } from './api'
 
 export async function submitLead(application) {
-  const response = await fetch(`${apiUrl}/api/leads`, {
+  const response = await fetch(apiUrl('/api/leads'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data: application }),

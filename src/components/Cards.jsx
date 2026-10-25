@@ -1,9 +1,15 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import React from 'react'
 
 const Cards = ({ deal, handleDealClick }) => {
+  const { t } = useLanguage()
   return (
     <div
       onClick={() => handleDealClick(deal)}
+      role="button"
+      tabIndex={0}
+      aria-label={`${t('BUSINESS CLASS')}: ${deal.destination || deal.title || ''}`}
+      onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); handleDealClick(deal) } }}
       className="flex-shrink-0 w-[280px] bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer snap-start"
     >
       <div className="relative h-48 overflow-hidden">

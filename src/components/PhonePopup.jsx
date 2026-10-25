@@ -18,12 +18,13 @@ const PhonePopup = ({ isOpen, onClose }) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div role="dialog" aria-modal="true" aria-label={t('Request a Free Callback')} className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-auto overflow-hidden max-h-[90vh] flex flex-col">
         {/* Close Button */}
         <button
           onClick={() => { if (!pending) { reset(); onClose() } }}
           disabled={pending}
+          aria-label={t('Close')}
           className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-colors group z-20 shadow-lg"
         >
           <svg

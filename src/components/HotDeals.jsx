@@ -1,9 +1,10 @@
+import { apiUrl, mediaUrl } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Cards from './Cards'
 
-const STRAPI_URL = 'http://localhost:1337';
+
 
 // Define a type/interface for your deal structure for better type safety (optional, but good practice)
 // interface Deal {
@@ -36,7 +37,7 @@ const HotDeals = () => {
         setError(null);
 
         // Note: Added ?populate=* to ensure Strapi returns the image data
-        const response = await fetch(`${STRAPI_URL}/api/hot-flights?populate=*`);
+        const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -61,7 +62,7 @@ const HotDeals = () => {
 
           // 2. Prepend base URL if the path is relative (starts with /)
           if (imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
-            imageUrl = `${STRAPI_URL}${imageUrl}`;
+            imageUrl = mediaUrl(imageUrl);
           }
 
           return { id: item.id, ...attrs, image: imageUrl };

@@ -1,5 +1,5 @@
 import { useLanguage } from '../i18n/LanguageContext'
-import React from 'react'
+import { useRef, useState } from 'react'
 
 const Testimonials = () => {
   const { t } = useLanguage()

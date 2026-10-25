@@ -1,3 +1,4 @@
+import { apiUrl, mediaUrl } from '../lib/api'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
 import { callbackPhone } from '../lib/leads'
@@ -6,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 
-const STRAPI_URL = 'http://localhost:1337';
+
 
 const BusinessClass = () => {
   const { t } = useLanguage()
@@ -24,7 +25,7 @@ const BusinessClass = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await fetch(`${STRAPI_URL}/api/hot-flights?populate=*`);
+        const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
         const data = await response.json();
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
         
@@ -35,7 +36,7 @@ const BusinessClass = () => {
             imageUrl = imageUrl.data?.attributes?.url || imageUrl.url;
           }
           if (imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
-            imageUrl = `${STRAPI_URL}${imageUrl}`;
+            imageUrl = mediaUrl(imageUrl);
           }
           return {
             id: item.id,

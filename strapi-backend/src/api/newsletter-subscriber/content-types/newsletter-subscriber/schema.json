@@ -1,0 +1,10 @@
+{
+  "kind": "collectionType",
+  "collectionName": "newsletter_subscribers",
+  "info": { "singularName": "newsletter-subscriber", "pluralName": "newsletter-subscribers", "displayName": "Newsletter subscribers" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "email": { "type": "email", "required": true, "unique": true, "maxLength": 254 },
+    "language": { "type": "enumeration", "enum": ["uz", "ru", "en"], "default": "uz" }
+  }
+}

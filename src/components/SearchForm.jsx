@@ -1,3 +1,6 @@
+import { apiUrl } from '../lib/api'
+import { findAirports, normalizeAirports } from '../lib/airports'
+import { airportCode, localDate, searchError } from '../lib/search'
 import { saveItineraryDraft } from '../lib/itinerary'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect, useCallback } from 'react'
@@ -17,25 +20,24 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
   const inputRef = useRef(null)
   const dropdownRef = useRef(null)
 
-  // Fetch airports from Strapi backend (which proxies the IATA API)
   useEffect(() => {
-    const cached = sessionStorage.getItem('iata_airports')
-    if (cached) {
-      setAllAirports(JSON.parse(cached))
-      return
-    }
-
+    try {
+      const cached = normalizeAirports(JSON.parse(sessionStorage.getItem('iata_airports')))
+      if (cached.length) { setAllAirports(cached); return }
+    } catch { /* Ignore damaged or unavailable optional cache. */ }
+    const controller = new AbortController()
     setLoading(true)
-    fetch('http://localhost:1337/api/airports')
-      .then(res => res.json())
+    fetch(apiUrl('/api/airports'), { signal: controller.signal })
+      .then(response => { if (!response.ok) throw new Error('Airport lookup failed'); return response.json() })
       .then(data => {
-        if (Array.isArray(data)) {
-          sessionStorage.setItem('iata_airports', JSON.stringify(data))
-          setAllAirports(data)
-        }
+        if (controller.signal.aborted) return
+        const airports = normalizeAirports(data)
+        setAllAirports(airports)
+        try { sessionStorage.setItem('iata_airports', JSON.stringify(airports)) } catch { /* Search works without browser storage. */ }
       })
-      .catch(err => console.error('Failed to fetch airports:', err))
-      .finally(() => setLoading(false))
+      .catch(() => { if (!controller.signal.aborted) setAllAirports([]) })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false) })
+    return () => controller.abort()
   }, [])
 
   // Sync external value changes (e.g. swap)
@@ -43,29 +45,22 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
     setQuery(value)
   }, [value])
 
-  // Filter airports based on query
-  const filterAirports = useCallback((searchQuery) => {
-    if (!searchQuery || searchQuery.length < 2) return []
-    const q = searchQuery.toLowerCase()
-    return allAirports
-      .filter(a => {
-        if (excludeCode && a.code === excludeCode) return false
-        return (
-          a.code.toLowerCase().includes(q) ||
-          a.name.toLowerCase().includes(q) ||
-          a.city.toLowerCase().includes(q) ||
-          a.country.toLowerCase().includes(q)
-        )
-      })
-      .slice(0, 8)
-  }, [allAirports, excludeCode])
+  const filterAirports = useCallback(query => findAirports(allAirports, query, excludeCode), [allAirports, excludeCode])
+
+  useEffect(() => {
+    if (document.activeElement !== inputRef.current) return
+    const filtered = filterAirports(query)
+    setSuggestions(filtered)
+    setShowDropdown(filtered.length > 0 || (loading && query.trim().length >= 2))
+  }, [filterAirports, query, loading])
 
   const handleInputChange = (e) => {
     const val = e.target.value
     setQuery(val)
+    onChange(val)
     const filtered = filterAirports(val)
     setSuggestions(filtered)
-    setShowDropdown(filtered.length > 0)
+    setShowDropdown(filtered.length > 0 || (loading && val.trim().length >= 2))
   }
 
   const handleSelect = (airport) => {
@@ -84,8 +79,8 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
   }
 
   const handleBlur = () => {
-    // Delay to allow click on dropdown item
-    setTimeout(() => setShowDropdown(false), 200)
+    // Suggestions prevent mousedown blur, so no delayed callback can close a newly reopened list.
+    setShowDropdown(false)
   }
 
   return (
@@ -95,6 +90,7 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
         ref={inputRef}
         required
         autoComplete="off"
+        aria-label={label}
         placeholder={placeholder}
         value={query}
         onChange={handleInputChange}
@@ -154,13 +150,12 @@ const SearchForm = () => {
     saveItineraryDraft({ from, to, departureDate, returnDate, passengers, cabin, tripType })
   }, [from, to, departureDate, returnDate, passengers, cabin, tripType])
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = localDate()
+  const [validationError, setValidationError] = useState('')
 
-  // Get IATA code from selected value to exclude from the other dropdown
-  const getCode = (val) => {
-    const match = val.match(/\(([^)]+)\)/)
-    return match ? match[1] : ''
-  }
+  useEffect(() => { if (returnDate && departureDate && returnDate < departureDate) setReturnDate('') }, [departureDate, returnDate])
+
+  const getCode = airportCode
 
   useEffect(() => {
     if (showPaxDropdown && formRef.current) {
@@ -192,6 +187,9 @@ const SearchForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    const error = searchError({ from, to, departureDate, returnDate, tripType, passengers, cabin })
+    setValidationError(error)
+    if (error) return
     const searchParams = new URLSearchParams({
       from,
       to,
@@ -294,6 +292,7 @@ const SearchForm = () => {
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg> {t("Search")} </button>
         </div>
+        {validationError && <p role="alert" className="mt-3 rounded-lg bg-white px-4 py-3 text-sm text-red-700">{t(validationError)}</p>}
       </form>
 
       {/* Passengers/Cabin Dropdown */}

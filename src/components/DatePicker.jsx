@@ -100,7 +100,10 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
   return (
     <div ref={containerRef} className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 relative">
       <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">{label}</label>
-      <div
+      <button
+        type="button"
+        aria-label={label}
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 cursor-pointer"
       >
@@ -110,7 +113,7 @@ const DatePicker = ({ value, onChange, minDate, label, placeholder }) => {
         <span className={`text-sm font-semibold ${value ? 'text-ink' : 'text-gray-400'}`}>
           {value ? formatDisplay(value) : placeholder || t('Select date')}
         </span>
-      </div>
+      </button>
 
       {/* Calendar Popup */}
       {isOpen && (

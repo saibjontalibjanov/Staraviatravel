@@ -1,38 +1,5 @@
-const axios = require('axios');
-
-let cachedAirports = null;
-let cacheTimestamp = null;
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-
-module.exports = {
-  async getAirports(ctx) {
-    try {
-      // Return cached data if still valid
-      if (cachedAirports && cacheTimestamp && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
-        return ctx.send(cachedAirports);
-      }
-
-      const response = await axios.get('https://portail-portal.otc-cta.gc.ca/api/Airports');
-      const data = response.data;
-
-      // Format and filter — only active airports with IATA codes
-      const airports = data
-        .filter(a => a.iata && a.active)
-        .map(a => ({
-          code: a.iata,
-          name: a.nameEn,
-          city: a.city?.nameEn || '',
-          country: a.city?.country?.nameEn || ''
-        }));
-
-      // Cache it
-      cachedAirports = airports;
-      cacheTimestamp = Date.now();
-
-      return ctx.send(airports);
-    } catch (error) {
-      console.error('Airport fetch error:', error.message);
-      return ctx.internalServerError('Aeroportlar ma\'lumotini olishda xatolik: ' + error.message);
-    }
-  },
-};
+'use strict';
+const catalog = require('../airports-data.json');
+// The same bundled catalogue backs agent search and the public picker, without an external-service dependency.
+const airports = catalog.filter(airport => airport && typeof airport.code === 'string' && /^[A-Z]{3}$/.test(airport.code) && typeof airport.name === 'string').map(airport => ({ code: airport.code, name: airport.name.trim(), city: typeof airport.city === 'string' ? airport.city : '', country: typeof airport.country === 'string' ? airport.country : '' }));
+module.exports = { async getAirports(ctx) { ctx.body = airports; } };

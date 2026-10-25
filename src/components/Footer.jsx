@@ -1,17 +1,30 @@
+import { Link } from 'react-router-dom'
+import { apiUrl } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
 const Footer = () => {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const [email, setEmail] = useState('')
   const [showMessage, setShowMessage] = useState(false)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleNewsletterSubmit = (e) => {
-    e.preventDefault()
-    setShowMessage(true)
-    setEmail('')
-    setTimeout(() => setShowMessage(false), 3000)
+  const handleNewsletterSubmit = async (event) => {
+    event.preventDefault()
+    if (pending) return
+    setPending(true); setError(''); setShowMessage(false)
+    try {
+      const response = await fetch(apiUrl('/api/newsletter'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { email, language } }) })
+      if (!response.ok || !(await response.json()).subscribed) throw new Error('Subscription failed')
+      setShowMessage(true); setEmail('')
+    } catch { setError('Could not save your subscription. Please try again.') }
+    finally { setPending(false) }
+  }
+  const followSection = (event, id) => {
+    const section = document.getElementById(id)
+    if (section) { event.preventDefault(); section.scrollIntoView({ behavior: 'smooth' }) }
   }
 
   return (
@@ -24,35 +37,23 @@ const Footer = () => {
             <p className="text-white/60 text-sm leading-relaxed mb-6"> {t("The most convenient and affordable flights to your dream destinations. Start your journey with us.")} </p>
             <div className="flex gap-4">
               {/* Instagram */}
-              <a
-                href="#"
-                aria-label={t("Instagram")}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-              >
+              <span className="text-white/40" title={t('Coming soon')} role="img" aria-label={t("Instagram")}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
                 </svg>
-              </a>
+              </span>
               {/* Telegram */}
-              <a
-                href="#"
-                aria-label={t("Telegram")}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-              >
+              <span className="text-white/40" title={t('Coming soon')} role="img" aria-label={t("Telegram")}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
                 </svg>
-              </a>
+              </span>
               {/* Facebook */}
-              <a
-                href="#"
-                aria-label={t("Facebook")}
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gold transition-colors"
-              >
+              <span className="text-white/40" title={t('Coming soon')} role="img" aria-label={t("Facebook")}>
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
-              </a>
+              </span>
             </div>
           </div>
 
@@ -61,16 +62,16 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-6">{t("Company")}</h4>
             <ul className="space-y-3 text-white/60 text-sm">
               <li>
-                <a href="#biz-haqimizda" className="hover:text-gold transition-colors"> {t("About Us")} </a>
+                <Link to="/about-us" className="hover:text-gold transition-colors">{t('About Us')}</Link>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("Careers")} </a>
+                <span className="text-white/40" title={t('Coming soon')}> {t("Careers")} </span>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("Partners")} </a>
+                <span className="text-white/40" title={t('Coming soon')}> {t("Partners")} </span>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("News")} </a>
+                <span className="text-white/40" title={t('Coming soon')}> {t("News")} </span>
               </li>
             </ul>
           </div>
@@ -80,13 +81,13 @@ const Footer = () => {
             <h4 className="text-lg font-bold mb-6">{t("Support")}</h4>
             <ul className="space-y-3 text-white/60 text-sm">
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("FAQ")} </a>
+                <Link to="/#faq" onClick={event => followSection(event, 'faq')} className="hover:text-gold transition-colors">{t('FAQ')}</Link>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("Terms & Conditions")} </a>
+                <span className="text-white/40" title={t('Coming soon')}> {t("Terms & Conditions")} </span>
               </li>
               <li>
-                <a href="#" className="hover:text-gold transition-colors"> {t("Privacy Policy")} </a>
+                <span className="text-white/40" title={t('Coming soon')}> {t("Privacy Policy")} </span>
               </li>
               <li>
                 <a href="https://wa.me/998901234567" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors"> {t("Contact")} </a>
@@ -102,6 +103,8 @@ const Footer = () => {
               <input
                 type="email"
                 required
+                maxLength={254}
+                aria-label={t('Your email address')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t("Your email address")}
@@ -109,14 +112,17 @@ const Footer = () => {
               />
               <button
                 type="submit"
+                disabled={pending}
+                aria-label={t(pending ? 'Sending…' : 'Subscribe')}
                 className="bg-gold px-4 py-3 rounded-xl hover:bg-gold-dark transition-colors font-bold"
               >
                 →
               </button>
             </form>
             {showMessage && (
-              <p className="text-green-400 text-xs mt-2">{t("✓ Successfully subscribed!")}</p>
+              <p role="status" className="text-green-400 text-xs mt-2">{t("✓ Successfully subscribed!")}</p>
             )}
+            {error && <p role="alert" className="text-red-300 text-xs mt-2">{t(error)}</p>}
             <div className="mt-6">
               <p className="text-white/40 text-xs mb-3">{t("Our address:")}</p>
               <p className="text-white/60 text-sm">{t("Uzbekistan, Andijan")}</p>
@@ -136,8 +142,8 @@ const Footer = () => {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
           <p>{t("© 2026 STARAVIA. All rights reserved.")}</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-gold transition-colors"> {t("Privacy Policy")} </a>
-            <a href="#" className="hover:text-gold transition-colors"> {t("Terms of Use")} </a>
+            <span className="text-white/40" title={t('Coming soon')}> {t("Privacy Policy")} </span>
+            <span className="text-white/40" title={t('Coming soon')}> {t("Terms of Use")} </span>
           </div>
         </div>
       </div>

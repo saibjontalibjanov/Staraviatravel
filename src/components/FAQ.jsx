@@ -62,7 +62,7 @@ const FAQ = () => {
   }
 
   return (
-    <section className="w-full bg-[#f0ebe1] px-6 py-20 md:px-12 lg:px-8">
+    <section id="faq" className="w-full bg-[#f0ebe1] px-6 py-20 md:px-12 lg:px-8">
       <div className="mx-auto max-w-[800px]">
         <div className="text-center mb-12">
           <span className="text-gold font-semibold tracking-wider uppercase text-sm">{t("FAQ")}</span>

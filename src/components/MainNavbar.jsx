@@ -16,14 +16,7 @@ export default function MainNavbar() {
   const [open, setOpen] = useState(false)
   const menuId = useId()
 
-  useEffect(() => {
-    setOpen(false)
-    if (location.pathname !== '/' || !location.hash) return
-    const frame = requestAnimationFrame(() => {
-      document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' })
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [location.pathname, location.hash])
+  useEffect(() => { setOpen(false) }, [location.pathname, location.hash])
 
   useEffect(() => {
     if (!open) return

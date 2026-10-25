@@ -1348,5 +1348,70 @@
     "en": "Mobile navigation",
     "uz": "Mobil menyu",
     "ru": "Мобильная навигация"
+  },
+  "Select a valid departure and arrival airport.": {
+    "en": "Select a valid departure and arrival airport.",
+    "uz": "Jo‘nash va borish aeroportlarini to‘g‘ri tanlang.",
+    "ru": "Выберите корректные аэропорты вылета и прилёта."
+  },
+  "Departure and arrival airports must be different.": {
+    "en": "Departure and arrival airports must be different.",
+    "uz": "Jo‘nash va borish aeroportlari har xil bo‘lishi kerak.",
+    "ru": "Аэропорты вылета и прилёта должны отличаться."
+  },
+  "Choose a departure date today or later.": {
+    "en": "Choose a departure date today or later.",
+    "uz": "Bugungi yoki keyingi jo‘nash sanasini tanlang.",
+    "ru": "Выберите дату вылета не раньше сегодняшнего дня."
+  },
+  "Choose a return date on or after departure.": {
+    "en": "Choose a return date on or after departure.",
+    "uz": "Jo‘nash sanasidan oldin bo‘lmagan qaytish sanasini tanlang.",
+    "ru": "Выберите дату возвращения не раньше вылета."
+  },
+  "Passenger count must be between 1 and 9.": {
+    "en": "Passenger count must be between 1 and 9.",
+    "uz": "Yo‘lovchilar soni 1 dan 9 gacha bo‘lishi kerak.",
+    "ru": "Количество пассажиров должно быть от 1 до 9."
+  },
+  "Choose a supported cabin class.": {
+    "en": "Choose a supported cabin class.",
+    "uz": "Mavjud xizmat toifasini tanlang.",
+    "ru": "Выберите доступный класс обслуживания."
+  },
+  "Price unavailable": {
+    "en": "Price unavailable",
+    "uz": "Narx mavjud emas",
+    "ru": "Цена недоступна"
+  },
+  "Page not found": {
+    "en": "Page not found",
+    "uz": "Sahifa topilmadi",
+    "ru": "Страница не найдена"
+  },
+  "Back to home": {
+    "en": "Back to home",
+    "uz": "Bosh sahifaga qaytish",
+    "ru": "На главную"
+  },
+  "Coming soon": {
+    "en": "Coming soon",
+    "uz": "Tez kunda",
+    "ru": "Скоро"
+  },
+  "Subscribe": {
+    "en": "Subscribe",
+    "uz": "Obuna bo‘lish",
+    "ru": "Подписаться"
+  },
+  "Could not save your subscription. Please try again.": {
+    "en": "Could not save your subscription. Please try again.",
+    "uz": "Obunangizni saqlab bo‘lmadi. Qayta urinib ko‘ring.",
+    "ru": "Не удалось сохранить подписку. Попробуйте ещё раз."
+  },
+  "Close": {
+    "en": "Close",
+    "uz": "Yopish",
+    "ru": "Закрыть"
   }
 }
