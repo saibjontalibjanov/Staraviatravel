@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Django backend: local secrets, Python environments, persistent data and generated static files
+.env
+.env.*
+!.env.example
+**/__pycache__/
+*.py[cod]
+django-backend/.venv/
+django-backend/data/
+django-backend/media/
+django-backend/staticfiles/
+django-backend/.test-data/

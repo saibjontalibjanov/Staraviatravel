@@ -1,0 +1,14 @@
+.git
+node_modules
+legacy
+dist
+.env
+.env.*
+django-backend/.env
+django-backend/.venv
+django-backend/data
+django-backend/media
+django-backend/staticfiles
+**/__pycache__
+**/*.pyc
+django-backend/.test-data

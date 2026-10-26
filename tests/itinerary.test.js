@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { itineraryFromSearch } from '../src/lib/itinerary.js'
-import { initialSearch } from '../strapi-backend/src/admin/components/ticket-search/itinerary.mjs'
+import { initialSearch } from '../django-backend/travel/static/office/itinerary.js'
 
 test('website search values become structured lead travel details', () => {
   const itinerary = itineraryFromSearch({ from: 'Tashkent (TAS)', to: 'istanbul (ist)', departureDate: '2026-11-01', returnDate: '2026-11-10', passengers: '3', cabin: 'Premium Economy' })

@@ -36,7 +36,7 @@ const HotDeals = () => {
         setLoading(true);
         setError(null);
 
-        // Note: Added ?populate=* to ensure Strapi returns the image data
+        // Published offers retain the existing frontend response contract.
         const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
 
         if (!response.ok) {
@@ -44,11 +44,11 @@ const HotDeals = () => {
         }
         const data = await response.json();
 
-        // Strapi returns an object with a 'data' property. 
-        // We handle both Strapi format and plain array format.
+        // The API wraps published offers in a data property.
+        // Accept a wrapped response or a plain array.
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
 
-        // Strapi nests fields inside 'attributes'. 
+        // Retain compatibility with older imported offer responses.
         // We flatten it so deal.destination, deal.image, etc. work in the Cards component.
         const formattedDeals = rawDeals.map(item => {
           const attrs = item.attributes || item;
@@ -56,7 +56,7 @@ const HotDeals = () => {
 
           // 1. Handle Strapi's nested media structure
           if (imageUrl && typeof imageUrl === 'object') {
-            // Checks for Strapi v4/v5 structure or simplified formats
+            // Imported media metadata or the current simplified media format
             imageUrl = imageUrl.data?.attributes?.url || imageUrl.url;
           }
 

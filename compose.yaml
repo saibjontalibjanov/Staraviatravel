@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-staravia}
+      POSTGRES_USER: ${POSTGRES_USER:-staravia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in django-backend/.env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  web:
+    build: .
+    env_file: django-backend/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-staravia}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-staravia}
+    ports: ["127.0.0.1:8000:8000"]
+    volumes:
+      - media:/app/django-backend/media
+      - staticfiles:/app/django-backend/staticfiles
+    depends_on:
+      db: {condition: service_healthy}
+    command: sh -c "python manage.py migrate --noinput && python manage.py bootstrap_roles && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/_health', timeout=4)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  telegram-worker:
+    build: .
+    env_file: django-backend/.env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-staravia}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-staravia}
+    command: python manage.py telegram_worker
+    depends_on:
+      web: {condition: service_healthy}
+    restart: unless-stopped
+volumes:
+  postgres_data:
+  media:
+  staticfiles:
