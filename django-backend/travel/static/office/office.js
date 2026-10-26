@@ -21,9 +21,44 @@ function input(label,value,onChange,{type='text',required=true,max=200,min,optio
  field.value=value??'';field.required=required;if(min!==undefined)field.min=min
  field.addEventListener('input',()=>onChange(field.value));wrapper.append(field);return wrapper
 }
-function dirty(){state.requestId=null;const confirmed=$('[name=fareConfirmed]',$('#checkout-form')||document);if(confirmed)confirmed.checked=false}
+function dirty(){state.requestId=null;const confirmed=$('[name=fareConfirmed]',$('#checkout-form')||document);if(confirmed)confirmed.checked=false;overview()}
 function money(amount,currency='USD'){return new Intl.NumberFormat('en-US',{style:'currency',currency}).format(amount)}
 $('[data-menu]')?.addEventListener('click',()=>$('.sidebar').classList.toggle('open'))
+
+// Native dialogs provide focus trapping, Escape dismissal and focus restoration.
+const dialogTriggers = new WeakMap()
+function openDialog(id, trigger){const dialog=document.getElementById(id);if(!dialog)return;dialogTriggers.set(dialog,trigger||document.activeElement);dialog.showModal();document.body.classList.add('modal-open')}
+function closeDialog(dialog){dialog.close()}
+$$('[data-dialog-open]').forEach(trigger=>trigger.addEventListener('click',()=>openDialog(trigger.dataset.dialogOpen,trigger)))
+$$('.workspace-dialog').forEach(dialog=>{
+ $('[data-dialog-close]',dialog)?.addEventListener('click',()=>closeDialog(dialog))
+ dialog.addEventListener('close',()=>{if(!$('.workspace-dialog[open]'))document.body.classList.remove('modal-open');dialogTriggers.get(dialog)?.focus()})
+ dialog.addEventListener('click',event=>{const box=dialog.getBoundingClientRect();if(event.target===dialog&&(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom))closeDialog(dialog)})
+ if(dialog.hasAttribute('data-auto-open'))openDialog(dialog.id)
+})
+function savedOverview(checkout){
+ const target=$('#checkout-overview');if(!target||state.selected)return
+ target.replaceChildren();const snapshot=checkout.snapshot
+ const header=node('div',null,{class:'booking-preview-header'});header.append(node('div',snapshot.route),node('span',`#${lead.clientId}`,{class:'pill'}));target.append(header)
+ for(const [index,journey] of (snapshot.journeys||[]).entries()){
+  const first=journey.legs[0],last=journey.legs.at(-1),row=node('article',null,{class:'booking-preview-flight'})
+  row.append(node('small',snapshot.tripType==='round-trip'?(index?'RETURN':'OUTBOUND'):`JOURNEY ${index+1}`),node('h3',`${first.from} → ${last.to}`),node('p',`${first.departureDate} · ${first.departureTime} → ${last.arrivalTime}`),node('p',`${journey.legs.length-1} stop(s) · ${first.airline} · ${first.cabin}`,{class:'muted'}));target.append(row)
+ }
+ target.append(node('p',(snapshot.passengerDetails||[]).map(person=>person.fullName).join(', ')||snapshot.passengerName||'',{class:'preview-passengers'}),node('div',`Client total · ${money(Number(checkout.amountMinor)/100,checkout.currency)}`,{class:'booking-preview-total'}),node('p',`Saved offer · ${checkout.status} · Expires ${new Date(checkout.expiresAt).toLocaleString()}`,{class:'fine-print'}))
+}
+function overview(){
+ const target=$('#checkout-overview');if(!target||!state.selected)return
+ const form=$('#checkout-form');target.replaceChildren()
+ const header=node('div',null,{class:'booking-preview-header'});header.append(node('div',form.elements.route.value||'Your journey'),node('span',`#${lead.clientId}`,{class:'pill'}));target.append(header)
+ for(const [index,journey] of state.journeys.entries()){
+  const first=journey.legs[0],last=journey.legs.at(-1);const row=node('article',null,{class:'booking-preview-flight'});row.append(node('small',form.elements.tripType.value==='round-trip'?(index?'RETURN':'OUTBOUND'):`JOURNEY ${index+1}`),node('h3',`${first.from||'—'}  →  ${last.to||'—'}`),node('p',`${first.departureDate||'Date to confirm'} · ${first.departureTime||'—'} → ${last.arrivalTime||'—'}`),node('p',`${journey.legs.length-1} stop(s) · ${first.airline||state.selected.flight.airline} · ${first.cabin||'Class to confirm'}`,{class:'muted'}));target.append(row)
+ }
+ const passengers=state.passports.filter(person=>person.firstName&&person.lastName).map(person=>`${person.firstName} ${person.lastName}`).join(', ')
+ target.append(node('p',passengers||'Save passport details to confirm passenger names.',{class:'preview-passengers'}))
+ const pricing=pricePreview(state.selected.flight.price,form.elements.currency.value,form.elements.exchangeRate.value,form.elements.profit.value)
+ if(pricing)target.append(node('div',`Client total · ${money(pricing.total,form.elements.currency.value)}`,{class:'booking-preview-total'}))
+ target.append(node('p','Draft preview · Generate a checkout link in PNR to save this offer.',{class:'fine-print'}))
+}
 
 // Passport editor: only explicitly saved server records become checkout names.
 function passportRows(){
@@ -34,7 +69,7 @@ const newPerson=()=>({id:crypto.randomUUID(),firstName:'',lastName:'',passportNu
 if($('#passport-form')){
  api(`/office/api/leads/${lead.clientId}/passports`).then(data=>{state.passports=data.passengers.length?data.passengers:[newPerson()];passportRows()}).catch(error=>feedback($('#passport-form'),error.message,true))
  $('#add-passenger').addEventListener('click',()=>{if(state.passports.length>=9)return;state.passports.push(newPerson());passportRows();dirty()})
- submit($('#passport-form'),async()=>{const result=await api(`/office/api/leads/${lead.clientId}/passports`,'PUT',{passengers:state.passports});state.passports=result.passengers;passportRows();feedback($('#passport-form'),'Passport details saved. Checkout names will use these saved records.');dirty()})
+ submit($('#passport-form'),async()=>{const result=await api(`/office/api/leads/${lead.clientId}/passports`,'PUT',{passengers:state.passports});state.passports=result.passengers;passportRows();feedback($('#passport-form'),'Passport details saved. Checkout names will use these saved records.');dirty();overview()})
 }
 
 // Ticket search. Additional journeys are editable for multi-city searches.
@@ -62,7 +97,7 @@ if(searchForm){
 }
 function selectFare(flight,search){
  state.selected={flight,search};const filled=fromOffer(state.selected,lead);state.journeys=filled.journeys;const form=$('#checkout-form');form.elements.route.value=filled.route;form.elements.tripType.value=filled.tripType;form.elements.currency.value='USD';$('#exchange-field').hidden=true
- $('#selected-fare').replaceChildren(node('strong',`${flight.airline} · ${flight.flightNumber} · ${money(flight.price)}`),node('p',`Selected fare expires ${new Date(flight.quoteExpiresAt).toLocaleString()}. Verify all flight details and complete any missing journeys.`));checkoutRows();priceDisplay();dirty();$('#checkout-editor').scrollIntoView({behavior:'smooth'})
+ $('#selected-fare').replaceChildren(node('strong',`${flight.airline} · ${flight.flightNumber} · ${money(flight.price)}`),node('p',`Selected fare expires ${new Date(flight.quoteExpiresAt).toLocaleString()}. Verify all flight details and complete any missing journeys.`));checkoutRows();priceDisplay();dirty();overview();const dialog=$('#ticket-dialog');if(dialog?.open)closeDialog(dialog);$('#checkout-editor').scrollIntoView({behavior:'smooth'})
 }
 // Private quote editor. The server calculates and freezes the actual total.
 const flightFields=[['from','From airport (IATA)','text'],['to','To airport (IATA)','text'],['fromCity','From city / airport','text'],['toCity','To city / airport','text'],['departureDate','Flight departure date','date'],['arrivalDate','Flight arrival date','date'],['departureTime','Departure time (local)','time'],['arrivalTime','Arrival time (local)','time'],['departureTerminal','Departure terminal','text'],['arrivalTerminal','Arrival terminal','text'],['airline','Operating airline','text'],['flightNumber','Flight number','text'],['cabin','Class of seats','text'],['durationMinutes','Flight duration (minutes)','number']]
@@ -76,17 +111,17 @@ function priceDisplay(){const form=$('#checkout-form');if(!form)return;const res
 function shareLink(checkout,target){if(!checkout.url)return;const field=node('input',null,{value:checkout.url,readonly:'', 'aria-label':'Client checkout link'});field.addEventListener('focus',()=>field.select());const actions=node('div',null,{class:'button-row'});actions.append(button('Copy link',async()=>{try{await navigator.clipboard.writeText(checkout.url);feedback($('#checkout-form'),'Checkout link copied.')}catch{field.focus();field.select();feedback($('#checkout-form'),'Copy the selected link manually.')}}),node('a','Open client page ↗',{href:checkout.url,target:'_blank',rel:'noreferrer',class:'button secondary'}));target.append(field,actions)}
 async function loadCheckouts(){
  const target=$('#checkout-history');if(!target)return
- try{const result=await api(`/office/api/leads/${lead.clientId}/checkouts`);target.replaceChildren();if(result.configurationError)target.append(node('p',result.configurationError,{class:'feedback error'}));if(!result.checkouts.length)target.append(node('p','No checkout pages created yet.',{class:'muted'}));for(const checkout of result.checkouts){const row=node('article',null,{class:'checkout-history-item'});row.append(node('h3',`${checkout.snapshot.route} · ${money(Number(checkout.amountMinor)/100,checkout.currency)}`),node('p',`${checkout.status} · Expires ${new Date(checkout.expiresAt).toLocaleString()}`));if(checkout.pricing?.baseMinor)row.append(node('p',`Agents only — cost ${money(Number(checkout.pricing.baseMinor)/100,checkout.currency)} · private profit ${money(Number(checkout.pricing.profitMinor)/100,checkout.currency)}`));if(checkout.billingContact?.fullName)row.append(node('p',`Billing submitted: ${checkout.billingContact.fullName} · ${checkout.billingContact.email} · ${checkout.billingContact.phone} · ${checkout.billingContact.country}, ${checkout.billingContact.city}, ${checkout.billingContact.address}`));shareLink(checkout,row);if(checkout.url)row.append(button('Revoke link',async()=>{try{await api(`/office/api/leads/${lead.clientId}/checkouts/${checkout.id}/revoke`,'POST',{});await loadCheckouts();$('#created-checkout').replaceChildren();feedback($('#checkout-form'),'Checkout revoked.')}catch(error){feedback($('#checkout-form'),error.message,true)}}));target.append(row)}}catch(error){target.replaceChildren(node('p',error.message,{class:'feedback error'}))}
+ try{const result=await api(`/office/api/leads/${lead.clientId}/checkouts`);target.replaceChildren();if(!state.selected&&result.checkouts.length)savedOverview(result.checkouts.find(item=>item.status==='active')||result.checkouts[0]);if(result.configurationError)target.append(node('p',result.configurationError,{class:'feedback error'}));if(!result.checkouts.length)target.append(node('p','No checkout pages created yet.',{class:'muted'}));for(const checkout of result.checkouts){const row=node('article',null,{class:'checkout-history-item'});row.append(node('h3',`${checkout.snapshot.route} · ${money(Number(checkout.amountMinor)/100,checkout.currency)}`),node('p',`${checkout.status} · Expires ${new Date(checkout.expiresAt).toLocaleString()}`));if(checkout.pricing?.baseMinor)row.append(node('p',`Agents only — cost ${money(Number(checkout.pricing.baseMinor)/100,checkout.currency)} · private profit ${money(Number(checkout.pricing.profitMinor)/100,checkout.currency)}`));if(checkout.billingContact?.fullName)row.append(node('p',`Billing submitted: ${checkout.billingContact.fullName} · ${checkout.billingContact.email} · ${checkout.billingContact.phone} · ${checkout.billingContact.country}, ${checkout.billingContact.city}, ${checkout.billingContact.address}`));shareLink(checkout,row);if(checkout.url)row.append(button('Revoke link',async()=>{try{await api(`/office/api/leads/${lead.clientId}/checkouts/${checkout.id}/revoke`,'POST',{});await loadCheckouts();$('#created-checkout').replaceChildren();feedback($('#checkout-form'),'Checkout revoked.')}catch(error){feedback($('#checkout-form'),error.message,true)}}));target.append(row)}}catch(error){target.replaceChildren(node('p',error.message,{class:'feedback error'}))}
 }
 if($('#checkout-form')){
  const form=$('#checkout-form');checkoutRows();priceDisplay();loadCheckouts()
- form.addEventListener('input',event=>{if(event.target.name!=='fareConfirmed')dirty();priceDisplay()})
+ form.addEventListener('input',event=>{if(event.target.name!=='fareConfirmed')dirty();priceDisplay();overview()})
  form.elements.currency.addEventListener('change',()=>{$('#exchange-field').hidden=form.elements.currency.value!=='UZS';form.elements.exchangeRate.required=form.elements.currency.value==='UZS';priceDisplay()})
  form.elements.tripType.addEventListener('change',()=>{const kind=form.elements.tripType.value;if(kind==='one-way')state.journeys=state.journeys.slice(0,1);else if(state.journeys.length<2){const first=state.journeys[0].legs[0];const last=state.journeys[0].legs.at(-1);state.journeys.push({legs:[{...emptyLeg(),from:last.to,to:first.from,fromCity:last.toCity,toCity:first.fromCity,cabin:last.cabin}]})}if(kind==='round-trip')state.journeys=state.journeys.slice(0,2);checkoutRows();dirty()})
  $('#add-checkout-city').addEventListener('click',()=>{if(state.journeys.length>=6)return;state.journeys.push({legs:[emptyLeg()]});checkoutRows();dirty()})
  $$('[data-add-baggage]').forEach(value=>value.addEventListener('click',()=>{if(state.baggage.length>=20)return;state.baggage.push({type:value.dataset.addBaggage,allowance:'',appliesTo:''});baggageRows();dirty()}))
  $('#refresh-checkouts').addEventListener('click',loadCheckouts)
- submit(form,async()=>{if(!state.selected)throw new Error('Choose a priced fare from ticket search first.');state.requestId ||= crypto.randomUUID();const data=Object.fromEntries(new FormData(form));Object.assign(data,{journeys:state.journeys,baggage:state.baggage,quoteReference:state.selected.flight.quoteReference,expiryDays:Number(data.expiryDays),fareConfirmed:form.elements.fareConfirmed.checked,requestId:state.requestId});const result=await api(`/office/api/leads/${lead.clientId}/checkouts`,'POST',data);state.requestId=null;const target=$('#created-checkout');target.replaceChildren();const box=node('div',null,{class:'created-checkout'});box.append(node('h3','Your client’s checkout link'));shareLink(result.checkout,box);target.append(box);feedback(form,'Checkout created. Copy the private link and share it with this client.');await loadCheckouts()})
+ submit(form,async()=>{if(!state.selected)throw new Error('Choose a priced fare from ticket search first.');state.requestId ||= crypto.randomUUID();const data=Object.fromEntries(new FormData(form));Object.assign(data,{journeys:state.journeys,baggage:state.baggage,quoteReference:state.selected.flight.quoteReference,expiryDays:Number(data.expiryDays),fareConfirmed:form.elements.fareConfirmed.checked,requestId:state.requestId});const result=await api(`/office/api/leads/${lead.clientId}/checkouts`,'POST',data);state.requestId=null;const target=$('#created-checkout');target.replaceChildren();const box=node('div',null,{class:'created-checkout'});box.append(node('h3','Your client’s checkout link'));shareLink(result.checkout,box);target.append(box);feedback(form,'Checkout created. Copy the private link and share it with this client.');await loadCheckouts();if($('#pnr-dialog')?.open)closeDialog($('#pnr-dialog'));target.scrollIntoView({behavior:'smooth'})})
 }
 
 // Telegram operations are performed only by explicit staff actions.

@@ -1413,5 +1413,80 @@
     "en": "Close",
     "uz": "Yopish",
     "ru": "Закрыть"
+  },
+  "Loading questions…": {
+    "en": "Loading questions…",
+    "uz": "Savollar yuklanmoqda…",
+    "ru": "Загружаем вопросы…"
+  },
+  "Questions could not be loaded.": {
+    "en": "Questions could not be loaded.",
+    "uz": "Savollarni yuklab bo‘lmadi.",
+    "ru": "Не удалось загрузить вопросы."
+  },
+  "Have a question? Contact our team.": {
+    "en": "Have a question? Contact our team.",
+    "uz": "Savolingiz bormi? Jamoamizga murojaat qiling.",
+    "ru": "Есть вопрос? Свяжитесь с нашей командой."
+  },
+  "Share your journey": {
+    "en": "Share your journey",
+    "uz": "Sayohatingiz haqida yozing",
+    "ru": "Поделитесь впечатлениями"
+  },
+  "Tell us about your experience. No photo needed.": {
+    "en": "Tell us about your experience. No photo needed.",
+    "uz": "Tajribangiz haqida aytib bering. Surat shart emas.",
+    "ru": "Расскажите о вашем опыте. Фото не требуется."
+  },
+  "Thank you! Your review will appear after our team approves it.": {
+    "en": "Thank you! Your review will appear after our team approves it.",
+    "uz": "Rahmat! Fikringiz jamoamiz tasdiqlaganidan so‘ng ko‘rinadi.",
+    "ru": "Спасибо! Ваш отзыв появится после одобрения нашей командой."
+  },
+  "Your name": {
+    "en": "Your name",
+    "uz": "Ismingiz",
+    "ru": "Ваше имя"
+  },
+  "Your rating": {
+    "en": "Your rating",
+    "uz": "Bahoyingiz",
+    "ru": "Ваша оценка"
+  },
+  "Your review": {
+    "en": "Your review",
+    "uz": "Fikringiz",
+    "ru": "Ваш отзыв"
+  },
+  "Your name and review may be published after approval. Please do not include passport or payment details.": {
+    "en": "Your name and review may be published after approval. Please do not include passport or payment details.",
+    "uz": "Ismingiz va fikringiz tasdiqlangandan keyin e’lon qilinishi mumkin. Pasport yoki to‘lov ma’lumotlarini yozmang.",
+    "ru": "После одобрения ваше имя и отзыв могут быть опубликованы. Не указывайте паспортные или платёжные данные."
+  },
+  "Send review": {
+    "en": "Send review",
+    "uz": "Fikr yuborish",
+    "ru": "Отправить отзыв"
+  },
+  "Could not send your review. Please try again.": {
+    "en": "Could not send your review. Please try again.",
+    "uz": "Fikrni yuborib bo‘lmadi. Qayta urinib ko‘ring.",
+    "ru": "Не удалось отправить отзыв. Попробуйте ещё раз."
+  },
+  "Loading reviews…": {
+    "en": "Loading reviews…",
+    "uz": "Fikrlar yuklanmoqda…",
+    "ru": "Загружаем отзывы…"
+  },
+  "Reviews could not be loaded.": {
+    "en": "Reviews could not be loaded.",
+    "uz": "Fikrlarni yuklab bo‘lmadi.",
+    "ru": "Не удалось загрузить отзывы."
+  },
+  "Your journey could be our next story.": {
+    "en": "Your journey could be our next story.",
+    "uz": "Keyingi hikoyamiz sizning sayohatingiz bo‘lishi mumkin.",
+    "ru": "Ваше путешествие может стать нашей следующей историей."
   }
 }

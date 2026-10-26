@@ -67,3 +67,15 @@ See [migration instructions](../docs/MIGRATION.md) before transferring live data
 
 
 If an enterprise/cloud build proxy uses a custom certificate authority, the Dockerfile accepts an optional BuildKit secret containing a **trusted CA bundle**: `docker build --secret id=build_ca,src=/path/to/trusted-ca-bundle.pem .`. Both npm and pip keep TLS verification enabled. The CA bundle is used only during installation and is not copied into the final image. Ordinary builds do not need this option.
+
+### CRM layout and website content
+
+Each lead keeps **Client checkout** on its main page. The top-right **All Client Records**, **Passenger Details**, and **Ticket Search** buttons open accessible dialogs; **PNR** opens the checkout/payment-information editor. Selecting a priced ticket closes search and fills the checkout preview. Save passports before generating a link. The preview is a draft until the PNR form saves a checkout snapshot. Online payment availability is unchanged.
+
+New website and manually entered leads are assigned randomly to active staff accounts. Updating a lead keeps its existing owner. If there are no active staff accounts, the lead remains unassigned. Source, status, assignment, airline, quoted price and payment preference are no longer editable client-record fields. Website booking enquiries require acceptance of terms, without a payment preference. Historical database fields remain for migration compatibility.
+
+The About page includes a photo-free review form immediately after the journey contact banner. **Testimonials** in the CRM navigation lists submissions as unpublished drafts; managers can edit, approve, unpublish or delete them. Public reviews show only the approved name, review, language and rating. Submission is limited to five requests per hour per client IP. Agents can view these records; managers manage publication.
+
+**Website FAQs** manages questions, answers, ordering and publication in Uzbek, Russian and English. All three translations are required. Migration `0004` seeds nine starter questions once; subsequent staff edits are preserved. The website reads published FAQs in its selected language and approved reviews through `GET /api/faqs?language=uz` and `GET /api/testimonials`. Reviews are submitted through `POST /api/testimonials` with `{ "data": { "name": "…", "text": "…", "rating": 5, "language": "uz" } }`; public submissions cannot approve themselves.
+
+After updating an existing installation, run `python manage.py migrate`, `python manage.py bootstrap_roles`, `python manage.py collectstatic --noinput`, rebuild the frontend, and restart the app. API keys remain in the same backend `.env`; these features require no additional keys.

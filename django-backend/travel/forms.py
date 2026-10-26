@@ -2,7 +2,7 @@ import re
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
-from travel.models import Lead, HotFlight, Booking, SavedSearch
+from travel.models import Lead, HotFlight, Booking, SavedSearch, Testimonial, FAQ
 from travel.services.validation import phone, ServiceError
 
 class StaffLoginForm(AuthenticationForm):
@@ -13,11 +13,8 @@ class StaffLoginForm(AuthenticationForm):
 class LeadForm(forms.ModelForm):
     class Meta:
         model=Lead
-        fields=['first_name','last_name','phone','email','source','language','lead_status','assigned_to','flight_route','airline','quoted_price','payment_method','departure_airport','arrival_airport','departure_date','return_date','passengers','cabin','notes']
+        fields=['first_name','last_name','phone','email','language','flight_route','departure_airport','arrival_airport','departure_date','return_date','passengers','cabin','notes']
         widgets={'departure_date':forms.DateInput(attrs={'type':'date'}),'return_date':forms.DateInput(attrs={'type':'date'}),'notes':forms.Textarea(attrs={'rows':4})}
-    def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
-        self.fields['assigned_to'].queryset=User.objects.filter(is_staff=True,is_active=True)
     def clean_phone(self):
         try:return phone(self.cleaned_data['phone'])
         except ServiceError as error:raise forms.ValidationError(error.message)
@@ -29,7 +26,6 @@ class LeadForm(forms.ModelForm):
             data[key]=value
         if data.get('departure_date') and data.get('return_date') and data['return_date']<data['departure_date']:self.add_error('return_date','Return must follow departure.')
         if data.get('passengers') is not None and not 1<=data['passengers']<=9:self.add_error('passengers','Use 1–9 passengers.')
-        if data.get('quoted_price') is not None and data['quoted_price']<0:self.add_error('quoted_price','Use a non-negative amount.')
         return data
 
 class HotFlightForm(forms.ModelForm):
@@ -74,3 +70,17 @@ class StaffCreationForm(UserCreationForm):
         user=super().save(commit=False);user.is_staff=True
         if commit:user.save();user.groups.add(self.cleaned_data['role'])
         return user
+
+
+class TestimonialForm(forms.ModelForm):
+    class Meta:
+        model = Testimonial
+        fields = ['name', 'text', 'language', 'rating', 'published']
+        labels = {'published': 'Approved for public display'}
+        widgets = {'text': forms.Textarea(attrs={'rows': 5})}
+
+class FAQForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
+        fields = ['question_uz', 'answer_uz', 'question_ru', 'answer_ru', 'question_en', 'answer_en', 'position', 'published']
+        widgets = {f'answer_{lang}': forms.Textarea(attrs={'rows': 4}) for lang in ['uz', 'ru', 'en']}

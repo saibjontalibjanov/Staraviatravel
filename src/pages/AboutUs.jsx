@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faCoins, faGlobe, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
 import { useLanguage } from '../i18n/LanguageContext'
 import TopBar from '../components/TopBar'
+import Testimonials from '../components/Testimonials'
 import MainNavbar from '../components/MainNavbar'
 import PhonePopup from '../components/PhonePopup'
 import BusinessSeat from '../../pictures/seats/business-seat.jpg'
@@ -81,6 +82,7 @@ export default function AboutUs() {
             </button>
           </div>
         </section>
+        <Testimonials allowSubmission />
       </main>
       <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
     </div>

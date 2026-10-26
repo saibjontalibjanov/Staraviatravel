@@ -2,6 +2,7 @@ import secrets
 import uuid
 from django.conf import settings
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
 
 def client_reference():
@@ -41,6 +42,13 @@ class Lead(Stamped):
     class Meta:
         ordering = ['-created_at']
         permissions = [('manage_passports', 'View and edit passport details')]
+    def save(self, *args, **kwargs):
+        if self._state.adding and not self.assigned_to_id:
+            from django.contrib.auth import get_user_model
+            candidates = list(get_user_model().objects.filter(is_staff=True, is_active=True).values_list('pk', flat=True))
+            if candidates:
+                self.assigned_to_id = secrets.choice(candidates)
+        super().save(*args, **kwargs)
     def __str__(self):
         return f'{self.client_id} · {self.first_name} {self.last_name}'.strip()
 
@@ -155,3 +163,29 @@ class AuditEvent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ['-created_at']
+
+
+class Testimonial(Stamped):
+    name = models.CharField(max_length=100)
+    text = models.TextField(max_length=2000)
+    language = models.CharField(max_length=2, choices=[('uz', 'Uzbek'), ('ru', 'Russian'), ('en', 'English')], default='uz')
+    rating = models.PositiveSmallIntegerField(default=5, validators=[MinValueValidator(1), MaxValueValidator(5)])
+    published = models.BooleanField(default=False)
+    class Meta:
+        ordering = ['-created_at']
+    def __str__(self):
+        return self.name
+
+class FAQ(Stamped):
+    question_uz = models.CharField('Question · Uzbek', max_length=300)
+    answer_uz = models.TextField('Answer · Uzbek', max_length=4000)
+    question_ru = models.CharField('Question · Russian', max_length=300)
+    answer_ru = models.TextField('Answer · Russian', max_length=4000)
+    question_en = models.CharField('Question · English', max_length=300)
+    answer_en = models.TextField('Answer · English', max_length=4000)
+    position = models.PositiveIntegerField(default=0)
+    published = models.BooleanField(default=True)
+    class Meta:
+        ordering = ['position', 'pk']
+    def __str__(self):
+        return self.question_en

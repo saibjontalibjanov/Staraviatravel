@@ -6,7 +6,6 @@ import LeadFeedback from '../components/LeadFeedback'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import TestimonialsCarousel from './Home'
 import TopBar from '../components/TopBar';
 import TrustBar from '../components/TrustBar';
 import FAQ from '../components/FAQ';
@@ -27,7 +26,6 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
     lastName: '',
     phone: '',
     email: '',
-    paymentMethod: '',
     termsAccepted: false
   })
   const { submit, pending, result, error, reset } = useLeadSubmission()
@@ -150,22 +148,6 @@ const BookFlightPopup = ({ isOpen, onClose, flightInfo, itinerary }) => {
                     className="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all"
                   />
                 </div>
-
-                {/* Payment Method */}
-                <select
-                  name="paymentMethod"
-                  required
-                  value={formData.paymentMethod}
-                  onChange={handleChange}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-ink bg-white focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all appearance-none cursor-pointer"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', backgroundSize: '20px' }}
-                >
-                  <option value="" disabled>{t("Select payment method")}</option>
-                  <option value="credit-card">{t("Credit Card")}</option>
-                  <option value="debit-card">{t("Debit Card")}</option>
-                  <option value="bank-transfer">{t("Bank Transfer")}</option>
-                  <option value="cash">{t("Cash")}</option>
-                </select>
 
                 {/* Terms Checkbox */}
                 <label className="flex items-start gap-3 cursor-pointer">

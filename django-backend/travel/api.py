@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import Http404
-from travel.models import Lead, NewsletterSubscriber, HotFlight, TelegramChat, TelegramMessage, Checkout, Booking, SavedSearch
+from travel.models import Lead, NewsletterSubscriber, HotFlight, TelegramChat, TelegramMessage, Checkout, Booking, SavedSearch, Testimonial, FAQ
 from travel.services.validation import ServiceError, obj, email, passports_input, text, request_uuid
 from travel.services.leads import create_lead, limit, audit
 from travel.services.flights import AIRPORTS, search_flights
@@ -214,3 +214,24 @@ def office_api(request,operation,client_id=None,pk=None):
             audit(request.user,'telegram.queued',record.pk)
             return {'queued':True,'id':record.pk}
     raise ServiceError('Not found.',404)
+
+
+@endpoint(['GET'])
+def faqs(request):
+    language=request.GET.get('language','uz')
+    if language not in ['uz','ru','en']:raise ServiceError('Invalid language.')
+    return {'data':[{'id':row.pk,'question':getattr(row,'question_'+language),'answer':getattr(row,'answer_'+language)} for row in FAQ.objects.filter(published=True)[:200]]}
+
+@csrf_exempt
+@endpoint(['GET','POST'])
+def testimonials(request):
+    if request.method=='GET':
+        return {'data':[{'id':row.pk,'name':row.name,'text':row.text,'rating':row.rating,'language':row.language} for row in Testimonial.objects.filter(published=True)[:100]]}
+    rate(request,'testimonial',5,3600)
+    data=obj(body(request).get('data'))
+    language=data.get('language','uz')
+    if language not in ['uz','ru','en']:raise ServiceError('Invalid language.')
+    rating=data.get('rating',5)
+    if type(rating) is not int or not 1<=rating<=5:raise ServiceError('Choose a rating from 1 to 5.')
+    row=Testimonial.objects.create(name=text(data.get('name'),100,'name',True),text=text(data.get('text'),2000,'review',True),language=language,rating=rating,published=False)
+    return {'submitted':True},201

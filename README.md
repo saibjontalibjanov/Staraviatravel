@@ -76,3 +76,9 @@ python manage.py collectstatic --noinput
 See [django-backend/README.md](django-backend/README.md) for API routes, production deployment, Docker/PostgreSQL and permission details. [docs/BACKEND_ANALYSIS.md](docs/BACKEND_ANALYSIS.md) maps the previous Strapi functions to their Django replacements.
 
 **Payments:** the existing project had checkout offers and billing-contact storage, not a completed CLICK integration. This migration preserves that behavior: no fake payment success, no card collection, no ticket issuance. Live CLICK payments require the complete merchant configuration and a verified callback implementation before enabling a pay button.
+
+### Client workspace and editable website content
+
+A lead’s main page now focuses on its client checkout. Use **All Client Records**, **Passenger Details**, and **Ticket Search** for pop-up editors; **PNR** opens the checkout and payment-information form. New leads are assigned randomly among active staff accounts.
+
+The CRM sidebar includes **Testimonials** (review, edit and approve About-page submissions) and **Website FAQs** (add, translate, order and publish questions). Nine FAQs are included in Uzbek, Russian and English. Photo-free reviews are submitted below the About page’s journey banner and stay private until approved. Managers control publication; agents can view content records. See [backend workflow and upgrade instructions](django-backend/README.md#crm-layout-and-website-content).

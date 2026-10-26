@@ -14,14 +14,14 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent
-from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm
+from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ
+from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm
 from travel.services.leads import limit, audit
 from travel.services.validation import ServiceError
 from travel.services.telegram import config_status
 from travel.services.checkouts import admin_checkout
 
-SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('offers','Website offers','▧','travel.view_hotflight'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
+SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
 
 def available(user):return [item for item in SECTIONS if item[3] is None or (user.is_superuser if item[3]=='superuser' else user.has_perm(item[3]))]
 
@@ -56,9 +56,11 @@ def office(request):
                 if not lead or not user.has_perm('travel.delete_lead'):raise PermissionDenied
                 if request.POST.get('confirm_delete')!='DELETE':messages.error(request,'Type DELETE to confirm removal.');return redirect(request.get_full_path())
                 reference=lead.client_id;lead.delete();audit(user,'lead.deleted',reference);messages.success(request,'Client removed. Associated checkout links are unavailable.');return redirect('/office/?section=leads')
-            form=LeadForm(request.POST or None,instance=lead,initial={'source':'agent','language':'uz'})
+            form=LeadForm(request.POST or None,instance=lead,initial={'language':'uz'})
             if request.method=='POST' and form.is_valid():
-                record=form.save();audit(user,'lead.updated' if lead else 'lead.created',record.client_id);messages.success(request,'Client record saved.');return redirect(f'/office/?section=leads&lead={record.client_id}')
+                record=form.save(commit=False)
+                if not lead:record.source='agent'
+                record.save();audit(user,'lead.updated' if lead else 'lead.created',record.client_id);messages.success(request,'Client record saved.');return redirect(f'/office/?section=leads&lead={record.client_id}')
             context.update(lead=lead,form=form,can_edit=user.has_perm(permission))
             if lead:context['lead_bootstrap']={'clientId':lead.client_id,'firstName':lead.first_name,'lastName':lead.last_name,'departureAirport':lead.departure_airport,'arrivalAirport':lead.arrival_airport,'departureDate':lead.departure_date.isoformat() if lead.departure_date else '', 'returnDate':lead.return_date.isoformat() if lead.return_date else '', 'passengers':lead.passengers or 1,'cabin':lead.cabin or 'Business','language':lead.language,'flightRoute':lead.flight_route,'airline':lead.airline}
         else:
@@ -69,8 +71,9 @@ def office(request):
             context.update(page=Paginator(leads,25).get_page(request.GET.get('page')),query=query,status=state,states=['new','contacted','qualified','closed'])
     elif section=='tickets':
         context['lead_bootstrap']={}
-    elif section in ['offers','bookings','searches']:
-        model,form_class={'offers':(HotFlight,HotFlightForm),'bookings':(Booking,BookingForm),'searches':(SavedSearch,SavedSearchForm)}[section]
+    elif section in ['offers','bookings','searches','testimonials','faqs']:
+        model,form_class={'offers':(HotFlight,HotFlightForm),'bookings':(Booking,BookingForm),'searches':(SavedSearch,SavedSearchForm),'testimonials':(Testimonial,TestimonialForm),'faqs':(FAQ,FAQForm)}[section]
+        context.update(can_add_record=user.has_perm(f'travel.add_{model._meta.model_name}'),can_change_record=user.has_perm(f'travel.change_{model._meta.model_name}'),can_delete_record=user.has_perm(f'travel.delete_{model._meta.model_name}'))
         reference=request.GET.get('record')
         record=get_object_or_404(model,pk=reference) if reference and reference!='new' else None
         if reference:
@@ -84,7 +87,7 @@ def office(request):
             if request.method=='POST' and form.is_valid():
                 record=form.save();audit(user,f'{model._meta.model_name}.saved',record.pk);messages.success(request,'Record saved.');return redirect(f'/office/?section={section}')
             context.update(form=form,record=record)
-        else:context['page']=Paginator(model.objects.order_by('-created_at'),25).get_page(request.GET.get('page'))
+        else:context['page']=Paginator(model.objects.order_by('position','pk') if section=='faqs' else model.objects.order_by('-created_at'),25).get_page(request.GET.get('page'))
     elif section=='subscribers':
         context['page']=Paginator(NewsletterSubscriber.objects.order_by('-created_at'),50).get_page(request.GET.get('page'))
         if request.GET.get('export')=='csv':

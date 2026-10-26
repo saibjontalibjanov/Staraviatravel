@@ -93,12 +93,9 @@ def lead_input(data):
         raise ServiceError('Invalid page path.')
     if data.get('quotedPrice') is not None:
         result['quoted_price'] = decimal_value(data['quotedPrice'], 'quoted price', True)
-    method = data.get('paymentMethod', '')
-    if method and method not in ['credit-card','debit-card','bank-transfer','cash']:
-        raise ServiceError('Invalid payment preference.')
-    if data['source'] == 'booking' and (data.get('termsAccepted') is not True or not method):
-        raise ServiceError('Accept the booking terms and choose a payment preference.')
-    result.update(payment_method=method, terms_accepted=data.get('termsAccepted') is True)
+    if data['source'] == 'booking' and data.get('termsAccepted') is not True:
+        raise ServiceError('Accept the booking terms.')
+    result.update(terms_accepted=data.get('termsAccepted') is True)
     for source,target in [('departureAirport','departure_airport'),('arrivalAirport','arrival_airport')]:
         if data.get(source):
             if not isinstance(data[source],str) or not re.fullmatch('[A-Z]{3}',data[source]):
