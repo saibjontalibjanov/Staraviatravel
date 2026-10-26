@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PhonePopup from './PhonePopup'
+import navbarLogo from '../../pictures/icons/staravia-logo-horizontal.png'
 import { useLanguage } from '../i18n/LanguageContext'
 import { Link } from 'react-router-dom';
 
@@ -17,7 +18,7 @@ const TopBar = ({ onPhoneClick }) => {
         {/* Left: Logo */}
         <div className="flex items-center gap-3 min-w-0">
           <Link to="/">
-            <img src="/staravia-mark.png" alt="Staravia Logo" className="h-16 w-20 sm:h-20 sm:w-24 object-contain -my-3" onError={(e) => e.target.style.display = 'none'} />
+            <img src={navbarLogo} alt="Staravia Logo" width="1307" height="316" className="h-auto w-[112px] sm:w-[160px] lg:w-[200px] max-w-full object-contain" onError={(e) => e.target.style.display = 'none'} />
           </Link>
           {/* <div className="w-px h-8 bg-gray-300 mx-2"></div>
           <img src={Nav2} alt="STARAVIA Logo" className="h-8 w-auto object-cover" onError={(e) => e.target.style.display = 'none'} /> */}
