@@ -76,23 +76,63 @@ if($('#passport-form')){
 const searchForm=$('#ticket-form')
 const defaults=initialSearch(lead)
 let searchJourneys=[{departure_id:defaults.departure_id,arrival_id:defaults.arrival_id,date:defaults.date},{departure_id:defaults.arrival_id,arrival_id:defaults.departure_id,date:defaults.return_date}]
+let ticketResults = null
 function searchRows(){
- if(!searchForm)return;const kind=searchForm.elements.tripType.value;const target=$('#search-journeys');target.replaceChildren();const count=kind==='one-way'?1:kind==='round-trip'?2:searchJourneys.length
- searchJourneys.slice(0,count).forEach((journey,index)=>{const row=node('div',null,{class:'journey-editor'});row.append(node('h3',kind==='round-trip'?(index?'Return':'Outbound'):`Journey ${index+1}`));const fields=node('div',null,{class:'form-grid'});for(const [key,label]of [['departure_id','From (IATA)'],['arrival_id','To (IATA)']])fields.append(input(`${label} · journey ${index+1}`,journey[key],value=>journey[key]=value.toUpperCase(),{max:3,list:'airport-catalogue'}));fields.append(input(`Departure date · journey ${index+1}`,journey.date,value=>journey.date=value,{type:'date',min:new Date().toLocaleDateString('en-CA')}));row.append(fields);if(kind==='multi-city'&&searchJourneys.length>2)row.append(button('Remove journey',()=>{searchJourneys.splice(index,1);searchRows()}));target.append(row)})
+ if(!searchForm)return
+ const kind=searchForm.elements.tripType.value,target=$('#search-journeys'),extra=$('#search-extra-journeys');target.replaceChildren();extra.replaceChildren()
+ const main=searchJourneys[0]
+ for(const [key,label] of [['departure_id','From (IATA)'],['arrival_id','To (IATA)']])target.append(input(`${label} · journey 1`,main[key],value=>{main[key]=value.toUpperCase();if(kind==='round-trip'){searchJourneys[1].departure_id=main.arrival_id;searchJourneys[1].arrival_id=main.departure_id}},{max:3,list:'airport-catalogue'}))
+ const dates=node('div',null,{class:'ticket-date-fields'});dates.append(input('Departure date · journey 1',main.date,value=>main.date=value,{type:'date',min:new Date().toLocaleDateString('en-CA')}))
+ if(kind==='round-trip'){
+  searchJourneys[1].departure_id=main.arrival_id;searchJourneys[1].arrival_id=main.departure_id
+  dates.append(input('Return date',searchJourneys[1].date,value=>searchJourneys[1].date=value,{type:'date',min:main.date||new Date().toLocaleDateString('en-CA')}))
+ }
+ target.append(dates)
+ if(kind==='multi-city')searchJourneys.slice(1).forEach((journey,offset)=>{const index=offset+1,row=node('div',null,{class:'ticket-extra-journey'});row.append(node('strong',`Journey ${index+1}`));for(const [key,label]of [['departure_id','From (IATA)'],['arrival_id','To (IATA)']])row.append(input(`${label} · journey ${index+1}`,journey[key],value=>journey[key]=value.toUpperCase(),{max:3,list:'airport-catalogue'}));row.append(input(`Departure date · journey ${index+1}`,journey.date,value=>journey.date=value,{type:'date',min:new Date().toLocaleDateString('en-CA')}));if(searchJourneys.length>2)row.append(button('Remove journey',()=>{searchJourneys.splice(index,1);searchRows()}));extra.append(row)})
  $('#add-search-city').hidden=kind!=='multi-city'
+}
+function renderTickets(){
+ if(!ticketResults)return
+ const target=$('#ticket-results'),stop=$('#ticket-stop-filter').value,airline=$('#ticket-airline-filter').value,maximum=$('#ticket-price-filter').value,sort=$('#ticket-sort').value
+ let flights=ticketResults.flights.filter(flight=>(stop==='all'||flight.stops<=Number(stop))&&(airline==='all'||flight.airline===airline)&&(!maximum||(flight.price!==null&&flight.price<=Number(maximum))))
+ if(sort==='price')flights.sort((a,b)=>(a.price??Infinity)-(b.price??Infinity))
+ if(sort==='duration')flights.sort((a,b)=>(Number.isFinite(a.duration)?a.duration:Infinity)-(Number.isFinite(b.duration)?b.duration:Infinity))
+ target.replaceChildren();$('#ticket-result-count').textContent=`${flights.length} / ${ticketResults.flights.length} offers`
+ if(!flights.length){const empty=node('div',null,{class:'ticket-empty'});empty.append(node('h3',ticketResults.flights.length?'No offers match your filters':'No flights found'),node('p',ticketResults.flights.length?'Reset or adjust filters to see more tickets.':'Try different dates or airports.'));target.append(empty);return}
+ for(const flight of flights){
+  const card=node('article',null,{class:'ticket-offer-card'}),identity=node('div',null,{class:'ticket-airline'}),logo=node('div',null,{class:'ticket-airline-logo'})
+  if(flight.airlineLogo){const img=node('img',null,{src:flight.airlineLogo,alt:flight.airline,loading:'lazy',referrerpolicy:'no-referrer'});img.addEventListener('error',()=>logo.replaceChildren(node('strong',flight.airline)),{once:true});logo.append(img)}else logo.append(node('strong',flight.airline))
+  identity.append(logo,node('p',flight.baggage||'Baggage: confirm fare allowance'),node('small',`${flight.stops===0?'Nonstop':`${flight.stops} stop(s)`} · ${flight.cabin}`))
+  const itinerary=node('div',null,{class:'ticket-segment-list'});itinerary.append(node('strong',`${flight.departure.code} → ${flight.arrival.code}`,{class:'ticket-route'}))
+  const lines=node('ol');for(const leg of flight.legs)lines.append(node('li',`${leg.flightNumber||'Flight to confirm'}  ${leg.departure.code} → ${leg.arrival.code}  ${leg.departure.time||'Time to confirm'} / ${leg.arrival.time||'Time to confirm'}  ${leg.cabin}`));itinerary.append(lines)
+  if(Number.isFinite(flight.duration))itinerary.append(node('small',`Total duration: ${flight.duration} minutes`))
+  const actions=node('div',null,{class:'ticket-offer-actions'});actions.append(node('strong',flight.price===null?'Price unavailable':money(flight.price)))
+  for(const [label,pnr]of [['Add',false],['Create PNR',true]]){const action=button(label,()=>{selectFare(flight,ticketResults.search);if(pnr)openDialog('pnr-dialog')},pnr?'primary':'secondary');action.disabled=!$('#checkout-form')||!flight.quoteReference;action.title=!$('#checkout-form')?'Open a client record to use this fare':!flight.quoteReference?'A current priced fare is required':pnr?'Fill the PNR checkout form with this fare':'Add this fare to the client checkout';actions.append(action)}
+  card.append(identity,itinerary,actions);target.append(card)
+ }
 }
 if(searchForm){
  searchForm.elements.cabin.value=defaults.cabin
  searchForm.elements.tripType.addEventListener('change',searchRows)
  $('#add-search-city').addEventListener('click',()=>{if(searchJourneys.length>=6)return;const last=searchJourneys.at(-1);searchJourneys.push({departure_id:last.arrival_id,arrival_id:'',date:last.date});searchRows()})
  searchRows()
+ const travellers=()=>$('#traveller-summary').textContent=`${searchForm.elements.cabin.value} · ${searchForm.elements.passengers.value} adult(s)`
+ travellers();for(const field of [searchForm.elements.cabin,searchForm.elements.passengers])field.addEventListener('input',travellers)
+ for(const id of ['ticket-stop-filter','ticket-airline-filter','ticket-price-filter','ticket-sort'])$('#'+id).addEventListener('input',renderTickets)
+ $('#reset-ticket-filters').addEventListener('click',()=>{$('#ticket-stop-filter').value='all';$('#ticket-airline-filter').value='all';$('#ticket-price-filter').value='';$('#ticket-sort').value='recommended';renderTickets()})
+ searchForm.addEventListener('invalid',()=>{const details=$('.ticket-travellers');if(details)details.open=true},true)
  fetch('/api/airports').then(response=>response.json()).then(rows=>{if(!Array.isArray(rows))return;const list=node('datalist',null,{id:'airport-catalogue'});for(const airport of rows)list.append(node('option',`${airport.city} · ${airport.name}`,{value:airport.code}));document.body.append(list)}).catch(()=>{})
  submit(searchForm,async()=>{
   const kind=searchForm.elements.tripType.value
   const data={...searchJourneys[0],cabin:searchForm.elements.cabin.value,passengers:Number(searchForm.elements.passengers.value),...(lead.clientId?{clientId:lead.clientId}:{}),...(kind==='round-trip'?{return_date:searchJourneys[1].date}:{}),...(kind==='multi-city'?{tripType:kind,multiCity:searchJourneys}:{})}
   if(kind==='round-trip'&&(searchJourneys[1].departure_id!==searchJourneys[0].arrival_id||searchJourneys[1].arrival_id!==searchJourneys[0].departure_id))throw new Error('Round-trip airports must reverse the outbound route. Choose multi-city for a different return routing.')
-  const result=await api('/office/api/search','POST',data);const target=$('#ticket-results');target.replaceChildren();feedback(searchForm,`${result.flights.length} offers found · ${result.currency}`)
-  for(const flight of result.flights){const card=node('article',null,{class:'fare-card'});const header=node('header');header.append(node('span',flight.airline),node('strong',flight.price===null?'Price unavailable':money(flight.price)));card.append(header,node('p',`${flight.stops===0?'Nonstop':`${flight.stops} stop(s)`} · ${flight.cabin} · ${flight.duration??'—'} minutes`));const legs=node('ol');for(const leg of flight.legs)legs.append(node('li',`${leg.departure.code} → ${leg.arrival.code} · ${leg.departure.time} → ${leg.arrival.time} · ${leg.flightNumber}`));card.append(legs);if($('#checkout-form')){const select=button('Use this fare for checkout',()=>selectFare(flight,result.search),'primary');select.disabled=!flight.quoteReference;card.append(select)}target.append(card)}
+  ticketResults=null;$('#ticket-results').replaceChildren(node('p','Searching current fares…',{class:'ticket-empty'}));$('#ticket-result-count').textContent='Searching…'
+  try{
+   const result=await api('/office/api/search','POST',data);ticketResults=result
+   const airlines=$('#ticket-airline-filter');airlines.replaceChildren(node('option','All airlines',{value:'all'}));for(const name of [...new Set(result.flights.map(flight=>flight.airline))].sort())airlines.append(node('option',name,{value:name}))
+   feedback(searchForm,`${result.flights.length} offers found · ${result.currency}`);renderTickets()
+  }catch(error){$('#ticket-results').replaceChildren(node('p',error.message,{class:'ticket-empty'}));$('#ticket-result-count').textContent='Search unavailable';throw error}
+
  })
 }
 function selectFare(flight,search){
