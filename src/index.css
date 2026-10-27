@@ -211,3 +211,7 @@ input[type='range'] {
 .date-input[value=''] {
   color: #9ca3af;
 }
+/* Compact laptops display the public website at an 80% base scale.
+   Browser zoom remains available; phones and large monitors keep normal sizing. */
+html.compact-laptop { zoom: 0.8; }
+@media print { html.compact-laptop { zoom: 1; } }

@@ -32,13 +32,14 @@ export function fromOffer(selection, lead) {
         ]
       : []),
   ]
+  const cities = new Map(flight.legs.flatMap(leg => [[leg.departure.code, leg.departure.city || leg.departure.airport], [leg.arrival.code, leg.arrival.city || leg.arrival.airport]]))
   const remaining = [...flight.legs]
   const journeys = expected.map((item, index) => {
     const legs = []
     while (remaining.length && (legs.length || remaining[0].departure.code === item.departure_id)) {
       const source = remaining.shift()
       const departure = splitTime(source.departure.time, item.date)
-      const arrival = splitTime(source.arrival.time, departure.date)
+      const arrival = splitTime(source.arrival.time, '')
       legs.push({
         ...emptyLeg(),
         from: source.departure.code,
@@ -63,13 +64,13 @@ export function fromOffer(selection, lead) {
         ? legs
         : [
             {
-              ...emptyLeg(lead),
+              ...emptyLeg({...lead, cabin: search.cabin || flight.cabin || lead.cabin, airline: flight.airline || lead.airline}),
               from: item.departure_id,
               to: item.arrival_id,
-              fromCity: item.departure_id,
-              toCity: item.arrival_id,
+              fromCity: cities.get(item.departure_id) || item.departure_id,
+              toCity: cities.get(item.arrival_id) || item.arrival_id,
               departureDate: item.date,
-              arrivalDate: item.date,
+              arrivalDate: '',
             },
           ],
     }
@@ -112,4 +113,25 @@ export function initialSearch(lead = {}) {
     date: lead.departureDate || '', return_date: lead.returnDate || '',
     passengers: lead.passengers || 1, cabin: lead.cabin || 'Business',
   }
+}
+
+
+export function checkoutAutofill(selection, lead = {}) {
+  const itinerary = fromOffer(selection, lead)
+  const flight = selection.flight
+  const language = lead.language || 'uz'
+  const defaults = {
+    en: { terms: 'Changes, cancellations and refunds are subject to the selected airline fare conditions. Please confirm the exact conditions with your agent before payment.', payment: 'Please contact your Staravia agent to confirm payment arrangements for this offer.' },
+    uz: { terms: 'O‘zgartirish, bekor qilish va pulni qaytarish tanlangan aviakompaniya tarifi shartlariga bog‘liq. To‘lovdan oldin aniq shartlarni agentingiz bilan tasdiqlang.', payment: 'Ushbu taklif bo‘yicha to‘lov tartibini tasdiqlash uchun Staravia agentingizga murojaat qiling.' },
+    ru: { terms: 'Изменения, отмена и возврат регулируются условиями выбранного тарифа авиакомпании. До оплаты уточните точные условия у вашего агента.', payment: 'Свяжитесь с вашим агентом Staravia для подтверждения порядка оплаты этого предложения.' },
+  }[language] || null
+  const baggage = Array.isArray(flight.baggageDetails) ? flight.baggageDetails.filter(item => ['checked','cabin','personal'].includes(item.type) && typeof item.allowance === 'string').map(item => ({type:item.type,allowance:item.allowance,appliesTo:item.appliesTo || 'Per passenger · selected fare'})) : []
+  if (!baggage.length && typeof flight.baggage === 'string' && flight.baggage.trim()) {
+    const value = flight.baggage.trim()
+    const types = [['cabin', /cabin|carry.on/i], ['personal', /personal/i], ['checked', /checked|check.in|hold/i]].filter(([,pattern]) => pattern.test(value)).map(([type]) => type)
+    const type = types.length === 1 ? types[0] : null
+    if (type) baggage.push({ type, allowance:value, appliesTo:'Per passenger · selected fare' })
+  }
+  const missing = itinerary.journeys.flatMap((journey, index) => journey.legs.flatMap((leg, segment) => ['from','to','departureDate','arrivalDate','departureTime','arrivalTime','airline','flightNumber','cabin','durationMinutes'].filter(key => !leg[key]).map(key => `Journey ${index+1}, flight ${segment+1}: ${key}`)))
+  return { ...itinerary, baggage, language, currency:'USD', fareTerms:flight.fareTerms || defaults?.terms || '', paymentInformation:flight.paymentInformation || defaults?.payment || '', missing }
 }

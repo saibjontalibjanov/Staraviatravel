@@ -1,8 +1,8 @@
-import { emptyLeg, fromOffer, pricePreview, initialSearch } from './itinerary.js'
+import { emptyLeg, pricePreview, initialSearch, checkoutAutofill } from './itinerary.js'
 const $ = (value, root=document) => root.querySelector(value)
 const $$ = (value, root=document) => [...root.querySelectorAll(value)]
 const lead = $('#lead-data') ? JSON.parse($('#lead-data').textContent) : {}
-const state = { passports: [], selected: null, journeys: [{legs:[emptyLeg(lead)]}], baggage: [], requestId:null }
+const state = { passports: [], savedPassengers: [], selected: null, journeys: [{legs:[emptyLeg(lead)]}], baggage: [], requestId:null }
 const csrf = () => $('[name=csrfmiddlewaretoken]')?.value || ''
 const node = (tag, content, attrs={}) => { const element=document.createElement(tag);if(content!==undefined&&content!==null)element.textContent=content;for(const [key,value]of Object.entries(attrs)){if(key==='class')element.className=value;else element.setAttribute(key,value)}return element }
 const button = (label, action, style='secondary') => {const value=node('button',label,{type:'button',class:`button ${style}`});value.addEventListener('click',action);return value}
@@ -14,11 +14,11 @@ async function api(url,method='GET',data){
 }
 function feedback(form,message,error=false){const target=$('.feedback',form);if(target){target.textContent=message;target.classList.toggle('error',error)}}
 function submit(form,action){if(!form)return;let busy=false;form.addEventListener('submit',async event=>{event.preventDefault();if(busy)return;busy=true;const disabled=$$('button',form).map(value=>[value,value.disabled]);disabled.forEach(([value])=>value.disabled=true);feedback(form,'Working…');try{await action()}catch(error){feedback(form,error.message,true)}finally{busy=false;disabled.forEach(([value,wasDisabled])=>value.disabled=wasDisabled)}})}
-function input(label,value,onChange,{type='text',required=true,max=200,min,options,name,list}={}){
- const wrapper=node('label',label);const field=node(options?'select':'input');if(name)field.name=name
+function input(label,value,onChange,{type='text',required=true,max=200,min,options,name,list,ariaLabel}={}){
+ const wrapper=node('label',label);const field=node(options?'select':'input');if(name)field.name=name;if(ariaLabel)field.setAttribute('aria-label',ariaLabel)
  if(options){for(const option of options){const [key,text]=Array.isArray(option)?option:[option,option];field.append(node('option',text,{value:key}))}}
  else{field.type=type;if(type!=='date'&&type!=='time')field.maxLength=max;if(list)field.setAttribute('list',list)}
- field.value=value??'';field.required=required;if(min!==undefined)field.min=min
+ field.value=value??'';field.required=required;if(required&&!field.value)field.classList.add('needs-confirmation');field.addEventListener('input',()=>field.classList.toggle('needs-confirmation',required&&!field.value));if(min!==undefined)field.min=min
  field.addEventListener('input',()=>onChange(field.value));wrapper.append(field);return wrapper
 }
 function dirty(){state.requestId=null;const confirmed=$('[name=fareConfirmed]',$('#checkout-form')||document);if(confirmed)confirmed.checked=false;overview()}
@@ -67,9 +67,9 @@ function passportRows(){
 }
 const newPerson=()=>({id:crypto.randomUUID(),firstName:'',lastName:'',passportNumber:'',birthDate:'',expiryDate:'',nationality:'Uzbekistan',passengerType:'adult'})
 if($('#passport-form')){
- api(`/office/api/leads/${lead.clientId}/passports`).then(data=>{state.passports=data.passengers.length?data.passengers:[newPerson()];passportRows()}).catch(error=>feedback($('#passport-form'),error.message,true))
+ api(`/office/api/leads/${lead.clientId}/passports`).then(data=>{state.savedPassengers=data.passengers;paymentPassengers();state.passports=data.passengers.length?data.passengers:[newPerson()];passportRows()}).catch(error=>feedback($('#passport-form'),error.message,true))
  $('#add-passenger').addEventListener('click',()=>{if(state.passports.length>=9)return;state.passports.push(newPerson());passportRows();dirty()})
- submit($('#passport-form'),async()=>{const result=await api(`/office/api/leads/${lead.clientId}/passports`,'PUT',{passengers:state.passports});state.passports=result.passengers;passportRows();feedback($('#passport-form'),'Passport details saved. Checkout names will use these saved records.');dirty();overview()})
+ submit($('#passport-form'),async()=>{const result=await api(`/office/api/leads/${lead.clientId}/passports`,'PUT',{passengers:state.passports});state.passports=result.passengers;state.savedPassengers=result.passengers;paymentPassengers();passportRows();feedback($('#passport-form'),'Passport details saved. Checkout names will use these saved records.');dirty();overview()})
 }
 
 // Ticket search. Additional journeys are editable for multi-city searches.
@@ -81,8 +81,8 @@ function searchRows(){
  if(!searchForm)return
  const kind=searchForm.elements.tripType.value,target=$('#search-journeys'),extra=$('#search-extra-journeys');target.replaceChildren();extra.replaceChildren()
  const main=searchJourneys[0]
- for(const [key,label] of [['departure_id','From (IATA)'],['arrival_id','To (IATA)']])target.append(input(`${label} · journey 1`,main[key],value=>{main[key]=value.toUpperCase();if(kind==='round-trip'){searchJourneys[1].departure_id=main.arrival_id;searchJourneys[1].arrival_id=main.departure_id}},{max:3,list:'airport-catalogue'}))
- const dates=node('div',null,{class:'ticket-date-fields'});dates.append(input('Departure date · journey 1',main.date,value=>main.date=value,{type:'date',min:new Date().toLocaleDateString('en-CA')}))
+ for(const [key,label] of [['departure_id','From (IATA)'],['arrival_id','To (IATA)']])target.append(input(key==='departure_id'?'Depart':'Arrival',main[key],value=>{main[key]=value.toUpperCase();if(kind==='round-trip'){searchJourneys[1].departure_id=main.arrival_id;searchJourneys[1].arrival_id=main.departure_id}},{max:3,list:'airport-catalogue',ariaLabel:`${label} · journey 1`}))
+ const dates=node('div',null,{class:'ticket-date-fields'});dates.append(input(kind==='round-trip'?'Depart date':'Dates',main.date,value=>main.date=value,{ariaLabel:'Departure date · journey 1',type:'date',min:new Date().toLocaleDateString('en-CA')}))
  if(kind==='round-trip'){
   searchJourneys[1].departure_id=main.arrival_id;searchJourneys[1].arrival_id=main.departure_id
   dates.append(input('Return date',searchJourneys[1].date,value=>searchJourneys[1].date=value,{type:'date',min:main.date||new Date().toLocaleDateString('en-CA')}))
@@ -101,7 +101,10 @@ function renderTickets(){
  if(!flights.length){const empty=node('div',null,{class:'ticket-empty'});empty.append(node('h3',ticketResults.flights.length?'No offers match your filters':'No flights found'),node('p',ticketResults.flights.length?'Reset or adjust filters to see more tickets.':'Try different dates or airports.'));target.append(empty);return}
  for(const flight of flights){
   const card=node('article',null,{class:'ticket-offer-card'}),identity=node('div',null,{class:'ticket-airline'}),logo=node('div',null,{class:'ticket-airline-logo'})
-  if(flight.airlineLogo){const img=node('img',null,{src:flight.airlineLogo,alt:flight.airline,loading:'lazy',referrerpolicy:'no-referrer'});img.addEventListener('error',()=>logo.replaceChildren(node('strong',flight.airline)),{once:true});logo.append(img)}else logo.append(node('strong',flight.airline))
+  const code=(flight.airlineCode||flight.flightNumber?.match(/^([A-Z0-9]{2})\s*\d/)?.[1]||'').toUpperCase()
+  const sources=[flight.airlineLogo,flight.airlineLogoFallback,code?`https://www.gstatic.com/flights/airline_logos/70px/${code}.png`:null,'/static/office/airlines/unknown.svg'].filter((value,index,all)=>value&&all.indexOf(value)===index)
+  const img=node('img',null,{src:sources.shift(),alt:`${flight.airline} logo`,loading:'eager',referrerpolicy:'no-referrer'});img.addEventListener('error',()=>{if(sources.length)img.src=sources.shift();else img.alt=flight.airline});logo.append(img,node('small',flight.airline))
+
   identity.append(logo,node('p',flight.baggage||'Baggage: confirm fare allowance'),node('small',`${flight.stops===0?'Nonstop':`${flight.stops} stop(s)`} · ${flight.cabin}`))
   const itinerary=node('div',null,{class:'ticket-segment-list'});itinerary.append(node('strong',`${flight.departure.code} → ${flight.arrival.code}`,{class:'ticket-route'}))
   const lines=node('ol');for(const leg of flight.legs)lines.append(node('li',`${leg.flightNumber||'Flight to confirm'}  ${leg.departure.code} → ${leg.arrival.code}  ${leg.departure.time||'Time to confirm'} / ${leg.arrival.time||'Time to confirm'}  ${leg.cabin}`));itinerary.append(lines)
@@ -135,9 +138,18 @@ if(searchForm){
 
  })
 }
+function paymentPassengers(){
+ const target=$('#payment-passengers');if(!target)return
+ target.textContent=state.savedPassengers.length?state.savedPassengers.map(person=>person.fullName || `${person.firstName} ${person.lastName}`).join(' · '):'Save passenger passport details to fill booking names automatically.'
+}
 function selectFare(flight,search){
- state.selected={flight,search};const filled=fromOffer(state.selected,lead);state.journeys=filled.journeys;const form=$('#checkout-form');form.elements.route.value=filled.route;form.elements.tripType.value=filled.tripType;form.elements.currency.value='USD';$('#exchange-field').hidden=true
- $('#selected-fare').replaceChildren(node('strong',`${flight.airline} · ${flight.flightNumber} · ${money(flight.price)}`),node('p',`Selected fare expires ${new Date(flight.quoteExpiresAt).toLocaleString()}. Verify all flight details and complete any missing journeys.`));checkoutRows();priceDisplay();dirty();overview();const dialog=$('#ticket-dialog');if(dialog?.open)closeDialog(dialog);$('#checkout-editor').scrollIntoView({behavior:'smooth'})
+ state.selected={flight,search};const filled=checkoutAutofill(state.selected,lead);state.journeys=filled.journeys;state.baggage=filled.baggage;const form=$('#checkout-form')
+ for(const key of ['route','tripType','currency','language','fareTerms','paymentInformation'])form.elements[key].value=filled[key]
+ $('#exchange-field').hidden=true;form.elements.exchangeRate.required=false
+ paymentPassengers();baggageRows()
+ $('#autofill-status').textContent=filled.missing.length?`Travel details copied from your selected ticket. The provider omitted ${filled.missing.length} required detail(s); highlighted fields need confirmation. Passenger names come from saved passports.`:'Travel details, fare, baggage information and saved passenger names are filled automatically. Review the offer before generating the payment link.'
+ $('#selected-fare').replaceChildren(node('strong',`${flight.airline} · ${flight.flightNumber} · ${money(flight.price)}`),node('p',`Selected fare expires ${new Date(flight.quoteExpiresAt).toLocaleString()}.`));checkoutRows();priceDisplay();dirty();overview();const dialog=$('#ticket-dialog');if(dialog?.open)closeDialog(dialog);$('#checkout-editor').scrollIntoView({behavior:'smooth'})
+
 }
 // Private quote editor. The server calculates and freezes the actual total.
 const flightFields=[['from','From airport (IATA)','text'],['to','To airport (IATA)','text'],['fromCity','From city / airport','text'],['toCity','To city / airport','text'],['departureDate','Flight departure date','date'],['arrivalDate','Flight arrival date','date'],['departureTime','Departure time (local)','time'],['arrivalTime','Arrival time (local)','time'],['departureTerminal','Departure terminal','text'],['arrivalTerminal','Arrival terminal','text'],['airline','Operating airline','text'],['flightNumber','Flight number','text'],['cabin','Class of seats','text'],['durationMinutes','Flight duration (minutes)','number']]

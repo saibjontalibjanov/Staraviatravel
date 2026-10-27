@@ -60,8 +60,15 @@ def format_flights(data,search):
         if not legs: continue
         price=offer.get('price')
         if type(price) not in [int,float] or not math.isfinite(price) or price<0: price=None
-        logo=offer['flights'][0].get('airline_logo','')
-        result.append({'id':len(result)+1,'airline':legs[0]['airline'],'airlineLogo':logo if isinstance(logo,str) and logo.startswith('https://') else None,'flightNumber':' / '.join(leg['flightNumber'] for leg in legs if leg['flightNumber']),'departure':{**legs[0]['departure'],'code':legs[0]['departure']['code'] or search['departure_id']},'arrival':{**legs[-1]['arrival'],'code':legs[-1]['arrival']['code'] or search['arrival_id']},'duration':offer.get('total_duration'),'stops':len(legs)-1,'price':price,'cabin':legs[0]['cabin'],'type':'multi-city' if search.get('multiCity') else 'round-trip' if search.get('return_date') else 'one-way','legs':legs,'layovers':[{'airport':stop.get('id',''),'city':stop.get('name',''),'minutes':stop.get('duration')} for stop in (offer.get('layovers') or []) if isinstance(stop,dict)],'baggage':offer.get('baggage','') if isinstance(offer.get('baggage',''),str) else ''})
+        first=offer['flights'][0]
+        logo=first.get('airline_logo') or offer.get('airline_logo','')
+        match=re.match(r'^([A-Z0-9]{2})\s*\d',str(first.get('flight_number','')).upper())
+        code=first.get('airline_iata') or first.get('airline_code') or (match.group(1) if match else '')
+        code=code.upper() if isinstance(code,str) and re.fullmatch('[A-Za-z0-9]{2}',code) else ''
+        fallback=f'https://www.gstatic.com/flights/airline_logos/70px/{code}.png' if code else ''
+        if code and (Path(__file__).resolve().parent.parent/'static/office/airlines'/f'{code}.png').exists():fallback=f'/static/office/airlines/{code}.png'
+        if not isinstance(logo,str) or not logo.startswith('https://'):logo=fallback or None
+        result.append({'id':len(result)+1,'airline':legs[0]['airline'],'airlineLogo':logo,'airlineLogoFallback':fallback,'airlineCode':code,'flightNumber':' / '.join(leg['flightNumber'] for leg in legs if leg['flightNumber']),'departure':{**legs[0]['departure'],'code':legs[0]['departure']['code'] or search['departure_id']},'arrival':{**legs[-1]['arrival'],'code':legs[-1]['arrival']['code'] or search['arrival_id']},'duration':offer.get('total_duration'),'stops':len(legs)-1,'price':price,'cabin':legs[0]['cabin'],'type':'multi-city' if search.get('multiCity') else 'round-trip' if search.get('return_date') else 'one-way','legs':legs,'layovers':[{'airport':stop.get('id',''),'city':stop.get('name',''),'minutes':stop.get('duration')} for stop in (offer.get('layovers') or []) if isinstance(stop,dict)],'baggage':offer.get('baggage','') if isinstance(offer.get('baggage',''),str) else '', 'baggageDetails':[{'type':item.get('type'),'allowance':item.get('allowance'),'appliesTo':item.get('appliesTo','')} for item in offer.get('baggage_details',[]) if isinstance(item,dict) and item.get('type') in ['checked','cabin','personal'] and isinstance(item.get('allowance'),str)] if isinstance(offer.get('baggage_details'),list) else [],'fareTerms':offer.get('fare_terms','') if isinstance(offer.get('fare_terms'),str) else ''})
     return result
 
 def search_flights(data,lead=None,agent=None):
