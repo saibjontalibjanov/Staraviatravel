@@ -1,4 +1,4 @@
-import { apiUrl, mediaUrl } from '../lib/api'
+import { apiUrl, mediaUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -37,7 +37,7 @@ const HotDeals = () => {
         setError(null);
 
         // Published offers retain the existing frontend response contract.
-        const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
+        const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'));
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

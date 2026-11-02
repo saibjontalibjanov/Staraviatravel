@@ -39,7 +39,7 @@ Open **http://localhost:3000** for the website and **http://localhost:8000/offic
 
 All active settings and API keys belong in **`django-backend/.env`**. `scripts/setup_env.py` creates it with a random Django secret and never prints or replaces secrets. See [API_KEYS.md](django-backend/API_KEYS.md) for every setting and provider key. `.env` is ignored by Git. Never put secrets in README files, frontend source, or a `VITE_*` variable.
 
-The frontend reads its optional **public** `VITE_API_URL` setting from this same file at build time; only `VITE_*` values enter the browser bundle. Leave it empty for same-origin hosting. A separately hosted website can set it to `https://api.your-domain.com` and list the website in `CLIENT_ORIGINS`.
+Development reads optional public `VITE_API_URL` from the backend `.env`. **Production builds read the repository-root `.env.production` instead**: copy root `.env.example` there before building. It contains only the public API origin (`https://api.staraviatravel.com` for the deployed split-domain site). Backend secrets stay in `django-backend/.env`. Only `VITE_*` values enter the browser bundle. Same-origin deployments can explicitly set `VITE_API_URL=` in the production file.
 
 ## Daily workflow
 
@@ -84,3 +84,5 @@ A lead’s main page now focuses on its client checkout. Use **All Client Record
 The CRM sidebar includes **Testimonials** (review, edit and approve About-page submissions) and **Website FAQs** (add, translate, order and publish questions). Nine FAQs are included in Uzbek, Russian and English. Photo-free reviews are submitted below the About page’s journey banner and stay private until approved. Managers control publication; agents can view content records. See [backend workflow and upgrade instructions](django-backend/README.md#crm-layout-and-website-content).
 
 The public website uses an **80% base scale on compact laptop screens** (1024–1536 logical pixels wide, at most 1000 pixels high, with a mouse/trackpad). Large displays and phones retain normal scale. Browser zoom controls remain available; the base scale is determined by the screen rather than the browser's current zoom level. The CRM keeps its own layout and scale.
+
+For the existing Namecheap deployment, use [the cPanel/Passenger runbook](docs/NAMECHEAP_DEPLOYMENT.md). The [production audit report](docs/PRODUCTION_AUDIT_2026-11-02.md) distinguishes locally verified fixes from production items awaiting logs/access. No live deployment or database migration is authorized by running local tests.

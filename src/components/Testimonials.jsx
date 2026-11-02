@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 
 export default function Testimonials({ allowSubmission = false }) {
   const { t, language } = useLanguage()
@@ -14,7 +14,7 @@ export default function Testimonials({ allowSubmission = false }) {
   useEffect(() => {
     const controller = new AbortController()
     setLoadStatus('loading')
-    fetch(apiUrl('/api/testimonials'), { signal: controller.signal })
+    apiFetch(apiUrl('/api/testimonials'), { signal: controller.signal })
       .then(response => { if (!response.ok) throw new Error(); return response.json() })
       .then(result => { setReviews(result.data); setLoadStatus('ready') })
       .catch(error => { if (error.name !== 'AbortError') setLoadStatus('error') })
@@ -27,10 +27,10 @@ export default function Testimonials({ allowSubmission = false }) {
     const form = event.currentTarget
     const fields = Object.fromEntries(new FormData(form))
     try {
-      const response = await fetch(apiUrl('/api/testimonials'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { ...fields, rating: Number(fields.rating), language } }) })
+      const response = await apiFetch(apiUrl('/api/testimonials'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { ...fields, rating: Number(fields.rating), language } }) })
       if (!response.ok) throw new Error(response.status === 429 ? 'Too many requests. Please try again later.' : 'Could not send your review. Please try again.')
       setSubmitted(true); form.reset()
-    } catch (cause) { setError(cause.message) }
+    } catch (cause) { setError(cause.message === 'Too many requests. Please try again later.' ? cause.message : 'Could not send your review. Please try again.') }
     finally { locked.current = false; setPending(false) }
   }
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { apiUrl } from '../../lib/api'
+import { apiUrl, apiFetch } from '../../lib/api'
 export default function BillingContact({ token, booking, t }) {
   const phoneId = useId()
   const [form, setForm] = useState(() => ({
@@ -31,7 +31,7 @@ export default function BillingContact({ token, booking, t }) {
     setSaved(false)
     request.current = new AbortController()
     try {
-      const response = await fetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}/billing`), {
+      const response = await apiFetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}/billing`), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         cache: 'no-store',

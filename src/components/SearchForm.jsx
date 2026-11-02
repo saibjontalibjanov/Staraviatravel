@@ -1,4 +1,4 @@
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { findAirports, normalizeAirports } from '../lib/airports'
 import { airportCode, localDate, searchError } from '../lib/search'
 import { saveItineraryDraft } from '../lib/itinerary'
@@ -27,7 +27,7 @@ const AirportDropdown = ({ value, onChange, placeholder, label, excludeCode }) =
     } catch { /* Ignore damaged or unavailable optional cache. */ }
     const controller = new AbortController()
     setLoading(true)
-    fetch(apiUrl('/api/airports'), { signal: controller.signal })
+    apiFetch(apiUrl('/api/airports'), { signal: controller.signal })
       .then(response => { if (!response.ok) throw new Error('Airport lookup failed'); return response.json() })
       .then(data => {
         if (controller.signal.aborted) return

@@ -1,4 +1,4 @@
-import { apiUrl, mediaUrl } from '../lib/api'
+import { apiUrl, mediaUrl, apiFetch } from '../lib/api'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
 import { callbackPhone } from '../lib/leads'
@@ -25,7 +25,7 @@ const BusinessClass = () => {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
+        const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'));
         const data = await response.json();
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
         

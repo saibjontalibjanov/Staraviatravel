@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
@@ -16,7 +16,7 @@ const Footer = () => {
     if (pending) return
     setPending(true); setError(''); setShowMessage(false)
     try {
-      const response = await fetch(apiUrl('/api/newsletter'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { email, language } }) })
+      const response = await apiFetch(apiUrl('/api/newsletter'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { email, language } }) })
       if (!response.ok || !(await response.json()).subscribed) throw new Error('Subscription failed')
       setShowMessage(true); setEmail('')
     } catch { setError('Could not save your subscription. Please try again.') }

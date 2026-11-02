@@ -9,7 +9,7 @@ from django.utils import timezone
 from travel.models import FareQuote
 from .validation import ServiceError, obj, iso_date
 
-AIRPORTS=json.loads((Path(__file__).resolve().parent.parent/'data/airports.json').read_text())
+AIRPORTS=json.loads((Path(__file__).resolve().parent.parent/'data/airports.json').read_text(encoding='utf-8'))
 AIRPORTS=[{'code':str(a.get('code') or ''),'name':str(a.get('name') or ''),'city':str(a.get('city') or ''),'country':str(a.get('country') or '')} for a in AIRPORTS if a.get('code')]
 CITIES={a['code']:a['city'] for a in AIRPORTS}
 CABINS={'economy':1,'premium economy':2,'business':3,'first':4}

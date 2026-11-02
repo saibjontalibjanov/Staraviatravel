@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env', override=False)
+load_dotenv(BASE_DIR / '.env', override=False, encoding='utf-8')
 def flag(name, default=False):
     return os.getenv(name, str(default)).lower() in ('true', '1', 'yes')
 def items(name, default=''):
@@ -14,7 +14,7 @@ DEBUG = flag('DJANGO_DEBUG')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', '')
 if not SECRET_KEY:
     raise ImproperlyConfigured('Set DJANGO_SECRET_KEY in django-backend/.env. See README.md.')
-ALLOWED_HOSTS = items('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
+ALLOWED_HOSTS = items('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1' if DEBUG else 'api.staraviatravel.com')
 INSTALLED_APPS = ['django.contrib.auth', 'django.contrib.contenttypes', 'django.contrib.sessions', 'django.contrib.messages', 'django.contrib.staticfiles', 'corsheaders', 'travel']
 MIDDLEWARE = ['django.middleware.security.SecurityMiddleware', 'whitenoise.middleware.WhiteNoiseMiddleware', 'corsheaders.middleware.CorsMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware', 'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware', 'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware', 'django.middleware.clickjacking.XFrameOptionsMiddleware', 'travel.middleware.PrivateResponsesMiddleware', 'travel.middleware.TrustedProxyClientIPMiddleware']
 ROOT_URLCONF = 'config.urls'
@@ -38,10 +38,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 WHITENOISE_ROOT = BASE_DIR.parent / 'dist'
 WHITENOISE_USE_FINDERS = DEBUG
 STORAGES = {'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'}, 'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'}}
-CORS_ALLOWED_ORIGINS = items('CLIENT_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
+CORS_ALLOWED_ORIGINS = items('CLIENT_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000' if DEBUG else 'https://staraviatravel.com,https://www.staraviatravel.com')
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_CREDENTIALS = False
-CSRF_TRUSTED_ORIGINS = items('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
+CSRF_TRUSTED_ORIGINS = items('CSRF_TRUSTED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000' if DEBUG else 'https://api.staraviatravel.com')
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 SESSION_COOKIE_SECURE = not DEBUG
@@ -66,10 +66,20 @@ SERPAPI_KEY = os.getenv('SERPAPI_KEY', '')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_LEADS_CHAT_ID = os.getenv('TELEGRAM_LEADS_CHAT_ID', '')
 TELEGRAM_WEBHOOK_SECRET = os.getenv('TELEGRAM_WEBHOOK_SECRET', '')
-LOGIN_URL = '/office/login/'
-LOGIN_REDIRECT_URL = '/office/'
-LOGOUT_REDIRECT_URL = '/office/login/'
+CRM_ROOT_ENABLED = flag('CRM_ROOT_ENABLED')
+LOGIN_URL = '/' if CRM_ROOT_ENABLED else '/office/login/'
+LOGIN_REDIRECT_URL = '/' if CRM_ROOT_ENABLED else '/office/'
+LOGOUT_REDIRECT_URL = '/' if CRM_ROOT_ENABLED else '/office/login/'
 
 TRUST_PROXY_CLIENT_IP = flag('TRUST_PROXY_CLIENT_IP')
 
 SECURE_REDIRECT_EXEMPT = [r'^_health$']
+
+# Passenger/cPanel captures stderr. Keep traceback evidence out of public responses.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {'standard': {'format': '{asctime} {levelname} {name}: {message}', 'style': '{'}},
+    'handlers': {'console': {'class': 'logging.StreamHandler', 'formatter': 'standard'}},
+    'loggers': {'django.request': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False}},
+}

@@ -1,5 +1,5 @@
 import { airportCode, formatFare, searchError } from '../lib/search'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { itineraryFromSearch } from '../lib/itinerary'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
@@ -236,7 +236,7 @@ const SearchResults = () => {
           queryParams.append('return_date', returnDate);
         }
 
-        const response = await fetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal });
+        const response = await apiFetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal, timeoutMs: 45000 });
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
