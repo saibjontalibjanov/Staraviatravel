@@ -12,3 +12,6 @@ django-backend/staticfiles
 **/__pycache__
 **/*.pyc
 django-backend/.test-data
+
+# Original media masters are not deployment assets.
+source-media/

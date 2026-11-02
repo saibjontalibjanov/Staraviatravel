@@ -22,7 +22,7 @@ const ImageCarousel = ({ images }) => {
     <div className="relative group">
       <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl relative">
         {images.map((img, idx) => (
-          <img 
+          <img loading="lazy" decoding="async"
             key={idx}
             src={img} 
             alt={`Business Class ${idx + 1}`}
@@ -154,7 +154,7 @@ const Home = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-gold/5 rounded-full transform scale-110 blur-3xl"></div>
                   <div className="absolute inset-0 border border-gold/20 rounded-full transform scale-105"></div>
                   <div className="relative w-full max-w-md">
-                    <img 
+                    <img loading="lazy" decoding="async"
                       src="/pictures/popup-pictures/woman-business-class.png" 
                       alt="Luxury Travel Concierge" 
                       className="relative z-10 w-full h-auto object-contain drop-shadow-2xl rounded-full" 

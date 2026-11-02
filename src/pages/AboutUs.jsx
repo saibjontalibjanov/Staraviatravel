@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faCoins, faGlobe, faHeart, faStar } from '@fortawesome/free-solid-svg-icons'
 import { useLanguage } from '../i18n/LanguageContext'
 import TopBar from '../components/TopBar'
+import BackgroundVideo from '../components/BackgroundVideo'
 import Testimonials from '../components/Testimonials'
 import MainNavbar from '../components/MainNavbar'
 import PhonePopup from '../components/PhonePopup'
@@ -25,9 +26,7 @@ export default function AboutUs() {
       <TopBar onPhoneClick={() => setShowPhonePopup(true)} />
       <main id="about">
         <section className="about-hero" aria-labelledby="about-title">
-          <video autoPlay loop muted playsInline preload="metadata" poster="/pictures/about/clouds.jpg" className="about-hero-video" aria-hidden="true">
-            <source src="/Cover800x312_darken_3mb.mp4" type="video/mp4" />
-          </video>
+          <BackgroundVideo className="about-hero-video" />
           <div className="about-hero-shade" aria-hidden="true" />
           <div className="about-hero-navigation"><MainNavbar /></div>
           <header className="about-heading">

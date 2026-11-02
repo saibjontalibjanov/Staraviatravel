@@ -1,6 +1,7 @@
 import { useLanguage } from '../i18n/LanguageContext'
 import MainNavbar from './MainNavbar'
 import SearchForm from './SearchForm'
+import BackgroundVideo from './BackgroundVideo'
 
 const Hero = () => {
   const { t } = useLanguage()
@@ -8,9 +9,7 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col bg-ink">
-      <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover z-0">
-        <source src="/Cover800x312_darken_3mb.mp4" type="video/mp4" />
-      </video>
+      <BackgroundVideo className="absolute inset-0 w-full h-full z-0" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1500px] flex-1 flex flex-col">
         <MainNavbar />
