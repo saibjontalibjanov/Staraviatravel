@@ -1,4 +1,6 @@
 import Checkout from './pages/Checkout'
+import VisitorTracker from './components/VisitorTracker'
+import CookieBanner from './components/CookieBanner'
 import RouteScroll from './components/RouteScroll'
 import NotFound from './pages/NotFound'
 import { Routes, Route } from 'react-router-dom'
@@ -11,6 +13,8 @@ function App() {
   return (
     <>
     <RouteScroll />
+    <VisitorTracker />
+    <CookieBanner />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/search-results" element={<SearchResults />} />

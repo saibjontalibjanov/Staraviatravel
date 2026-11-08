@@ -8,21 +8,23 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count
+from django.db.models.functions import TruncDate
+from datetime import timedelta
 from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ
-from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm
+from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView
+from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm, PartnerForm
 from travel.services.leads import limit, audit
 from travel.services.validation import ServiceError
 from travel.services.telegram import config_status
 from travel.services.checkouts import admin_checkout
 
-SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
+SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('visitors','Website visitors','↗','travel.view_traffic'),('partners','Partner logos','◇','travel.view_partner'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
 
 def workspace_path():
     return '/' if settings.CRM_ROOT_ENABLED else '/office/'
@@ -55,6 +57,8 @@ def office(request):
     user=request.user
     if section=='dashboard':
         context.update(lead_count=Lead.objects.count() if user.has_perm('travel.view_lead') else None,new_count=Lead.objects.filter(lead_status='new').count() if user.has_perm('travel.view_lead') else None,checkout_count=Checkout.objects.count() if user.has_perm('travel.manage_checkouts') else None,subscriber_count=NewsletterSubscriber.objects.count() if user.has_perm('travel.view_newslettersubscriber') else None,recent_leads=Lead.objects.select_related('assigned_to')[:6] if user.has_perm('travel.view_lead') else [],recent_activity=AuditEvent.objects.select_related('actor')[:6] if user.has_perm('travel.view_auditevent') else [])
+    elif section=='visitors':
+        context.update(traffic_context())
     elif section=='leads':
         reference=request.GET.get('lead')
         lead=get_object_or_404(Lead,client_id=reference) if reference and reference!='new' else None
@@ -71,7 +75,7 @@ def office(request):
                 if not lead:record.source='agent'
                 record.save();audit(user,'lead.updated' if lead else 'lead.created',record.client_id);messages.success(request,'Client record saved.');return redirect(f'{workspace_path()}?section=leads&lead={record.client_id}')
             context.update(lead=lead,form=form,can_edit=user.has_perm(permission))
-            if lead:context['lead_bootstrap']={'clientId':lead.client_id,'firstName':lead.first_name,'lastName':lead.last_name,'departureAirport':lead.departure_airport,'arrivalAirport':lead.arrival_airport,'departureDate':lead.departure_date.isoformat() if lead.departure_date else '', 'returnDate':lead.return_date.isoformat() if lead.return_date else '', 'passengers':lead.passengers or 1,'cabin':lead.cabin or 'Business','language':lead.language,'flightRoute':lead.flight_route,'airline':lead.airline}
+            if lead:context['lead_bootstrap']={'clientId':lead.client_id,'firstName':lead.first_name,'lastName':lead.last_name,'departureAirport':lead.departure_airport,'arrivalAirport':lead.arrival_airport,'departureDate':lead.departure_date.isoformat() if lead.departure_date else '', 'returnDate':lead.return_date.isoformat() if lead.return_date else '', 'passengers':lead.passengers or 1,'cabin':lead.cabin or 'Economy','language':lead.language,'flightRoute':lead.flight_route,'airline':lead.airline}
         else:
             query=request.GET.get('q','').strip()[:100];state=request.GET.get('status','')
             leads=Lead.objects.select_related('assigned_to')
@@ -80,8 +84,8 @@ def office(request):
             context.update(page=Paginator(leads,25).get_page(request.GET.get('page')),query=query,status=state,states=['new','contacted','qualified','closed'])
     elif section=='tickets':
         context['lead_bootstrap']={}
-    elif section in ['offers','bookings','searches','testimonials','faqs']:
-        model,form_class={'offers':(HotFlight,HotFlightForm),'bookings':(Booking,BookingForm),'searches':(SavedSearch,SavedSearchForm),'testimonials':(Testimonial,TestimonialForm),'faqs':(FAQ,FAQForm)}[section]
+    elif section in ['offers','bookings','searches','testimonials','faqs','partners']:
+        model,form_class={'offers':(HotFlight,HotFlightForm),'bookings':(Booking,BookingForm),'searches':(SavedSearch,SavedSearchForm),'testimonials':(Testimonial,TestimonialForm),'faqs':(FAQ,FAQForm),'partners':(Partner,PartnerForm)}[section]
         context.update(can_add_record=user.has_perm(f'travel.add_{model._meta.model_name}'),can_change_record=user.has_perm(f'travel.change_{model._meta.model_name}'),can_delete_record=user.has_perm(f'travel.delete_{model._meta.model_name}'))
         reference=request.GET.get('record')
         record=get_object_or_404(model,pk=record_id(reference)) if reference and reference!='new' else None
@@ -96,7 +100,7 @@ def office(request):
             if request.method=='POST' and form.is_valid():
                 record=form.save();audit(user,f'{model._meta.model_name}.saved',record.pk);messages.success(request,'Record saved.');return redirect(f'{workspace_path()}?section={section}')
             context.update(form=form,record=record)
-        else:context['page']=Paginator(model.objects.order_by('position','pk') if section=='faqs' else model.objects.order_by('-created_at'),25).get_page(request.GET.get('page'))
+        else:context['page']=Paginator(model.objects.order_by('position','pk') if section in ['faqs','partners'] else model.objects.order_by('-created_at'),25).get_page(request.GET.get('page'))
     elif section=='subscribers':
         context['page']=Paginator(NewsletterSubscriber.objects.order_by('-created_at'),50).get_page(request.GET.get('page'))
         if request.GET.get('export')=='csv':
@@ -133,4 +137,14 @@ def office(request):
             form.save();update_session_auth_hash(request,user);audit(user,'staff.password.changed',user.pk);messages.success(request,'Your password was updated.');return redirect(workspace_path()+'?section=account')
         context['form']=form
     elif section=='audit':context['page']=Paginator(AuditEvent.objects.select_related('actor'),50).get_page(request.GET.get('page'))
+    if section=='dashboard' and user.has_perm('travel.view_traffic'):context.update(traffic_context())
     return render(request,'office/workspace.html',context)
+
+
+def traffic_context():
+    now=timezone.now();today=timezone.localdate()
+    recent=WebsitePageView.objects.filter(created_at__gte=now-timedelta(days=30))
+    daily=list(recent.annotate(day=TruncDate('created_at')).values('day').annotate(views=Count('pk'),visitors=Count('visitor',distinct=True)).order_by('-day'))
+    maximum=max([row['views'] for row in daily],default=1)
+    for row in daily:row['width']=round(row['views']/maximum*100)
+    return {'traffic':{'active':WebsiteVisitor.objects.filter(last_seen__gte=now-timedelta(minutes=5)).count(),'today':WebsitePageView.objects.filter(created_at__date=today).values('visitor').distinct().count(),'total':WebsiteVisitor.objects.count(),'pageviews':WebsitePageView.objects.count(),'todayViews':WebsitePageView.objects.filter(created_at__date=today).count()},'traffic_daily':daily,'traffic_pages':list(recent.values('path').annotate(views=Count('pk'),visitors=Count('visitor',distinct=True)).order_by('-views'))}

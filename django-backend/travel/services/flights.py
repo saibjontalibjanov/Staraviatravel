@@ -17,7 +17,7 @@ CABINS={'economy':1,'premium economy':2,'business':3,'first':4}
 def normalize_search(data,today=None):
     obj(data)
     today=(today or timezone.localdate()).isoformat()
-    cabin=data.get('cabin','Business')
+    cabin=data.get('cabin','Economy')
     if not isinstance(cabin,str): raise ServiceError('Invalid cabin class.')
     cabin=cabin.strip().lower().replace('first class','first')
     if cabin not in CABINS: raise ServiceError('Choose a supported cabin class.')

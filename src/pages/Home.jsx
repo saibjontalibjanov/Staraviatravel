@@ -9,7 +9,7 @@ import Testimonials from '../components/Testimonials'
 import Footer from '../components/Footer'
 import FloatingButtons from '../components/FloatingButtons'
 import PhonePopup from '../components/PhonePopup'
-import CookieBanner from '../components/CookieBanner'
+import Partners from '../components/Partners'
 
 // Image Carousel Component for About Us
 const ImageCarousel = ({ images }) => {
@@ -73,6 +73,7 @@ const Home = () => {
         <TrustBar />
         
         {/* Hot Deals Section */}
+        <Partners />
         <HotDeals />
 
         {/* Why Choose Us Section - with working carousel */}
@@ -211,7 +212,7 @@ const Home = () => {
       <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
 
       {/* Cookie Banner */}
-      <CookieBanner />
+
     </div>
   )
 }

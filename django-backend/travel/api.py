@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import Http404
-from travel.models import Lead, NewsletterSubscriber, HotFlight, TelegramChat, TelegramMessage, Checkout, Booking, SavedSearch, Testimonial, FAQ
+from travel.models import Lead, NewsletterSubscriber, HotFlight, TelegramChat, TelegramMessage, Checkout, Booking, SavedSearch, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView
 from travel.services.validation import ServiceError, obj, email, passports_input, text, request_uuid
 from travel.services.leads import create_lead, limit, audit
 from travel.services.flights import AIRPORTS, search_flights
@@ -235,3 +235,35 @@ def testimonials(request):
     if type(rating) is not int or not 1<=rating<=5:raise ServiceError('Choose a rating from 1 to 5.')
     row=Testimonial.objects.create(name=text(data.get('name'),100,'name',True),text=text(data.get('text'),2000,'review',True),language=language,rating=rating,published=False)
     return {'submitted':True},201
+
+
+@endpoint(['GET'])
+def partners(request):
+    return {'data':[{'id':row.pk,'name':row.name,'logo':row.logo.url,'website':row.website if row.website.startswith('https://') else ''} for row in Partner.objects.filter(published=True).exclude(logo='')[:100]]}
+
+@csrf_exempt
+@endpoint(['POST'])
+def visit(request):
+    import hashlib, hmac, re
+    rate(request,'website-visit',120,600)
+    if request.headers.get('DNT')=='1' or request.headers.get('Sec-GPC')=='1' or re.search(r'bot|spider|crawler',request.headers.get('User-Agent',''),re.I):return {'recorded':False}
+    data=obj(body(request).get('data'))
+    if data.get('path') not in ['/', '/about-us', '/business-class', '/search-results']:raise ServiceError('Invalid public page.')
+    language=data.get('language','uz')
+    if language not in ['uz','ru','en']:raise ServiceError('Invalid language.')
+    visitor_id=request_uuid(data.get('visitorId'))
+    key=hmac.new(settings.SECRET_KEY.encode(),str(visitor_id).encode(),hashlib.sha256).hexdigest()
+    now=timezone.now()
+    if data.get('type')=='heartbeat':
+        updated=WebsiteVisitor.objects.filter(key=key).update(last_seen=now)
+        return {'recorded':bool(updated)}
+    if data.get('type','pageview')!='pageview':raise ServiceError('Invalid event type.')
+    event_id=request_uuid(data.get('eventId'))
+    with transaction.atomic():
+        # A globally unique event makes retries and React StrictMode idempotent.
+        existing=WebsitePageView.objects.filter(event_id=event_id).first()
+        if existing:return {'recorded':True}
+        visitor,_=WebsiteVisitor.objects.get_or_create(key=key,defaults={'last_seen':now})
+        _,created=WebsitePageView.objects.get_or_create(event_id=event_id,defaults={'visitor':visitor,'path':data['path'],'language':language})
+        if created:WebsiteVisitor.objects.filter(pk=visitor.pk).update(last_seen=now)
+    return {'recorded':True}

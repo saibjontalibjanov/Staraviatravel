@@ -24,7 +24,7 @@ test('unfinished search values do not invalidate a contact application', () => {
 })
 
 test('legacy lead routes prefill airports without inventing missing travel dates', () => {
-  assert.deepEqual(initialSearch({ flightRoute: 'Tashkent (TAS) → Istanbul (IST)' }), { departure_id: 'TAS', arrival_id: 'IST', date: '', return_date: '', passengers: 1, cabin: 'Business' })
+  assert.deepEqual(initialSearch({ flightRoute: 'Tashkent (TAS) → Istanbul (IST)' }), { departure_id: 'TAS', arrival_id: 'IST', date: '', return_date: '', passengers: 1, cabin: 'Economy' })
 })
 
 test('explicit lead airports take precedence over legacy route text', () => {

@@ -140,7 +140,7 @@ const SearchForm = () => {
   const [departureDate, setDepartureDate] = useState('')
   const [returnDate, setReturnDate] = useState('')
   const [passengers, setPassengers] = useState(1)
-  const [cabin, setCabin] = useState('Business')
+  const [cabin, setCabin] = useState('Economy')
   const [showPaxDropdown, setShowPaxDropdown] = useState(false)
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0, width: 0 })
   const paxRef = useRef(null)
@@ -278,11 +278,11 @@ const SearchForm = () => {
           {/* Passengers / Cabin */}
           <div ref={paxRef} className="flex-1 flex flex-col justify-center px-4 py-2.5 border-b lg:border-b-0 lg:border-r border-gray-200 min-w-0 cursor-pointer">
             <label className="text-[9px] text-gray-400 font-semibold uppercase tracking-widest mb-0.5">{t("Passengers / Cabin")}</label>
-            <div
+            <button type="button" aria-expanded={showPaxDropdown}
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowPaxDropdown(!showPaxDropdown) }}
               className="text-ink font-semibold text-sm text-left">
               {passengers} | {t(cabin === 'First' ? 'First class' : cabin)}
-            </div>
+            </button>
           </div>
 
           {/* Search button */}

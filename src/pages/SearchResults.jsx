@@ -208,7 +208,7 @@ const SearchResults = () => {
   const fromCity = from.replace(/\s*\([^)]*\)/, '')
   const toCity = to.replace(/\s*\([^)]*\)/, '')
   const passengers = searchParams.get('passengers') || '1'
-  const cabin = searchParams.get('cabin') || 'Business'
+  const cabin = searchParams.get('cabin') || 'Economy'
   const tripType = searchParams.get('returnDate') ? 'round-trip' : 'one-way'
   const departureDate = searchParams.get('departureDate') || ''
   const returnDate = searchParams.get('returnDate')

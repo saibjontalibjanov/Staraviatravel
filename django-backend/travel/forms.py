@@ -2,7 +2,7 @@ import re
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
-from travel.models import Lead, HotFlight, Booking, SavedSearch, Testimonial, FAQ
+from travel.models import Lead, HotFlight, Booking, SavedSearch, Testimonial, FAQ, Partner
 from travel.services.validation import phone, ServiceError
 
 class StaffLoginForm(AuthenticationForm):
@@ -84,3 +84,21 @@ class FAQForm(forms.ModelForm):
         model = FAQ
         fields = ['question_uz', 'answer_uz', 'question_ru', 'answer_ru', 'question_en', 'answer_en', 'position', 'published']
         widgets = {f'answer_{lang}': forms.Textarea(attrs={'rows': 4}) for lang in ['uz', 'ru', 'en']}
+
+
+class PartnerForm(forms.ModelForm):
+    class Meta:
+        model = Partner
+        fields = ['name', 'logo', 'website', 'position', 'published']
+    def clean_logo(self):
+        image = self.cleaned_data.get('logo')
+        if image and getattr(image, 'size', 0) > 2 * 1024 * 1024:
+            raise forms.ValidationError('Logo must be 2 MB or smaller. Use PNG, JPEG or WebP.')
+        return image
+    def clean_website(self):
+        value = self.cleaned_data.get('website', '')
+        from urllib.parse import urlsplit
+        parsed = urlsplit(value)
+        if value and (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password):
+            raise forms.ValidationError('Use an HTTPS website address without credentials.')
+        return value

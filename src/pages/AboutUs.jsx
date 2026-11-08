@@ -5,6 +5,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import TopBar from '../components/TopBar'
 import BackgroundVideo from '../components/BackgroundVideo'
 import Testimonials from '../components/Testimonials'
+import Partners from '../components/Partners'
 import MainNavbar from '../components/MainNavbar'
 import PhonePopup from '../components/PhonePopup'
 import BusinessSeat from '../../pictures/seats/business-seat.jpg'
@@ -81,6 +82,7 @@ export default function AboutUs() {
             </button>
           </div>
         </section>
+        <Partners />
         <Testimonials allowSubmission />
       </main>
       <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />

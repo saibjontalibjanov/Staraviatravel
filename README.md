@@ -86,3 +86,7 @@ The CRM sidebar includes **Testimonials** (review, edit and approve About-page s
 The public website uses an **80% base scale on compact laptop screens** (1024–1536 logical pixels wide, at most 1000 pixels high, with a mouse/trackpad). Large displays and phones retain normal scale. Browser zoom controls remain available; the base scale is determined by the screen rather than the browser's current zoom level. The CRM keeps its own layout and scale.
 
 For the existing Namecheap deployment, use [the cPanel/Passenger runbook](docs/NAMECHEAP_DEPLOYMENT.md). The [production audit report](docs/PRODUCTION_AUDIT_2026-11-02.md) distinguishes locally verified fixes from production items awaiting logs/access. No live deployment or database migration is authorized by running local tests.
+
+### Visitors, partner logos and typography
+
+The CRM **Website visitors** page and overview show active/recent browsers, today's visitors, total visitors, page views and 30-day statistics. Tracking respects the website's consent and browser privacy controls. **Partner logos** lets managers upload, order and publish logos for the animated grayscale/hover-color strips on Home and About. Search starts in **Economy**. Public and CRM typography use an SF Pro-first system stack; exact SF Pro on devices without it requires an authorized font file. Apply migration `0005`, update role permissions and rebuild/collect assets before enabling this release. See [setup, metric definitions and font details](docs/PARTNERS_AND_VISITORS.md).

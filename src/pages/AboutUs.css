@@ -34,7 +34,7 @@
 }
 .about-heading h1 {
   margin: 15px 0 20px;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-sf);
   font-size: clamp(36px, 3.4vw, 50px);
   font-weight: 400;
   line-height: 1.2;
@@ -45,7 +45,7 @@
 .about-subtitle {
   margin-top: 22px;
   color: #787166;
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-sf);
   font-style: italic;
   font-size: 15px;
   line-height: 1.8;
@@ -67,7 +67,7 @@
 }
 .about-gold-rule { display: block; width: 50px; height: 2px; background: var(--about-gold); margin-bottom: 23px; }
 .about-story-copy h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-sf);
   font-size: clamp(25px, 2.2vw, 32px);
   font-weight: 400;
   line-height: 1.5;
@@ -79,13 +79,13 @@
 .about-benefit { padding: 42px 30px 38px; text-align: center; }
 .about-benefit + .about-benefit { border-left: 1px solid var(--about-line); }
 .about-benefit > svg { color: var(--about-gold); font-size: 20px; margin-bottom: 16px; }
-.about-benefit h3 { font-family: 'Playfair Display', Georgia, serif; font-size: 19px; font-weight: 400; margin-bottom: 12px; }
+.about-benefit h3 { font-family: var(--font-sf); font-size: 19px; font-weight: 400; margin-bottom: 12px; }
 .about-benefit p { color: #787166; font-size: 12px; line-height: 1.9; }
 
 .about-mission { background: #fff; padding: 98px 32px 106px; text-align: center; }
 .about-mission-inner { max-width: 710px; margin: 0 auto; }
 .about-mission blockquote {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-sf);
   font-style: italic;
   font-size: clamp(25px, 2.5vw, 35px);
   line-height: 1.65;
@@ -100,7 +100,7 @@
   padding: 80px 32px;
 }
 .about-contact-inner { max-width: 960px; margin: 0 auto; display: flex; gap: 40px; justify-content: space-between; align-items: center; }
-.about-contact h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(24px, 2.3vw, 32px); line-height: 1.5; font-weight: 400; }
+.about-contact h2 { font-family: var(--font-sf); font-size: clamp(24px, 2.3vw, 32px); line-height: 1.5; font-weight: 400; }
 .about-contact p { color: #f3e6d0; font-size: 13px; line-height: 1.9; margin-top: 8px; }
 .about-contact-button { display: inline-flex; gap: 24px; align-items: center; justify-content: center; flex-shrink: 0; background: #dbad57; color: #30220e; border-radius: 5px; font-size: 13px; font-weight: 500; padding: 16px 28px; transition: background-color .2s; }
 .about-contact-button:hover { background: #edc879; }

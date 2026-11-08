@@ -1488,5 +1488,20 @@
     "en": "Your journey could be our next story.",
     "uz": "Keyingi hikoyamiz sizning sayohatingiz bo‘lishi mumkin.",
     "ru": "Ваше путешествие может стать нашей следующей историей."
+  },
+  "Our partners": {
+    "en": "Our partners",
+    "uz": "Bizning hamkorlarimiz",
+    "ru": "Наши партнёры"
+  },
+  "Pause partner logos": {
+    "en": "Pause partner logos",
+    "uz": "Harakatni to‘xtatish",
+    "ru": "Приостановить логотипы"
+  },
+  "Resume partner logos": {
+    "en": "Resume partner logos",
+    "uz": "Harakatni davom ettirish",
+    "ru": "Продолжить движение"
   }
 }
