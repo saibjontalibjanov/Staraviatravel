@@ -143,8 +143,27 @@ def office(request):
 
 def traffic_context():
     now=timezone.now();today=timezone.localdate()
-    recent=WebsitePageView.objects.filter(created_at__gte=now-timedelta(days=30))
+    recent=WebsitePageView.objects.filter(created_at__date__gte=today-timedelta(days=29),created_at__date__lte=today)
     daily=list(recent.annotate(day=TruncDate('created_at')).values('day').annotate(views=Count('pk'),visitors=Count('visitor',distinct=True)).order_by('-day'))
     maximum=max([row['views'] for row in daily],default=1)
     for row in daily:row['width']=round(row['views']/maximum*100)
-    return {'traffic':{'active':WebsiteVisitor.objects.filter(last_seen__gte=now-timedelta(minutes=5)).count(),'today':WebsitePageView.objects.filter(created_at__date=today).values('visitor').distinct().count(),'total':WebsiteVisitor.objects.count(),'pageviews':WebsitePageView.objects.count(),'todayViews':WebsitePageView.objects.filter(created_at__date=today).count()},'traffic_daily':daily,'traffic_pages':list(recent.values('path').annotate(views=Count('pk'),visitors=Count('visitor',distinct=True)).order_by('-views'))}
+    return {'traffic':{'active':WebsiteVisitor.objects.filter(last_seen__gte=now-timedelta(minutes=5)).count(),'today':WebsitePageView.objects.filter(created_at__date=today).values('visitor').distinct().count(),'total':WebsiteVisitor.objects.count(),'pageviews':WebsitePageView.objects.count(),'todayViews':WebsitePageView.objects.filter(created_at__date=today).count()},'traffic_chart':traffic_chart(daily,today),'traffic_daily':daily,'traffic_pages':list(recent.values('path').annotate(views=Count('pk'),visitors=Count('visitor',distinct=True)).order_by('-views'))}
+
+
+def traffic_chart(daily, today):
+    """Thirty local calendar days, including zero-traffic days, oldest first."""
+    by_day={row['day']:row for row in daily}
+    days=[]
+    for index in range(30):
+        day=today-timedelta(days=29-index)
+        row=by_day.get(day, {})
+        days.append({'day':day,'visitors':row.get('visitors',0),'views':row.get('views',0)})
+    maximum=max(2,max(row['views'] for row in days),max(row['visitors'] for row in days))
+    # Even scale keeps the middle tick an integer, including an empty dataset.
+    maximum += maximum % 2
+    for index,row in enumerate(days):
+        row.update(x=round(52+index*900/29,2),visitor_y=round(224-row['visitors']/maximum*192,2),view_y=round(224-row['views']/maximum*192,2))
+    return {'days':days,'maximum':maximum,'middle':maximum//2,
+            'visitor_points':' '.join(f"{row['x']},{row['visitor_y']}" for row in days),
+            'view_points':' '.join(f"{row['x']},{row['view_y']}" for row in days),
+            'labels':[days[index] for index in (0,7,14,21,29)]}

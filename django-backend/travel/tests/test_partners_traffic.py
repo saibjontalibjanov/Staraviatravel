@@ -70,3 +70,36 @@ class PartnersTrafficTests(TestCase):
         from travel.forms import PartnerForm
         bad=PartnerForm({'name':'Bad','website':'https://user:password@partner.example','position':0},{'logo':SimpleUploadedFile('bad.svg',b'<svg/>',content_type='image/svg+xml')})
         self.assertFalse(bad.is_valid());self.assertIn('logo',bad.errors);self.assertIn('website',bad.errors)
+
+    def test_overview_chart_fills_missing_days_and_keeps_details_separate(self):
+        visitor=str(uuid.uuid4())
+        self.post_visit(visitorId=visitor)
+        self.post_visit(visitorId=visitor,path='/about-us')
+        self.client.force_login(self.staff)
+        response=self.client.get('/office/')
+        self.assertEqual(response.status_code,200)
+        self.assertContains(response,'Daily website visitors and page views')
+        self.assertNotContains(response,'A little care.')
+        self.assertNotContains(response,'Active now')
+        days=response.context['traffic_chart']['days']
+        self.assertEqual(len(days),30)
+        self.assertEqual(days[0]['day'],timezone.localdate()-timedelta(days=29))
+        self.assertEqual(days[-1]['visitors'],1)
+        self.assertEqual(days[-1]['views'],2)
+        self.assertTrue(all(row['views']==0 for row in days[:-1]))
+        details=self.client.get('/office/?section=visitors')
+        self.assertContains(details,'Active now')
+        self.assertContains(details,'Last 30 days')
+
+    def test_empty_chart_has_safe_scale_and_no_traffic_access_is_preserved(self):
+        self.client.force_login(self.staff)
+        response=self.client.get('/office/')
+        chart=response.context['traffic_chart']
+        self.assertEqual(chart['maximum'],2)
+        self.assertTrue(all(row['visitor_y']==224 and row['view_y']==224 for row in chart['days']))
+        user=User.objects.create_user('chart-unprivileged',is_staff=True)
+        self.client.force_login(user)
+        response=self.client.get('/office/')
+        self.assertEqual(response.status_code,200)
+        self.assertNotContains(response,'traffic-graph-title')
+        self.assertNotIn('traffic_chart',response.context)

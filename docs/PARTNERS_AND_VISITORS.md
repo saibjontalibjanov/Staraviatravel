@@ -58,3 +58,7 @@ python manage.py check
 So‘ng backend/Passenger’ni qayta ishga tushiring. Frontend uchun root `.env.production` API originini tekshirib `npm ci && npm run build` qiling va `dist/` ichidagi fayllarni mavjud hosting jarayoni bilan yangilang. Backend maxfiy `.env` ni frontendga yuklamang. Mavjud logotip va rasmlar uchun API domenidagi `/uploads/` mapping ishlashini tekshiring.
 
 Mahalliy tekshiruvlar: **70 Django testi**, **27 frontend testi**, production build. Alohida test bazasida brauzer orqali logo upload/publish/order, sahifadagi joylashuv, o‘ngdan-chapga animatsiya, hover rangi, rozilik va tashriflarni deduplikatsiya qilish, CRM statistika, mobil o‘lchamlar, shrift stack’i va Economy tanlovi tekshirildi. Production’dagi tashriflar o‘lchanmadi; sinovdagi sonlar va logotiplar fixture edi.
+
+## Overview chart update
+
+The overview replaces the four visitor summary cards with a 30-day line graph of daily distinct consenting browsers and page views, using Tashkent calendar dates and including zero-traffic days. Exact values are available in an expandable table; the separate Website visitors page retains its cards and detailed tables. The promotional journey panel is removed and Latest enquiries uses the full width. Traffic permissions remain required. No migration or new chart service/key is needed. Deploy backend templates/code and run `python manage.py collectstatic --noinput`, then restart the backend through the existing hosting procedure.
