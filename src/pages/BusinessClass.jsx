@@ -6,6 +6,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import TopBar from '../components/TopBar';
+import MainNavbar from '../components/MainNavbar';
 
 
 
@@ -26,6 +27,7 @@ const BusinessClass = () => {
     const fetchDeals = async () => {
       try {
         const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'));
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
         
@@ -49,16 +51,14 @@ const BusinessClass = () => {
             oldPrice: attrs.oldPrice || '',
             link: attrs.link || '',
           };
-        }).filter(item => item.image);
+        });
 
         setDeals(formatted);
 
-        // Auto-select deal from URL param
+        // Direct visits show the same first published offer as Home.
+        // Explicit offer links retain their selected offer; stale IDs fall back to first.
         const dealId = searchParams.get('dealId');
-        if (dealId) {
-          const found = formatted.find(d => String(d.id) === dealId);
-          if (found) setSelectedDeal(found);
-        }
+        setSelectedDeal(formatted.find(deal => String(deal.id) === dealId) || formatted[0] || null);
       } catch (err) {
         console.error('Failed to fetch hot deals:', err);
       }
@@ -73,8 +73,8 @@ const BusinessClass = () => {
   // Use selected deal's texts or defaults
   const displayTitle = selectedDeal?.title || t('Premium Business Class Flights & Airline Tickets');
   const displayBadge = selectedDeal?.badge || t('50-77% Off Discounted Business Class');
-  const displayPrice = selectedDeal?.price || '$1,985';
-  const displayOldPrice = selectedDeal?.oldPrice || '$4,963';
+  const displayPrice = selectedDeal?.price;
+  const displayOldPrice = selectedDeal?.oldPrice;
   const displayType = selectedDeal?.type || t('Discounted business class flights - 2026 from USA to Europe, Asia, Philippines, Africa, India etc. The cheapest business class flights with top airlines\' offers and deals.');
 
   const handleCardClick = (deal) => {
@@ -85,7 +85,7 @@ const BusinessClass = () => {
     <>
       <TopBar />
       <div 
-        className="min-h-screen relative flex items-center pt-24 pb-12 transition-all duration-500"
+        className="min-h-screen relative flex flex-col pb-12 transition-all duration-500"
         style={{
           backgroundImage: `url("${backgroundImage}")`,
           backgroundSize: 'cover',
@@ -95,8 +95,10 @@ const BusinessClass = () => {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/70"></div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+        <div className="relative z-20 w-full max-w-[1500px] mx-auto"><MainNavbar /></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-1 flex items-center py-8 lg:py-12">
+          <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             
             {/* Left side - Info & Prices */}
             <div className="text-white">
@@ -113,13 +115,13 @@ const BusinessClass = () => {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 border-l-4 border-[#d4a445] pl-6 py-2">
                 <div>
                   <span className="inline-block bg-[#d4a445] text-black font-bold px-3 py-1 text-sm rounded mb-2"> {t("🔥 This Month's Best Deal")} </span>
-                  <div className="flex items-baseline gap-4">
-                    <div className="flex flex-col">
+                  {displayPrice && <div className="flex items-baseline gap-4">
+                    {displayOldPrice && <div className="flex flex-col">
                       <span className="text-gray-400 text-sm">{t("Old price:")}</span>
                       <span className="text-gray-400 line-through text-lg">{displayOldPrice}</span>
-                    </div>
+                    </div>}
                     <span className="text-5xl font-bold text-white">{displayPrice}<span className="text-xl text-[#d4a445]">*</span></span>
-                  </div>
+                  </div>}
                 </div>
                 
                 <div className="hidden sm:block h-16 w-px bg-gray-600 mx-4"></div>
@@ -136,15 +138,18 @@ const BusinessClass = () => {
               {/* Deal image cards from API */}
               <div className="mt-8 flex flex-wrap gap-3">
                 {deals.map((deal) => (
-                  <div
+                  <button
+                    type="button"
+                    aria-label={deal.title}
+                    aria-pressed={selectedDeal?.id === deal.id}
                     key={deal.id}
                     onClick={() => handleCardClick(deal)}
                     className={`w-16 h-12 rounded-lg overflow-hidden shadow-md cursor-pointer transition-all hover:scale-110 ${
                       selectedDeal?.id === deal.id ? 'ring-2 ring-[#d4a445] scale-110' : 'hover:ring-1 hover:ring-white/50'
                     }`}
                   >
-                    <img src={deal.image} alt={deal.title} className="w-full h-full object-cover" />
-                  </div>
+                    {deal.image ? <img src={deal.image} alt="" className="w-full h-full object-cover" /> : <span className="text-xs text-white">{deal.title}</span>}
+                  </button>
                 ))}
               </div>
             </div>
