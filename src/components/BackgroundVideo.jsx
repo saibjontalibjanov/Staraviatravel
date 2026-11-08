@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
+import { initialLoading } from '../lib/initialLoading'
+import { heroVideoSource } from '../lib/heroVideo'
 
 export const heroPoster = '/media/hero-poster-v1.webp'
 
-// A decorative video must never hold up navigation, text, or the booking form.
+// The full-page loader waits for playback readiness, with a bounded poster fallback.
 export default function BackgroundVideo({ className = '' }) {
   const video = useRef(null)
+  const chosenSource = useRef('')
+  const finishLoading = useRef(() => {})
   const [source, setSource] = useState('')
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    finishLoading.current = initialLoading.begin()
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const connection = navigator.connection
     let idle, timer
@@ -19,12 +24,12 @@ export default function BackgroundVideo({ className = '' }) {
     const update = () => {
       cancel()
       if (motion.matches || connection?.saveData || ['slow-2g', '2g'].includes(connection?.effectiveType)) {
-        setSource(''); setReady(false)
+        chosenSource.current = ''; setSource(''); setReady(false); finishLoading.current()
         return
       }
       const start = () => {
-        const mobile = window.matchMedia('(max-width: 767px)').matches || (connection?.downlink > 0 && connection.downlink < 1.5)
-        setSource(mobile ? '/media/hero-mobile-v1.mp4' : '/media/hero-desktop-v1.mp4')
+        chosenSource.current ||= heroVideoSource({ mobile: window.matchMedia('(max-width: 767px)').matches, effectiveType: connection?.effectiveType, downlink: connection?.downlink })
+        setSource(chosenSource.current)
       }
       if ('requestIdleCallback' in window) idle = window.requestIdleCallback(start, { timeout: 1200 })
       else timer = window.setTimeout(start, 250)
@@ -32,7 +37,7 @@ export default function BackgroundVideo({ className = '' }) {
     update()
     motion.addEventListener('change', update)
     connection?.addEventListener('change', update)
-    return () => { cancel(); motion.removeEventListener('change', update); connection?.removeEventListener('change', update) }
+    return () => { cancel(); finishLoading.current(); motion.removeEventListener('change', update); connection?.removeEventListener('change', update) }
   }, [])
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function BackgroundVideo({ className = '' }) {
     let visible = true
     const playback = () => {
       if (document.hidden || !visible) element.pause()
-      else element.play()?.catch(() => { /* Poster/first frame remains if autoplay is blocked. */ })
+      else element.play()?.catch(() => finishLoading.current())
     }
     const observer = 'IntersectionObserver' in window ? new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; playback() }, { threshold: 0.01 }) : null
     observer?.observe(element)
@@ -52,6 +57,6 @@ export default function BackgroundVideo({ className = '' }) {
 
   return <div className={className} aria-hidden="true">
     <img src={heroPoster} width="1280" height="720" alt="" fetchpriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-    {source && <video ref={video} src={source} poster={heroPoster} autoPlay loop muted playsInline preload="metadata" disablePictureInPicture onLoadedData={() => setReady(true)} onError={() => setReady(false)} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: ready ? 1 : 0 }} />}
+    {source && <video ref={video} src={source} poster={heroPoster} autoPlay loop muted playsInline preload="metadata" disablePictureInPicture onLoadedData={() => setReady(true)} onCanPlay={() => { setReady(true); finishLoading.current() }} onError={() => { setReady(false); finishLoading.current() }} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: ready ? 1 : 0 }} />}
   </div>
 }

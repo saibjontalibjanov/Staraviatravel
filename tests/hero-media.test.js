@@ -7,7 +7,7 @@ function boxes(buffer, start=0, end=buffer.length) {
   return result
 }
 test('published hero videos have streaming metadata first, no audio, and bounded sizes',()=>{
-  for(const [name,limit] of [['hero-desktop-v1.mp4',12*1024*1024],['hero-mobile-v1.mp4',5*1024*1024]]){
+  for(const [name,limit] of [['hero-desktop-v2.mp4',64*1024*1024],['hero-mobile-v2.mp4',20*1024*1024],['hero-desktop-v1.mp4',12*1024*1024],['hero-mobile-v1.mp4',5*1024*1024]]){
     const file='public/media/'+name;assert(statSync(file).size<limit,name+' exceeds transfer budget')
     const buffer=readFileSync(file),top=boxes(buffer),moov=top.find(box=>box.type==='moov'),mdat=top.find(box=>box.type==='mdat');assert(moov&&mdat);assert(moov.start<mdat.start,name+' must start playing before the full file downloads')
     const tracks=boxes(buffer,moov.payload,moov.end).filter(box=>box.type==='trak');assert.equal(tracks.length,1,'decorative video must not contain unused audio')

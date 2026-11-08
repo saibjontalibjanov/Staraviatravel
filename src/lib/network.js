@@ -1,6 +1,8 @@
+import { initialLoading } from './initialLoading.js'
 // Bound stalled requests while preserving the caller's unmount/cancel signal.
 export async function fetchWithTimeout(url, options = {}) {
   const { timeoutMs = 20000, signal, ...requestOptions } = options
+  const finishLoading = !options.method || options.method.toUpperCase() === 'GET' ? initialLoading.begin() : () => {}
   const controller = new AbortController()
   const abort = () => controller.abort(signal.reason)
   if (signal?.aborted) abort()
@@ -15,5 +17,5 @@ export async function fetchWithTimeout(url, options = {}) {
     if (controller.signal.aborted) throw controller.signal.reason || error
     throw error
   }
-  finally { clearTimeout(timer); signal?.removeEventListener('abort', abort) }
+  finally { finishLoading(); clearTimeout(timer); signal?.removeEventListener('abort', abort) }
 }

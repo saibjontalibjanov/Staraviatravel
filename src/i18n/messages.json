@@ -1503,5 +1503,15 @@
     "en": "Resume partner logos",
     "uz": "Harakatni davom ettirish",
     "ru": "Продолжить движение"
+  },
+  "Loading the website…": {
+    "en": "Loading the website…",
+    "uz": "Sayt yuklanmoqda…",
+    "ru": "Сайт загружается…"
+  },
+  "Preparing your journey…": {
+    "en": "Preparing your journey…",
+    "uz": "Sayohatingizga tayyorgarlik ko‘rilmoqda…",
+    "ru": "Готовим ваше путешествие…"
   }
 }

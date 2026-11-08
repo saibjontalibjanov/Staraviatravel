@@ -1,4 +1,4 @@
-# Tashriflar, hamkorlar, SF Pro va Economy
+# Tashriflar, hamkorlar, shriftlar va Economy
 
 Ushbu o‘zgarishlar `feature/traffic-partners-sfpro` branchida. Hosting va ishlab turgan production bazasiga avtomatik o‘zgartirish kiritilmagan.
 
@@ -29,15 +29,13 @@ Mavjud Cookie banner’dagi **Accept All** tanlangandan keyin hisob boshlanadi. 
 
 Managers va superuser qo‘shish/tahrirlash/chop etish huquqiga ega; Agents ko‘ra oladi. `bootstrap_roles` bu huquqlarni yangilaydi; maxsus o‘zgartirilgan guruhlar bo‘lsa avval tekshiring.
 
-Chop etilgan logotiplar bosh sahifada **maxsus takliflar** oldida, About sahifasida **mijozlar fikrlari** oldida chiqadi. Default holat grayscale, hover’da asl rang. Aylanish o‘ngdan chapga uzluksiz; logotip ko‘payganda tezlik o‘qishga qulay saqlanadi. Pause/Resume tugmasi, klaviatura focus pauzasi va reduced-motion qo‘llanadi. Hech qanday logotip kiritilmagan bo‘lsa, bo‘lim yashirin qoladi; soxta hamkorlar kiritilmaydi. `GET /api/partners` faqat published logotiplarni qaytaradi.
+Chop etilgan logotiplar bosh sahifada **`#biz-haqimizda`** bo‘limi oldida, About sahifasida **mijozlar fikrlari** oldida chiqadi. Default holat grayscale, hover’da asl rang. Aylanish o‘ngdan chapga uzluksiz; logotip ko‘payganda tezlik o‘qishga qulay saqlanadi. Pause/Resume tugmasi, klaviatura focus pauzasi va reduced-motion qo‘llanadi. Hech qanday logotip kiritilmagan bo‘lsa, bo‘lim yashirin qoladi; soxta hamkorlar kiritilmaydi. `GET /api/partners` faqat published logotiplarni qaytaradi.
 
 Logotip fayllari backend `media/partners/` ichida. Namecheap’da mavjud `/uploads/` mapping shu katalogni ham to‘g‘ri ochishi kerak. Fayllarni va mavjud offer rasmlarini o‘chirmang.
 
 ## Shrift
 
-Barcha frontend sarlavha, matn, forma, checkout va CRM matnlari yagona **SF Pro-first** stack’ka o‘tkazildi. Oldingi Poppins/Playfair/Manrope Google Fonts so‘rovlari olib tashlandi.
-
-SF Pro loyihada taqdim qilinmagan. Apple qurilmalarida tizim SF shrifti ishlaydi; boshqa tizimda SF Pro o‘rnatilgan bo‘lsa u tanlanadi, aks holda mos tizim shrifti ishlatiladi. Windows/Android’da ham aynan SF Pro’ni kafolatlash uchun vebda tarqatishga ruxsat berilgan font fayli va tegishli litsenziya kerak. Begona yoki litsenziyasi noma’lum font yuklab, loyihaga qo‘shilmadi. Ruxsat etilgan WOFF2 fayli berilgach, uni `@font-face` bilan ulash mumkin.
+Foydalanuvchi so‘roviga ko‘ra oldingi shriftlar qaytarildi: saytda **Poppins** va **Playfair Display**, CRM’da **DM Sans** va **Manrope**. Google Fonts yuklanmasa, tegishli sans-serif/serif fallback ishlaydi. SF Pro stack endi ishlatilmaydi.
 
 ## Economy
 
