@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { apiUrl, apiFetch } from '../../lib/api'
-export default function BillingContact({ token, booking, t }) {
+export default function BillingContact({ token, booking, t, onSaved }) {
   const phoneId = useId()
   const [form, setForm] = useState(() => ({
     fullName: booking.passengerDetails[0].fullName,
@@ -19,7 +19,7 @@ export default function BillingContact({ token, booking, t }) {
   useEffect(() => () => request.current?.abort(), [])
   const change = (key, value) => {
     setForm((previous) => ({ ...previous, [key]: value }))
-    setSaved(false)
+    setSaved(false); onSaved?.(false)
     setError('')
   }
   const submit = async (event) => {
@@ -28,7 +28,7 @@ export default function BillingContact({ token, booking, t }) {
     busy.current = true
     setPending(true)
     setError('')
-    setSaved(false)
+    setSaved(false); onSaved?.(false)
     request.current = new AbortController()
     try {
       const response = await apiFetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}/billing`), {
@@ -42,7 +42,7 @@ export default function BillingContact({ token, booking, t }) {
       if (!response.ok) throw new Error('save failed')
       const data = await response.json()
       if (data.saved !== true) throw new Error('save failed')
-      setSaved(true)
+      setSaved(true); onSaved?.(true)
     } catch (cause) {
       if (!request.current.signal.aborted) setError(t.billingError)
     } finally {

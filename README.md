@@ -75,7 +75,7 @@ python manage.py collectstatic --noinput
 
 See [django-backend/README.md](django-backend/README.md) for API routes, production deployment, Docker/PostgreSQL and permission details. [docs/BACKEND_ANALYSIS.md](docs/BACKEND_ANALYSIS.md) maps the previous Strapi functions to their Django replacements.
 
-**Payments:** the existing project had checkout offers and billing-contact storage, not a completed CLICK integration. This migration preserves that behavior: no fake payment success, no card collection, no ticket issuance. Live CLICK payments require the complete merchant configuration and a verified callback implementation before enabling a pay button.
+**Payments:** Ipak Yo‘li payment records, guarded status/checkout flows and CRM management are implemented behind an explicitly unavailable bank adapter. No live or sandbox bank connection is claimed; official merchant documentation is required before implementing the protocol. No raw card collection or automatic ticket issuance. See [integration, environment and deployment guide](docs/IPAK_PAYMENTS.md) and [implementation report](docs/IPAK_PAYMENT_REPORT.md). Existing CLICK placeholders remain inactive.
 
 ### Client workspace and editable website content
 

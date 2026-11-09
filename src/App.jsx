@@ -1,4 +1,5 @@
 import Checkout from './pages/Checkout'
+import PaymentResult from './pages/PaymentResult'
 import WebsiteLoader from './components/WebsiteLoader'
 import VisitorTracker from './components/VisitorTracker'
 import CookieBanner from './components/CookieBanner'
@@ -21,6 +22,7 @@ function App() {
       <Route path="/search-results" element={<SearchResults />} />
       <Route path="/business-class" element={<BusinessClass />} />
       <Route path='/about-us' element={<AboutUs />} />
+      {['success','failed','pending','cancelled'].map(state => <Route key={state} path={`/payment/${state}`} element={<PaymentResult />} />)}
       <Route path="/checkout/:token" element={<Checkout />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

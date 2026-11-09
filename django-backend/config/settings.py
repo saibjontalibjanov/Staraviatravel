@@ -83,3 +83,12 @@ LOGGING = {
     'handlers': {'console': {'class': 'logging.StreamHandler', 'formatter': 'standard'}},
     'loggers': {'django.request': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False}},
 }
+
+# Internal names only: bank protocol fields remain subject to official merchant docs.
+IPAK_MERCHANT_ID = os.getenv('IPAK_MERCHANT_ID', '')
+IPAK_API_KEY = os.getenv('IPAK_API_KEY', '')
+IPAK_API_BASE_URL = os.getenv('IPAK_API_BASE_URL', '')
+IPAK_WEBHOOK_SECRET = os.getenv('IPAK_WEBHOOK_SECRET', '')
+IPAK_PAYMENT_MODE = os.getenv('IPAK_PAYMENT_MODE', 'sandbox')
+# Exact HTTPS checkout origins from the bank's verified documentation; no wildcards.
+IPAK_HOSTED_CHECKOUT_ORIGINS = items('IPAK_HOSTED_CHECKOUT_ORIGINS')
