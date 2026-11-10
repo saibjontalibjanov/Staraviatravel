@@ -5,7 +5,7 @@ class PrivateResponsesMiddleware:
         self.get_response = get_response
     def __call__(self, request):
         response = self.get_response(request)
-        if (request.path=='/' and settings.CRM_ROOT_ENABLED) or request.path.startswith(('/office', '/api/checkouts/', '/api/payments/', '/checkout/', '/payment/', '/api/bookings', '/api/search-results')):
+        if (request.path=='/' and settings.CRM_ROOT_ENABLED) or request.path.startswith(('/office', '/api/checkouts/', '/api/bookings', '/api/search-results')):
             response['Cache-Control'] = 'no-store, private'
             response['X-Robots-Tag'] = 'noindex, nofollow'
             response['Referrer-Policy'] = 'same-origin' if request.path.startswith('/office') or (request.path=='/' and settings.CRM_ROOT_ENABLED) else 'no-referrer'

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { apiUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
-import BankPayment from '../components/checkout/BankPayment'
 import BillingContact from '../components/checkout/BillingContact'
 import BookingSummary from '../components/checkout/BookingSummary'
 import messages from '../components/checkout/messages'
@@ -16,7 +15,6 @@ export default function Checkout() {
   const [status, setStatus] = useState('loading')
   const [attempt, setAttempt] = useState(0)
   const [accepted, setAccepted] = useState(false)
-  const [billingSaved, setBillingSaved] = useState(false)
   const [, tick] = useState(0)
   const languageSetter = useRef(setLanguage)
   languageSetter.current = setLanguage
@@ -26,14 +24,14 @@ export default function Checkout() {
   }, [])
   useEffect(() => {
     const controller = new AbortController()
-    setStatus('loading'); setResult(null); setAccepted(false); setBillingSaved(false)
+    setStatus('loading'); setResult(null); setAccepted(false)
     if (!/^[A-Za-z0-9_-]{43}$/.test(token || '')) { setStatus('unavailable'); return () => controller.abort() }
     apiFetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}`), { signal: controller.signal, cache: 'no-store', referrerPolicy: 'no-referrer' })
       .then(async response => {
         if (!response.ok) throw new Error(response.status === 404 ? 'unavailable' : 'error')
         const data = await response.json()
         if (!data.booking || !/^\d+$/.test(data.amountMinor) || !['USD', 'UZS'].includes(data.currency) || !Number.isFinite(Date.parse(data.expiresAt))) throw new Error('error')
-        if (!controller.signal.aborted) { setResult(data); setBillingSaved(data.billingSaved === true); languageSetter.current(data.booking.language); setStatus('ready') }
+        if (!controller.signal.aborted) { setResult(data); languageSetter.current(data.booking.language); setStatus('ready') }
       })
       .catch(error => { if (!controller.signal.aborted) setStatus(error.message === 'unavailable' ? 'unavailable' : 'error') })
     return () => controller.abort()
@@ -53,10 +51,10 @@ export default function Checkout() {
     <main className="cc-main">
       <p className="cc-eyebrow">{t.step}</p><h1>{t.title}</h1><p className="cc-subtitle">{t.subtitle}</p>
       {status === 'loading' ? <p className="cc-state" role="status">{t.loading}</p> : status !== 'ready' || expired ? <section className="cc-panel cc-state" role="alert"><h2>{t.unavailable}</h2><p>{t.invalid}</p><button type="button" onClick={() => setAttempt(value => value + 1)}>{t.retry}</button><Link to="/">{t.home} →</Link></section> : <div className="cc-grid">
-        <div className="cc-content"><div className="cc-notice">♧ <span>{t.secure}</span></div>
-          {booking.passengerDetails?.length ? <BillingContact token={token} booking={booking} t={t} onSaved={setBillingSaved} key={token} /> : <section className="cc-panel"><div className="cc-section-title"><span>1</span><div><h2>{t.contact}</h2><p>{t.contactSub}</p></div></div><dl className="cc-details">{[[t.passenger, booking.passengerName], [t.passengers, booking.passengers], [t.cabin, cabin(booking.cabin)], ...(booking.airline ? [[t.airline, booking.airline]] : [])].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section>}
+        <div className="cc-content"><div className="cc-notice">♧ <span>{t.noCharge}</span></div>
+          {booking.passengerDetails?.length ? <BillingContact token={token} booking={booking} t={t} key={token} /> : <section className="cc-panel"><div className="cc-section-title"><span>1</span><div><h2>{t.contact}</h2><p>{t.contactSub}</p></div></div><dl className="cc-details">{[[t.passenger, booking.passengerName], [t.passengers, booking.passengers], [t.cabin, cabin(booking.cabin)], ...(booking.airline ? [[t.airline, booking.airline]] : [])].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section>}
           <section className="cc-panel"><div className="cc-section-title"><span>2</span><div><h2>{t.terms}</h2><p>{t.termsSub}</p></div></div><p className="cc-fare-terms">{booking.fareTerms}</p><label className="cc-accept"><input type="checkbox" checked={accepted} onChange={e => setAccepted(e.target.checked)} />{t.accept}</label></section>
-          <BankPayment token={token} result={result} accepted={accepted} billingSaved={billingSaved} />
+          <section className="cc-panel cc-payment"><div className="cc-section-title"><span>3</span><div><h2>{t.payment}</h2><p>{t.paymentSub}</p></div></div><div className="cc-payment-placeholder" aria-hidden="true"><span>▣</span><span>VISA</span><span>Mastercard</span><span>UZCARD</span><span>HUMO</span></div><p>{t.note}</p>{booking.paymentInformation&&<div className="cc-agent-payment"><h3>{t.paymentInfo}</h3><p>{booking.paymentInformation}</p></div>}<button type="button" disabled>{t.pending}</button><p className="cc-small">{t.noCharge}</p></section>
         </div>
         <BookingSummary booking={booking} result={result} t={t} locale={locale} money={money} date={date} cabin={cabin} />
       </div>}

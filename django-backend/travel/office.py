@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum, Count
 from django.db.models.functions import TruncDate
@@ -17,14 +17,14 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView, Payment, PaymentNotice
+from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView
 from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm, PartnerForm
 from travel.services.leads import limit, audit
 from travel.services.validation import ServiceError
 from travel.services.telegram import config_status
 from travel.services.checkouts import admin_checkout
 
-SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('payments','Payments','▣','travel.view_payment'),('visitors','Website visitors','↗','travel.view_traffic'),('partners','Partner logos','◇','travel.view_partner'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
+SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('visitors','Website visitors','↗','travel.view_traffic'),('partners','Partner logos','◇','travel.view_partner'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
 
 def workspace_path():
     return '/' if settings.CRM_ROOT_ENABLED else '/office/'
@@ -57,25 +57,6 @@ def office(request):
     user=request.user
     if section=='dashboard':
         context.update(lead_count=Lead.objects.count() if user.has_perm('travel.view_lead') else None,new_count=Lead.objects.filter(lead_status='new').count() if user.has_perm('travel.view_lead') else None,checkout_count=Checkout.objects.count() if user.has_perm('travel.manage_checkouts') else None,subscriber_count=NewsletterSubscriber.objects.count() if user.has_perm('travel.view_newslettersubscriber') else None,recent_leads=Lead.objects.select_related('assigned_to')[:6] if user.has_perm('travel.view_lead') else [],recent_activity=AuditEvent.objects.select_related('actor')[:6] if user.has_perm('travel.view_auditevent') else [])
-    elif section=='payments':
-        from travel.payments.service import reconcile, mark_issued
-        if request.method=='POST':
-            try:
-                payment=get_object_or_404(Payment,pk=request.POST.get('payment'))
-                action=request.POST.get('action')
-                if action=='verify':
-                    if not user.has_perm('travel.reconcile_payment'):raise PermissionDenied
-                    limit(f'payment-staff:{user.pk}',20,600)
-                    reconcile(payment,source='staff');audit(user,'payment.reconciled',payment.pk)
-                    messages.success(request,'Payment status verified with the bank.')
-                elif action=='issued':
-                    if request.POST.get('confirm')!='ISSUED':raise ServiceError('Type ISSUED to confirm actual manual ticket issuance.')
-                    mark_issued(payment.pk,user);messages.success(request,'Manual ticket issuance recorded.')
-                else:raise ServiceError('Invalid payment operation.')
-            except (ValueError,ValidationError):raise Http404
-            except ServiceError as error:messages.error(request,error.message)
-            return redirect(workspace_path()+'?section=payments')
-        context['payments']=Paginator(Payment.objects.select_related('checkout__lead').prefetch_related('events'),25).get_page(request.GET.get('page'))
     elif section=='visitors':
         context.update(traffic_context())
     elif section=='leads':
@@ -156,8 +137,6 @@ def office(request):
             form.save();update_session_auth_hash(request,user);audit(user,'staff.password.changed',user.pk);messages.success(request,'Your password was updated.');return redirect(workspace_path()+'?section=account')
         context['form']=form
     elif section=='audit':context['page']=Paginator(AuditEvent.objects.select_related('actor'),50).get_page(request.GET.get('page'))
-    if section=='dashboard' and user.has_perm('travel.view_payment'):
-        context.update(payment_notices=PaymentNotice.objects.filter(recipient=user).select_related('payment__checkout__lead').order_by('-created_at')[:6],recent_payments=Payment.objects.select_related('checkout__lead')[:6])
     if section=='dashboard' and user.has_perm('travel.view_traffic'):context.update(traffic_context())
     return render(request,'office/workspace.html',context)
 

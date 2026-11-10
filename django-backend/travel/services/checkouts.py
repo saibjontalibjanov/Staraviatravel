@@ -72,15 +72,12 @@ def active_checkout(token):
     return checkout
 
 def public_checkout(checkout):
-    from travel.payments.provider import capabilities
-    provider=capabilities(checkout.currency)
-    latest=checkout.payments.order_by('-created_at').first()
-    return {'booking':{key:checkout.snapshot[key] for key in PUBLIC_FIELDS if key in checkout.snapshot},'amountMinor':str(checkout.amount_minor),'currency':checkout.currency,'expiresAt':checkout.expires_at.isoformat(),'paymentsEnabled':provider['enabled'],'paymentProvider':provider,'paymentStatus':checkout.payment_status,'billingSaved':bool(checkout.billing_contact),'latestPayment':{'id':str(latest.pk),'status':latest.status} if latest else None}
+    return {'booking':{key:checkout.snapshot[key] for key in PUBLIC_FIELDS if key in checkout.snapshot},'amountMinor':str(checkout.amount_minor),'currency':checkout.currency,'expiresAt':checkout.expires_at.isoformat(),'paymentsEnabled':False}
 
 def admin_checkout(checkout):
     try: origin=website_origin()
     except ServiceError: origin=''
-    return {'id':checkout.pk,'snapshot':checkout.snapshot,'pricing':checkout.pricing,'billingContact':checkout.billing_contact,'amountMinor':str(checkout.amount_minor),'currency':checkout.currency,'expiresAt':checkout.expires_at.isoformat(),'status':checkout.state,'paymentStatus':checkout.payment_status,'url':f'{origin}/checkout/{checkout.token}' if checkout.state=='active' and origin else None}
+    return {'id':checkout.pk,'snapshot':checkout.snapshot,'pricing':checkout.pricing,'billingContact':checkout.billing_contact,'amountMinor':str(checkout.amount_minor),'currency':checkout.currency,'expiresAt':checkout.expires_at.isoformat(),'status':checkout.state,'url':f'{origin}/checkout/{checkout.token}' if checkout.state=='active' and origin else None}
 
 def save_billing(token,data):
     checkout=active_checkout(token)

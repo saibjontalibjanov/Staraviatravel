@@ -79,7 +79,7 @@ const Home = () => {
         <section id="parvozlar" className="w-full bg-white px-6 py-20 md:px-12 lg:px-8">
           <div className="mx-auto w-full max-w-[1500px]">
             {/* First Row */}
-            <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-20 rounded-3xl bg-[#141210] p-6 sm:p-8 lg:p-12 border border-[#D4A34B]/20">
               <ImageCarousel 
                 images={[
                   '/pictures/Trust-section-pictures/Business-class-picture1.jpg',
@@ -87,11 +87,11 @@ const Home = () => {
                   '/pictures/Trust-section-pictures/Business-class-picture3.jpg'
                 ]}
               />
-              <div>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-ink leading-tight"> {t("STARAVIA Travel is Trusted")}<br/>{t("by Over")} <span className="text-gold">{t("188K+ Travelers")}</span>
-                </h2>
-                <p className="mt-6 text-ink/70 text-lg leading-relaxed"> {t("Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.")} </p>
-                <p className="mt-4 text-ink/60 leading-relaxed"> {t("If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!")} </p>
+              <div className="min-w-0">
+                <span className="inline-flex items-center rounded-full border border-[#D4A34B]/40 bg-[#D4A34B]/10 px-4 py-2 text-sm font-semibold text-[#D4A34B]">{t('24/7 personal support')}</span>
+                <h2 className="mt-5 font-display text-3xl sm:text-4xl xl:text-5xl font-bold text-[#D4A34B] leading-tight">{t('StarAvia Cons — Your New Standard of Trust in Air Travel!')}</h2>
+                <p className="mt-6 text-white/80 text-base sm:text-lg leading-relaxed">{t('StarAvia Cons introduction')}</p>
+                <button type="button" onClick={() => setShowPhonePopup(true)} className="mt-7 inline-flex items-center justify-center rounded-xl bg-[#D4A34B] px-6 py-3 font-semibold text-[#141210] transition-colors hover:bg-[#e4b86c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4A34B]">{t('Contact our support team')} <span className="ml-2" aria-hidden="true">↗</span></button>
               </div>
             </div>
 

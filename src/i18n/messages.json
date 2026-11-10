@@ -924,31 +924,6 @@
     "ru": "Живые специалисты",
     "uz": "Mutaxassislar"
   },
-  "STARAVIA Travel is Trusted": {
-    "en": "STARAVIA Travel is Trusted",
-    "ru": "STARAVIA Travel доверяют",
-    "uz": "STARAVIA Travel’ga ishonadi"
-  },
-  "by Over": {
-    "en": "by Over",
-    "ru": "более",
-    "uz": "ko‘proq:"
-  },
-  "188K+ Travelers": {
-    "en": "188K+ Travelers",
-    "ru": "188 тысяч путешественников",
-    "uz": "188 mingdan ortiq sayohatchi"
-  },
-  "Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.": {
-    "en": "Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.",
-    "ru": "Добро пожаловать в Staravia Travel! Мы предоставляем каждому клиенту отличный персональный сервис круглосуточно и ежедневно. Мы отточили каждый этап, чтобы ваше путешествие прошло максимально гладко от начала до конца.",
-    "uz": "Staravia Travel’ga xush kelibsiz! Har bir mijozga haftaning har kuni, kechayu kunduz ajoyib shaxsiy xizmat ko‘rsatamiz. Sayohatingiz boshidan oxirigacha qulay o‘tishi uchun har bir bosqichni mukammallashtirdik."
-  },
-  "If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!": {
-    "en": "If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!",
-    "ru": "Мы помогаем организовать комфортное личное или деловое путешествие с отличным соотношением цены и качества. Обращайтесь к нам! Наши специалисты ответят на вопросы по телефону или почте. Будем рады помочь!",
-    "uz": "Shaxsiy yoki ish safaringizni qulay va maqbul narxda tashkil qilishga yordam beramiz. Biz bilan bog‘laning! Mutaxassislarimiz telefon yoki pochta orqali savollaringizga javob berishadi. Yordam berishdan mamnunmiz!"
-  },
   "Expert First & Business Class": {
     "en": "Expert First & Business Class",
     "ru": "Эксперты первого и бизнес-класса",
@@ -1513,5 +1488,25 @@
     "en": "Preparing your journey…",
     "uz": "Sayohatingizga tayyorgarlik ko‘rilmoqda…",
     "ru": "Готовим ваше путешествие…"
+  },
+  "StarAvia Cons — Your New Standard of Trust in Air Travel!": {
+    "uz": "StarAvia Cons — parvozlaringizdagi yangi ishonch standarti!",
+    "ru": "StarAvia Cons — ваш новый стандарт надежности в мире перелетов!",
+    "en": "StarAvia Cons — Your New Standard of Trust in Air Travel!"
+  },
+  "StarAvia Cons introduction": {
+    "uz": "StarAvia Cons’ga xush kelibsiz! Biz har bir mijozga haftaning 7 kuni, 24 soat davomida yuqori darajadagi shaxsiy xizmat ko‘rsatamiz. Sayohatingiz ilk qadamdan to manzilga yetguncha mukammal va qulay o‘tishi uchun barcha jarayonlarni eng mayda detallarigacha o‘ylab chiqdik. Shaxsiy ta’til yoki xizmat safaringizni eng maqbul narxlarda va ortiqcha tashvishlarsiz tashkil qilishga yordam beramiz. Biz bilan bog‘laning! Mutaxassislarimiz telefon yoki elektron pochta orqali barcha savollaringizga mamnuniyat bilan javob berishadi.",
+    "ru": "Добро пожаловать в StarAvia Cons! Мы предоставляем каждому клиенту первоклассный персональный сервис 24/7, без выходных. Мы продумали каждый этап до мелочей, чтобы ваше путешествие прошло максимально комфортно от начала и до конца. Поможем организовать вашу личную или деловую поездку удобно и по самым выгодным ценам. Свяжитесь с нами! Наши специалисты с радостью ответят на все ваши вопросы по телефону или электронной почте.",
+    "en": "Welcome to StarAvia Cons! We provide exceptional, personalized service to every client 24/7, every day of the week. We have perfected every step of the booking process to ensure your journey is seamless from start to finish. Whether for leisure or business, we help you arrange your trips comfortably and at the most competitive rates. Get in touch with us! Our experts are always happy to answer your questions via phone or email."
+  },
+  "24/7 personal support": {
+    "uz": "24/7 shaxsiy yordam",
+    "ru": "Персональная поддержка 24/7",
+    "en": "24/7 personal support"
+  },
+  "Contact our support team": {
+    "uz": "Mutaxassislarimiz bilan bog‘lanish",
+    "ru": "Связаться с нашей поддержкой",
+    "en": "Contact our support team"
   }
 }

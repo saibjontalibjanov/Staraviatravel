@@ -63,7 +63,6 @@ class FareQuote(Stamped):
         permissions = [('search_flights', 'Search live ticket fares')]
 
 class Checkout(Stamped):
-    payment_status = models.CharField(max_length=10, default='unpaid', choices=[('unpaid','Unpaid'),('paid','Paid')])
     lead = models.ForeignKey(Lead, null=True, on_delete=models.SET_NULL, related_name='checkouts')
     token = models.CharField(max_length=43, unique=True, editable=False)
     token_hash = models.CharField(max_length=64, unique=True, editable=False)
@@ -216,49 +215,3 @@ class WebsitePageView(models.Model):
     path = models.CharField(max_length=40)
     language = models.CharField(max_length=2, default='uz')
     created_at = models.DateTimeField(default=timezone.now, db_index=True)
-
-
-class Payment(models.Model):
-    """Immutable order amount snapshot; no card data or bank payloads are stored."""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    checkout = models.ForeignKey(Checkout, on_delete=models.PROTECT, related_name='payments')
-    request_id = models.UUIDField()
-    provider = models.CharField(max_length=20, default='ipak', editable=False)
-    mode = models.CharField(max_length=10, default='sandbox', choices=[('sandbox','Sandbox'),('production','Production')], editable=False)
-    amount_minor = models.PositiveBigIntegerField()
-    currency = models.CharField(max_length=3)
-    status = models.CharField(max_length=16, default='creating', choices=[(x,x.title()) for x in ['creating','pending','unknown','succeeded','failed','cancelled','expired']])
-    bank_reference = models.CharField(max_length=150, blank=True, null=True, unique=True)
-    hosted_url = models.URLField(max_length=2000, blank=True)
-    expires_at = models.DateTimeField()
-    verified_at = models.DateTimeField(null=True, blank=True)
-    paid_at = models.DateTimeField(null=True, blank=True)
-    issuance_status = models.CharField(max_length=20, default='not_ready', choices=[('not_ready','Not ready'),('ready','Ready for manual issuance'),('issued','Issued manually')])
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-    class Meta:
-        ordering = ['-created_at']
-        permissions = [('reconcile_payment','Verify payment status with bank'),('issue_paid_ticket','Mark a paid booking as manually issued')]
-        constraints = [models.UniqueConstraint(fields=['checkout','request_id'], name='unique_payment_request_per_order'),
-            models.UniqueConstraint(fields=['checkout'],condition=models.Q(status__in=['creating','pending','unknown','succeeded']),name='one_live_payment_per_checkout'),
-            models.CheckConstraint(condition=models.Q(amount_minor__gt=0),name='payment_amount_positive')]
-    @property
-    def total(self):
-        from decimal import Decimal
-        return Decimal(self.amount_minor)/100
-
-class PaymentEvent(models.Model):
-    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, related_name='events')
-    key = models.CharField(max_length=64, unique=True)
-    source = models.CharField(max_length=20)
-    status = models.CharField(max_length=16)
-    created_at = models.DateTimeField(default=timezone.now)
-    class Meta:
-        ordering = ['created_at','pk']
-
-class PaymentNotice(models.Model):
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='notices')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    created_at = models.DateTimeField(default=timezone.now)
-    class Meta:
-        constraints = [models.UniqueConstraint(fields=['payment','recipient'],name='unique_paid_notice_per_staff')]
