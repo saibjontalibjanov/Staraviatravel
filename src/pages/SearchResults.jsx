@@ -1,5 +1,5 @@
 import { airportCode, formatFare, searchError } from '../lib/search'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { itineraryFromSearch } from '../lib/itinerary'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
@@ -12,7 +12,6 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 import Testimonials from '../components/Testimonials';
 import PhonePopup from '../components/PhonePopup';
-import TakeoffProgressLoader from './TakeoffProgressLoader';
 
 
 
@@ -208,7 +207,7 @@ const SearchResults = () => {
   const fromCity = from.replace(/\s*\([^)]*\)/, '')
   const toCity = to.replace(/\s*\([^)]*\)/, '')
   const passengers = searchParams.get('passengers') || '1'
-  const cabin = searchParams.get('cabin') || 'Business'
+  const cabin = searchParams.get('cabin') || 'Economy'
   const tripType = searchParams.get('returnDate') ? 'round-trip' : 'one-way'
   const departureDate = searchParams.get('departureDate') || ''
   const returnDate = searchParams.get('returnDate')
@@ -236,7 +235,7 @@ const SearchResults = () => {
           queryParams.append('return_date', returnDate);
         }
 
-        const response = await fetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal });
+        const response = await apiFetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal, timeoutMs: 45000, blockingLoader: true });
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
@@ -326,7 +325,7 @@ const SearchResults = () => {
         {/* Featured Deal Card - Clickable */}
         {loading ? (
           <>
-            <TakeoffProgressLoader />
+            <p role="status">{t('Loading the website…')}</p>
           </>
         ) : error ? (
           <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100">

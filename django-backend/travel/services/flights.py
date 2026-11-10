@@ -9,7 +9,7 @@ from django.utils import timezone
 from travel.models import FareQuote
 from .validation import ServiceError, obj, iso_date
 
-AIRPORTS=json.loads((Path(__file__).resolve().parent.parent/'data/airports.json').read_text())
+AIRPORTS=json.loads((Path(__file__).resolve().parent.parent/'data/airports.json').read_text(encoding='utf-8'))
 AIRPORTS=[{'code':str(a.get('code') or ''),'name':str(a.get('name') or ''),'city':str(a.get('city') or ''),'country':str(a.get('country') or '')} for a in AIRPORTS if a.get('code')]
 CITIES={a['code']:a['city'] for a in AIRPORTS}
 CABINS={'economy':1,'premium economy':2,'business':3,'first':4}
@@ -17,7 +17,7 @@ CABINS={'economy':1,'premium economy':2,'business':3,'first':4}
 def normalize_search(data,today=None):
     obj(data)
     today=(today or timezone.localdate()).isoformat()
-    cabin=data.get('cabin','Business')
+    cabin=data.get('cabin','Economy')
     if not isinstance(cabin,str): raise ServiceError('Invalid cabin class.')
     cabin=cabin.strip().lower().replace('first class','first')
     if cabin not in CABINS: raise ServiceError('Choose a supported cabin class.')

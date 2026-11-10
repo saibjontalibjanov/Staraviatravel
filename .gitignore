@@ -34,3 +34,21 @@ django-backend/data/
 django-backend/media/
 django-backend/staticfiles/
 django-backend/.test-data/
+
+# Never publish local databases, credentials, environments or backups.
+venv/
+.venv/
+*.sqlite3
+*.sqlite3-*
+*.db
+*.pem
+*.key
+id_rsa
+id_ed25519
+backups/
+exports/
+!.env.namecheap.example
+*.dump
+*.sql.gz
+*.p12
+*.pfx

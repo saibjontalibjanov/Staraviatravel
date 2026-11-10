@@ -3,7 +3,7 @@
 <div class="ticket-search-strip">
 <label class="ticket-trip-field">Trip type<select name="tripType"><option value="one-way">One way</option><option value="round-trip" {% if lead.return_date %}selected{% endif %}>Round trip</option><option value="multi-city">Multi-city</option></select></label>
 <div id="search-journeys"></div>
-<details class="ticket-travellers"><summary>Class & passengers <span id="traveller-summary"></span></summary><div class="traveller-options"><label>Passengers (adults)<input type="number" name="passengers" min="1" max="9" value="{{ lead.passengers|default:1 }}" required></label><label>Cabin<select name="cabin"><option>Business</option><option>Economy</option><option>Premium Economy</option><option>First</option></select></label></div></details>
+<details class="ticket-travellers"><summary>Class & passengers <span id="traveller-summary"></span></summary><div class="traveller-options"><label>Passengers (adults)<input type="number" name="passengers" min="1" max="9" value="{{ lead.passengers|default:1 }}" required></label><label>Cabin<select name="cabin"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First</option></select></label></div></details>
 <button type="submit" class="ticket-search-submit">Search <span aria-hidden="true">⌕</span></button>
 </div>
 <div id="search-extra-journeys"></div><button type="button" class="button secondary" id="add-search-city" hidden>＋ Add city</button>

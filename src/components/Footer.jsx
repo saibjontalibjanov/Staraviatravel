@@ -1,5 +1,6 @@
+import { callCenter } from '../lib/contact'
 import { Link } from 'react-router-dom'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 
@@ -16,7 +17,7 @@ const Footer = () => {
     if (pending) return
     setPending(true); setError(''); setShowMessage(false)
     try {
-      const response = await fetch(apiUrl('/api/newsletter'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { email, language } }) })
+      const response = await apiFetch(apiUrl('/api/newsletter'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { email, language } }) })
       if (!response.ok || !(await response.json()).subscribed) throw new Error('Subscription failed')
       setShowMessage(true); setEmail('')
     } catch { setError('Could not save your subscription. Please try again.') }
@@ -90,7 +91,7 @@ const Footer = () => {
                 <span className="text-white/40" title={t('Coming soon')}> {t("Privacy Policy")} </span>
               </li>
               <li>
-                <a href="https://wa.me/998901234567" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors"> {t("Contact")} </a>
+                <a href={callCenter.whatsapp} target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors"> {t("Contact")} </a>
               </li>
             </ul>
           </div>
@@ -127,12 +128,12 @@ const Footer = () => {
               <p className="text-white/40 text-xs mb-3">{t("Our address:")}</p>
               <p className="text-white/60 text-sm">{t("Uzbekistan, Andijan")}</p>
               <a
-                href="https://wa.me/998901234567"
+                href={callCenter.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white/60 text-sm hover:text-gold transition-colors mt-1 block"
               >
-                +998 90 123 45 67
+                {callCenter.display}
               </a>
             </div>
           </div>

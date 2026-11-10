@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 
 export default function FAQ() {
   const { t, language } = useLanguage()
@@ -11,7 +11,7 @@ export default function FAQ() {
   useEffect(() => {
     const controller = new AbortController()
     setStatus('loading'); setOpenId(null)
-    fetch(apiUrl(`/api/faqs?language=${language}`), { signal: controller.signal })
+    apiFetch(apiUrl(`/api/faqs?language=${language}`), { signal: controller.signal })
       .then(response => { if (!response.ok) throw new Error(); return response.json() })
       .then(result => { setFaqs(result.data); setStatus('ready') })
       .catch(error => { if (error.name !== 'AbortError') setStatus('error') })

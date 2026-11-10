@@ -1,10 +1,12 @@
 import { itineraryFromSearch, readItineraryDraft } from '../lib/itinerary'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
 import { submitLead } from '../lib/leads'
 
 export default function useLeadSubmission() {
   const { language } = useLanguage()
+  const request = useRef(null)
+  useEffect(() => () => request.current?.abort(), [])
   const locked = useRef(false)
   const [pending, setPending] = useState(false)
   const [result, setResult] = useState(null)
@@ -13,6 +15,7 @@ export default function useLeadSubmission() {
   async function submit(application) {
     if (locked.current) return null
     locked.current = true
+    request.current = new AbortController()
     setPending(true)
     setError('')
     try {
@@ -23,10 +26,12 @@ export default function useLeadSubmission() {
           ? itineraryFromSearch(Object.fromEntries(params))
           : readItineraryDraft()
       }
-      const receipt = await submitLead({ ...itinerary, ...application, language, pagePath: window.location.pathname })
+      const receipt = await submitLead({ ...itinerary, ...application, language, pagePath: window.location.pathname }, { signal: request.current.signal })
+      if (request.current.signal.aborted) return null
       setResult(receipt)
       return receipt
     } catch (cause) {
+      if (request.current.signal.aborted) return null
       setError(cause.message === 'Too many requests. Please try again later.' ? cause.message : 'Could not send your application. Please check your details and try again.')
       return null
     } finally {

@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  envDir: 'django-backend',
+  envDir: mode === 'production' ? '.' : 'django-backend',
   server: {
     port: 3000,
     fs: { deny: ['.env', '.env.*', '*.{crt,pem}', '**/.git/**', '**/django-backend/**', '**/legacy/**'] },
@@ -17,4 +17,4 @@ export default defineConfig({
     },
     open: true
   }
-})
+}))

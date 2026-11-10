@@ -13,7 +13,7 @@ const Cards = ({ deal, handleDealClick }) => {
       className="flex-shrink-0 w-[280px] bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group cursor-pointer snap-start"
     >
       <div className="relative h-48 overflow-hidden">
-        <img
+        <img loading="lazy" decoding="async"
           src={deal.image}
           alt={deal.destination || deal.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

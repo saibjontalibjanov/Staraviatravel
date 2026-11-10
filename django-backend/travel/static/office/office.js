@@ -1,3 +1,4 @@
+import { loadingManager } from './global-loader.js'
 import { emptyLeg, pricePreview, initialSearch, checkoutAutofill } from './itinerary.js'
 const $ = (value, root=document) => root.querySelector(value)
 const $$ = (value, root=document) => [...root.querySelectorAll(value)]
@@ -7,11 +8,18 @@ const csrf = () => $('[name=csrfmiddlewaretoken]')?.value || ''
 const node = (tag, content, attrs={}) => { const element=document.createElement(tag);if(content!==undefined&&content!==null)element.textContent=content;for(const [key,value]of Object.entries(attrs)){if(key==='class')element.className=value;else element.setAttribute(key,value)}return element }
 const button = (label, action, style='secondary') => {const value=node('button',label,{type:'button',class:`button ${style}`});value.addEventListener('click',action);return value}
 async function api(url,method='GET',data){
- const response=await fetch(url,{method,credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},...(data===undefined?{}:{body:JSON.stringify(data)})})
- const body=await response.json().catch(()=>({}))
- if(!response.ok)throw new Error(body.error?.message || (response.status===403?'Access denied or your session expired. Sign in again.':'The operation failed. Please try again.'))
- return body
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),45000)
+ const token=method!=='GET'?loadingManager.start({label:'workspace-request',timeoutMs:46000,onTimeout:()=>controller.abort(),onCancel:()=>controller.abort()}):null
+ try{
+  const response=await fetch(url,{method,signal:controller.signal,credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','X-CSRFToken':csrf()},...(data===undefined?{}:{body:JSON.stringify(data)})})
+  const body=await response.json().catch(error=>{if(controller.signal.aborted)throw error;return null})
+  if(!response.ok)throw new Error(body?.error?.message || (response.status===403?'Access denied or your session expired. Sign in again.':'The operation failed. Please try again.'))
+  if(body===null)throw new Error('The server returned an invalid response. Check the record before retrying.')
+  return body
+ }catch(error){if(controller.signal.aborted)throw new Error('Request timed out. Please try again.');throw error}
+ finally{if(token)loadingManager.stop(token);clearTimeout(timer)}
 }
+
 function feedback(form,message,error=false){const target=$('.feedback',form);if(target){target.textContent=message;target.classList.toggle('error',error)}}
 function submit(form,action){if(!form)return;let busy=false;form.addEventListener('submit',async event=>{event.preventDefault();if(busy)return;busy=true;const disabled=$$('button',form).map(value=>[value,value.disabled]);disabled.forEach(([value])=>value.disabled=true);feedback(form,'Working…');try{await action()}catch(error){feedback(form,error.message,true)}finally{busy=false;disabled.forEach(([value,wasDisabled])=>value.disabled=wasDisabled)}})}
 function input(label,value,onChange,{type='text',required=true,max=200,min,options,name,list,ariaLabel}={}){

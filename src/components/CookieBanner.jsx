@@ -1,28 +1,35 @@
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { publicPages } from '../lib/visitors'
 
 const CookieBanner = () => {
   const { t } = useLanguage()
+  const { pathname } = useLocation()
+  const isPublic = publicPages.includes(pathname)
 
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    if (!isPublic) { setIsVisible(false); return }
     let consent
     try { consent = localStorage.getItem('cookieConsent') } catch { /* Storage can be unavailable. */ }
     if (!consent) {
       const timer = setTimeout(() => setIsVisible(true), 1000)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [isPublic])
 
   const saveConsent = value => {
     try { localStorage.setItem('cookieConsent', value) } catch { /* Dismiss for this visit even without persistence. */ }
+    window.dispatchEvent(new CustomEvent('staravia:consent', { detail: value }))
+    if (value === 'rejected') { try { localStorage.removeItem('staravia_visitor_id') } catch {} }
     setIsVisible(false)
   }
   const handleAccept = () => saveConsent('accepted')
   const handleReject = () => saveConsent('rejected')
 
-  if (!isVisible) return null
+  if (!isPublic || !isVisible) return null
 
   return (
     <div

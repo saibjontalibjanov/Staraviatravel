@@ -1,6 +1,6 @@
 # Django backend and Staravia Workspace
 
-Python 3.12+ · Django 5.2 LTS · SQLite locally / PostgreSQL in production. This is the active backend. There is no dependency on Strapi, its Node packages, admin build or JWT keys.
+Python 3.12+ · Django 5.2 LTS · SQLite or PostgreSQL, according to the existing deployment configuration. This is the active backend. There is no dependency on Strapi, its Node packages, admin build or JWT keys.
 
 ## Setup
 
@@ -49,7 +49,7 @@ Run one or more supervised worker processes; messages are claimed with a conditi
 6. Only enable `TRUST_PROXY_HTTPS` / `TRUST_PROXY_CLIENT_IP` if the trusted proxy overwrites the corresponding headers and the Django port is not publicly exposed. Preserve media and database backups across deployments.
 7. Run `python manage.py check --deploy` using your production environment.
 
-For separate frontend hosting, set `VITE_API_URL` in the same `.env` before building. Serve `/office/` directly on the backend's HTTPS origin, or proxy `/office/` and `/static/` to it. Public API CORS does not grant staff cookie access across arbitrary origins.
+For separate frontend hosting, set public `VITE_API_URL` in the repository-root `.env.production` before building. Backend secrets remain in the backend `.env`. Serve `/office/` directly on the backend's HTTPS origin, or proxy `/office/` and `/static/` to it. Public API CORS does not grant staff cookie access across arbitrary origins.
 
 A multi-stage [Dockerfile](../Dockerfile) builds the frontend and Python image without copying `.env`, legacy Node packages, local databases or uploads. [compose.yaml](../compose.yaml) provides PostgreSQL, web and worker services; run `docker compose --env-file django-backend/.env up --build -d` after configuring a strong URL-safe `POSTGRES_PASSWORD`. The web port binds only to localhost; connect your HTTPS reverse proxy and persistent `/uploads/` serving before publishing. Create a superuser with `docker compose --env-file django-backend/.env exec web python manage.py createsuperuser`. Never use development DEBUG/cookie settings for a public deployment.
 
@@ -81,3 +81,7 @@ The About page includes a photo-free review form immediately after the journey c
 After updating an existing installation, run `python manage.py migrate`, `python manage.py bootstrap_roles`, `python manage.py collectstatic --noinput`, rebuild the frontend, and restart the app. API keys remain in the same backend `.env`; these features require no additional keys.
 
 Selecting **Add** or **Create PNR** copies every supplied segment (airports, cities, dates, local times, terminals, airline, flight number, cabin and duration), recognized baggage allowances, and available fare rules into the payment/checkout editor. Saved passport names appear automatically. When the supplier omits fare rules, the editor supplies a clearly conditional airline-rules notice in the client's language; agents must still verify the exact rules and total. Missing supplier flight details stay highlighted for confirmation, including return details omitted by outbound-only search results. Airport times and flight numbers are never invented. Airline cards use supplier artwork, then an airline-code logo source, then a labelled generic airline image if both external sources fail.
+
+### Existing Namecheap installation
+
+See [the deployment/rollback runbook](../docs/NAMECHEAP_DEPLOYMENT.md). Use `passenger_wsgi.py` as Passenger's startup file with callable `application`; select the existing Python 3.12 virtual environment in cPanel. `CRM_ROOT_ENABLED=True` serves the same protected CRM directly at `/` and keeps `/office` and `/office/` as aliases. Leave it false for a combined website/backend origin. Run `python manage.py audit_database --json` for read-only schema, migration, count and SQLite integrity checks. It refuses to create a missing SQLite database and never applies migrations.

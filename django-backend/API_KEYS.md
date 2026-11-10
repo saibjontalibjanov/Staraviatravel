@@ -14,7 +14,7 @@ To import compatible provider settings from an existing Strapi `.env` instead:
 python scripts/setup_env.py --from-strapi /absolute/path/to/old/.env
 ```
 
-The script refuses to overwrite an existing `.env`. It copies provider values privately, generates a new Django signing secret, and does not reuse old Strapi JWT/signing keys. Edit the generated file locally, then restart Django and the Telegram worker. Rebuild the frontend if `VITE_API_URL` changes.
+The script refuses to overwrite an existing `.env`. It copies provider values privately, generates a new Django signing secret, and does not reuse old Strapi JWT/signing keys. Edit the generated file locally, then restart Django and the Telegram worker. Production builds use public `VITE_API_URL` from the repository-root `.env.production`; rebuild after changing it. Development still reads the backend `.env`.
 
 | Setting | What to put here |
 | --- | --- |
@@ -29,7 +29,7 @@ The script refuses to overwrite an existing `.env`. It copies provider values pr
 | `PUBLIC_BACKEND_URL` | Public HTTPS Django origin used for Telegram webhook and CRM links. This replaces `PUBLIC_STRAPI_URL`. |
 | `CLIENT_ORIGINS` | Exact permitted website origins for public cross-origin API requests. |
 | `CSRF_TRUSTED_ORIGINS` | Exact trusted origins for the staff workspace when a proxy is used, including `https://`. |
-| `VITE_API_URL` | Optional **public** API origin compiled into the frontend. Leave empty for same-origin hosting. Never put a secret here. |
+| `VITE_API_URL` | **Public** API origin: development uses the backend `.env`; production uses root `.env.production`. Set `https://api.staraviatravel.com` for the split-domain site, empty for same-origin hosting. Never put a secret here. |
 | `SERPAPI_KEY` | SerpAPI Google Flights key. Without it, ticket searches return a configuration error instead of invented fares. |
 | `TELEGRAM_BOT_TOKEN` | BotFather bot token. Server/worker only. |
 | `TELEGRAM_LEADS_CHAT_ID` | Numeric target chat/group ID for new lead notifications; groups often start with `-100`. |

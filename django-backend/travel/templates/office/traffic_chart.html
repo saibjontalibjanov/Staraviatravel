@@ -1,0 +1,16 @@
+{% load l10n %}
+<section class="panel traffic-chart" aria-labelledby="traffic-chart-heading">
+  <div class="panel-heading"><div><p class="eyebrow">YOUR WEBSITE AUDIENCE</p><h2 id="traffic-chart-heading">Website visitors</h2><p class="muted">Last 30 days · Tashkent time</p></div><a class="text-link" href="{{ workspace_url }}?section=visitors">View statistics →</a></div>
+  <div class="traffic-legend"><span><i class="visitors-key"></i>Visitors</span><span><i class="views-key"></i>Page views</span></div>
+  <div class="traffic-chart-scroll" tabindex="0" role="region" aria-label="Website traffic line graph; scroll horizontally on small screens">
+    <svg viewBox="0 0 1000 272" role="img" aria-labelledby="traffic-graph-title traffic-graph-description">
+      <title id="traffic-graph-title">Daily website visitors and page views</title><desc id="traffic-graph-description">Distinct consenting browsers per day and their page views over the last 30 calendar days. Missing days count as zero. Exact figures are available in the data table below.</desc>
+      <g class="traffic-grid"><path d="M52 32H952 M52 128H952 M52 224H952"/></g>
+      <g class="traffic-axis"><text x="40" y="36" text-anchor="end">{{ traffic_chart.maximum }}</text><text x="40" y="132" text-anchor="end">{{ traffic_chart.middle }}</text><text x="40" y="228" text-anchor="end">0</text>{% for row in traffic_chart.labels %}<text x="{{ row.x|unlocalize }}" y="255" text-anchor="middle">{{ row.day|date:'d M' }}</text>{% endfor %}</g>
+      <polyline class="traffic-line traffic-views" points="{{ traffic_chart.view_points }}"/><polyline class="traffic-line traffic-visitors" points="{{ traffic_chart.visitor_points }}"/>
+      {% for row in traffic_chart.days %}<circle class="traffic-view-point" cx="{{ row.x|unlocalize }}" cy="{{ row.view_y|unlocalize }}" r="3"><title>{{ row.day|date:'d M Y' }}: {{ row.views }} page views</title></circle><circle class="traffic-visitor-point" cx="{{ row.x|unlocalize }}" cy="{{ row.visitor_y|unlocalize }}" r="3"><title>{{ row.day|date:'d M Y' }}: {{ row.visitors }} visitors</title></circle>{% endfor %}
+    </svg>
+  </div>
+  <p class="muted traffic-chart-note">Counts include browsers that accepted analytics. Recognized bots and private checkout/CRM pages are excluded. One person may use several browsers. Refresh this page to update.</p>
+  <details class="traffic-chart-data"><summary>View daily figures</summary><div class="table-scroll"><table><caption>Website traffic · last 30 days</caption><thead><tr><th scope="col">Date</th><th scope="col">Visitors</th><th scope="col">Page views</th></tr></thead><tbody>{% for row in traffic_chart.days %}<tr><th scope="row">{{ row.day|date:'d M Y' }}</th><td>{{ row.visitors }}</td><td>{{ row.views }}</td></tr>{% endfor %}</tbody></table></div></details>
+</section>

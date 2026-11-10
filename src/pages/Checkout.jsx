@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { apiUrl } from '../lib/api'
+import { apiUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import BillingContact from '../components/checkout/BillingContact'
 import BookingSummary from '../components/checkout/BookingSummary'
@@ -26,7 +26,7 @@ export default function Checkout() {
     const controller = new AbortController()
     setStatus('loading'); setResult(null); setAccepted(false)
     if (!/^[A-Za-z0-9_-]{43}$/.test(token || '')) { setStatus('unavailable'); return () => controller.abort() }
-    fetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}`), { signal: controller.signal, cache: 'no-store', referrerPolicy: 'no-referrer' })
+    apiFetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}`), { blockingLoader: true, signal: controller.signal, cache: 'no-store', referrerPolicy: 'no-referrer' })
       .then(async response => {
         if (!response.ok) throw new Error(response.status === 404 ? 'unavailable' : 'error')
         const data = await response.json()

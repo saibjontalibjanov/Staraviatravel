@@ -1,4 +1,4 @@
-import { apiUrl, mediaUrl } from '../lib/api'
+import { apiUrl, mediaUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -31,13 +31,14 @@ const HotDeals = () => {
   const [error, setError] = useState(null) // State to store any fetch errors
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchHotDeals = async () => {
       try {
         setLoading(true);
         setError(null);
 
         // Published offers retain the existing frontend response contract.
-        const response = await fetch(apiUrl('/api/hot-flights?populate=*'));
+        const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'), { signal: controller.signal, blockingLoader: true });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -70,6 +71,7 @@ const HotDeals = () => {
 
         setDeals(formattedDeals);
       } catch (e) {
+        if (controller.signal.aborted) return;
         console.error("Failed to fetch hot deals:", e);
         setError("Failed to load hot deals. Please try again later.");
       } finally {
@@ -78,6 +80,7 @@ const HotDeals = () => {
     };
 
     fetchHotDeals();
+    return () => controller.abort();
   }, []); // Empty dependency array means this runs once on mount
 
   const scroll = (direction) => {

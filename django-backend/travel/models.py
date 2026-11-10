@@ -189,3 +189,29 @@ class FAQ(Stamped):
         ordering = ['position', 'pk']
     def __str__(self):
         return self.question_en
+
+
+class Partner(Stamped):
+    name = models.CharField(max_length=120)
+    logo = models.ImageField(upload_to='partners/')
+    website = models.URLField(blank=True)
+    position = models.PositiveIntegerField(default=0)
+    published = models.BooleanField(default=True)
+    class Meta:
+        ordering = ['position', 'pk']
+    def __str__(self):
+        return self.name
+
+class WebsiteVisitor(models.Model):
+    key = models.CharField(max_length=64, unique=True, editable=False)
+    first_seen = models.DateTimeField(default=timezone.now)
+    last_seen = models.DateTimeField(default=timezone.now, db_index=True)
+    class Meta:
+        permissions = [('view_traffic', 'View aggregated website visitor statistics')]
+
+class WebsitePageView(models.Model):
+    event_id = models.UUIDField(unique=True)
+    visitor = models.ForeignKey(WebsiteVisitor, on_delete=models.CASCADE, related_name='pageviews')
+    path = models.CharField(max_length=40)
+    language = models.CharField(max_length=2, default='uz')
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)

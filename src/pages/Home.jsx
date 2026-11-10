@@ -1,3 +1,4 @@
+import { callCenter } from '../lib/contact'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState } from 'react'
 import TopBar from '../components/TopBar'
@@ -9,7 +10,7 @@ import Testimonials from '../components/Testimonials'
 import Footer from '../components/Footer'
 import FloatingButtons from '../components/FloatingButtons'
 import PhonePopup from '../components/PhonePopup'
-import CookieBanner from '../components/CookieBanner'
+import Partners from '../components/Partners'
 
 // Image Carousel Component for About Us
 const ImageCarousel = ({ images }) => {
@@ -22,7 +23,7 @@ const ImageCarousel = ({ images }) => {
     <div className="relative group">
       <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl relative">
         {images.map((img, idx) => (
-          <img 
+          <img loading="lazy" decoding="async"
             key={idx}
             src={img} 
             alt={`Business Class ${idx + 1}`}
@@ -79,7 +80,7 @@ const Home = () => {
         <section id="parvozlar" className="w-full bg-white px-6 py-20 md:px-12 lg:px-8">
           <div className="mx-auto w-full max-w-[1500px]">
             {/* First Row */}
-            <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-20 rounded-3xl bg-[#141210] p-6 sm:p-8 lg:p-12 border border-[#D4A34B]/20">
               <ImageCarousel 
                 images={[
                   '/pictures/Trust-section-pictures/Business-class-picture1.jpg',
@@ -87,11 +88,11 @@ const Home = () => {
                   '/pictures/Trust-section-pictures/Business-class-picture3.jpg'
                 ]}
               />
-              <div>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-ink leading-tight"> {t("STARAVIA Travel is Trusted")}<br/>{t("by Over")} <span className="text-gold">{t("188K+ Travelers")}</span>
-                </h2>
-                <p className="mt-6 text-ink/70 text-lg leading-relaxed"> {t("Welcome to Staravia Travel! Our commitment is to provide all our clients with excellent personal service, 24 hours a day, 7 days a week. We have perfected the art of making your travel experience as smooth as possible – from start to finish.")} </p>
-                <p className="mt-4 text-ink/60 leading-relaxed"> {t("If you would rather have travel comfort for you or your business, our quality is what we help you. We are among the best possible value for the money. Feel free to reach out! These talented employees are on phone or email with any questions or concerns. We look forward to assisting you!")} </p>
+              <div className="min-w-0">
+                <span className="inline-flex items-center rounded-full border border-[#D4A34B]/40 bg-[#D4A34B]/10 px-4 py-2 text-sm font-semibold text-[#D4A34B]">{t('24/7 personal support')}</span>
+                <h2 className="mt-5 font-display text-3xl sm:text-4xl xl:text-5xl font-bold text-[#D4A34B] leading-tight">{t('StarAvia Cons — Your New Standard of Trust in Air Travel!')}</h2>
+                <p className="mt-6 text-white/80 text-base sm:text-lg leading-relaxed">{t('StarAvia Cons introduction')}</p>
+                <button type="button" onClick={() => setShowPhonePopup(true)} className="mt-7 inline-flex items-center justify-center rounded-xl bg-[#D4A34B] px-6 py-3 font-semibold text-[#141210] transition-colors hover:bg-[#e4b86c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#D4A34B]">{t('Contact our support team')} <span className="ml-2" aria-hidden="true">↗</span></button>
               </div>
             </div>
 
@@ -131,6 +132,7 @@ const Home = () => {
         </section>
 
         {/* Exclusive Deals - phone popup on click */}
+        <Partners />
         <section id="biz-haqimizda" className="w-full bg-gradient-to-br from-[#fdfcfb] via-[#f8f6f0] to-[#fdfcfb] py-20 lg:py-28 relative overflow-hidden">
           <div className="absolute top-20 left-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-80 h-80 bg-gold/10 rounded-full blur-3xl"></div>
@@ -154,7 +156,7 @@ const Home = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-gold/10 to-gold/5 rounded-full transform scale-110 blur-3xl"></div>
                   <div className="absolute inset-0 border border-gold/20 rounded-full transform scale-105"></div>
                   <div className="relative w-full max-w-md">
-                    <img 
+                    <img loading="lazy" decoding="async"
                       src="/pictures/popup-pictures/woman-business-class.png" 
                       alt="Luxury Travel Concierge" 
                       className="relative z-10 w-full h-auto object-contain drop-shadow-2xl rounded-full" 
@@ -186,7 +188,7 @@ const Home = () => {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                     </svg>
-                    <span className="tracking-wide">+998 90 123 45 67</span>
+                    <span className="tracking-wide">{callCenter.display}</span>
                   </button>
                 </div>
               </div>
@@ -211,7 +213,7 @@ const Home = () => {
       <PhonePopup isOpen={showPhonePopup} onClose={() => setShowPhonePopup(false)} />
 
       {/* Cookie Banner */}
-      <CookieBanner />
+
     </div>
   )
 }

@@ -1,8 +1,8 @@
-import { apiUrl } from './api'
+import { apiUrl, apiFetch } from './api'
 
-export async function submitLead(application) {
-  const response = await fetch(apiUrl('/api/leads'), {
-    method: 'POST',
+export async function submitLead(application, { signal } = {}) {
+  const response = await apiFetch(apiUrl('/api/leads'), {
+    method: 'POST', blockingLoader: true, signal,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data: application }),
   })
