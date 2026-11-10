@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { initialLoading } from '../lib/initialLoading'
 import { heroVideoSource } from '../lib/heroVideo'
 
 export const heroPoster = '/media/hero-poster-v1.webp'
@@ -8,12 +7,10 @@ export const heroPoster = '/media/hero-poster-v1.webp'
 export default function BackgroundVideo({ className = '' }) {
   const video = useRef(null)
   const chosenSource = useRef('')
-  const finishLoading = useRef(() => {})
   const [source, setSource] = useState('')
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    finishLoading.current = initialLoading.begin()
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const connection = navigator.connection
     let idle, timer
@@ -24,7 +21,7 @@ export default function BackgroundVideo({ className = '' }) {
     const update = () => {
       cancel()
       if (motion.matches || connection?.saveData || ['slow-2g', '2g'].includes(connection?.effectiveType)) {
-        chosenSource.current = ''; setSource(''); setReady(false); finishLoading.current()
+        chosenSource.current = ''; setSource(''); setReady(false)
         return
       }
       const start = () => {
@@ -37,7 +34,7 @@ export default function BackgroundVideo({ className = '' }) {
     update()
     motion.addEventListener('change', update)
     connection?.addEventListener('change', update)
-    return () => { cancel(); finishLoading.current(); motion.removeEventListener('change', update); connection?.removeEventListener('change', update) }
+    return () => { cancel(); motion.removeEventListener('change', update); connection?.removeEventListener('change', update) }
   }, [])
 
   useEffect(() => {
@@ -46,7 +43,7 @@ export default function BackgroundVideo({ className = '' }) {
     let visible = true
     const playback = () => {
       if (document.hidden || !visible) element.pause()
-      else element.play()?.catch(() => finishLoading.current())
+      else element.play()?.catch(() => {})
     }
     const observer = 'IntersectionObserver' in window ? new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; playback() }, { threshold: 0.01 }) : null
     observer?.observe(element)
@@ -57,6 +54,6 @@ export default function BackgroundVideo({ className = '' }) {
 
   return <div className={className} aria-hidden="true">
     <img src={heroPoster} width="1280" height="720" alt="" fetchpriority="high" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
-    {source && <video ref={video} src={source} poster={heroPoster} autoPlay loop muted playsInline preload="metadata" disablePictureInPicture onLoadedData={() => setReady(true)} onCanPlay={() => { setReady(true); finishLoading.current() }} onError={() => { setReady(false); finishLoading.current() }} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: ready ? 1 : 0 }} />}
+    {source && <video ref={video} src={source} poster={heroPoster} autoPlay loop muted playsInline preload="metadata" disablePictureInPicture onLoadedData={() => setReady(true)} onCanPlay={() => { setReady(true) }} onError={() => { setReady(false) }} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: ready ? 1 : 0 }} />}
   </div>
 }

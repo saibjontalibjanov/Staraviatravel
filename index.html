@@ -7,12 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link id="website-fonts" rel="stylesheet" media="print" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=Poppins:wght@300;400;500;600&amp;display=swap">
-    <style>.site-loading body{overflow:hidden}.site-loader{position:fixed;inset:0;z-index:10000;background:#fcfaf6;display:grid;place-items:center;color:#29231b}.site-loader-inner{display:flex;align-items:center;flex-direction:column;gap:16px;text-align:center;padding:30px}.site-loader-inner strong{font:30px Georgia,serif;letter-spacing:6px}.site-loader-star{font-size:34px;color:#bf8d37}.site-loader-ring{width:38px;height:38px;border:2px solid #e8ddcb;border-top-color:#b78634;border-radius:50%;animation:site-loader-spin .9s linear infinite;margin:10px 0}.site-loader p{font:12px Arial,sans-serif;color:#8b7a62}@keyframes site-loader-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.site-loader-ring{animation:none}}</style>
+    <style>.site-loading body{overflow:hidden}.boot-splash{position:fixed;inset:0;background:white;display:grid;place-items:center;color:#14243b;z-index:2147483647;font:16px Arial,sans-serif;text-align:center;padding:24px}.boot-splash a{display:block;margin-top:20px;color:#976d23}</style>
     <title>STARAVIA™ | Premium and Luxury classes</title>
     <link rel="icon" type="image/png" href="/staravia-mark.png">
   </head>
   <body class="bg-paper text-ink font-sans antialiased selection:bg-gold selection:text-white relative overflow-x-hidden">
-    <div id="root"><div class="site-loader" role="status" aria-label="Sayt yuklanmoqda"><div class="site-loader-inner"><span class="site-loader-star">✦</span><strong>STARAVIA</strong><span class="site-loader-ring"></span><p>Sayt yuklanmoqda…</p></div></div></div>
+    <div id="root"><div id="boot-splash" class="boot-splash" role="status">STARAVIA · Yuklanmoqda…</div></div>
+    <script defer src="/boot-recovery.js"></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1508,5 +1508,20 @@
     "uz": "Mutaxassislarimiz bilan bog‘lanish",
     "ru": "Связаться с нашей поддержкой",
     "en": "Contact our support team"
+  },
+  "Loading took too long. Please try again.": {
+    "uz": "Yuklash vaqti tugadi. Qayta urinib ko‘ring.",
+    "ru": "Время ожидания истекло. Попробуйте снова.",
+    "en": "Loading took too long. Please try again."
+  },
+  "Scan to call our support team": {
+    "uz": "Bizga qo‘ng‘iroq qilish uchun QR-kodni skanerlang",
+    "ru": "Отсканируйте QR-код, чтобы позвонить нам",
+    "en": "Scan to call our support team"
+  },
+  "Offers could not be loaded. Please try again.": {
+    "uz": "Takliflar yuklanmadi. Qayta urinib ko‘ring.",
+    "ru": "Не удалось загрузить предложения. Попробуйте снова.",
+    "en": "Offers could not be loaded. Please try again."
   }
 }

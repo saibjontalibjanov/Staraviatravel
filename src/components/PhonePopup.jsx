@@ -1,3 +1,4 @@
+import { callCenter } from '../lib/contact'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from './LeadFeedback'
 import { callbackPhone } from '../lib/leads'
@@ -70,7 +71,7 @@ const PhonePopup = ({ isOpen, onClose }) => {
 
                 {/* Phone Number Button */}
                 <a
-                  href="tel:+998901234567"
+                  href={callCenter.tel}
                   className="w-full bg-[#059669] hover:bg-[#047857] text-white font-bold text-base py-3 rounded-lg flex items-center justify-center gap-2 mb-4 transition-colors shadow-lg"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,16 +82,16 @@ const PhonePopup = ({ isOpen, onClose }) => {
                       d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                     />
                   </svg>
-                  +998 90 123 45 67
+                  {callCenter.display}
                 </a>
 
                 {/* QR Code Section */}
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div className="bg-white p-1.5 rounded-lg border-2 border-gray-200">
                     <img
-                      src="/pictures/popup-pictures/staravia_qr_code.png"
-                      alt="Scan to Call QR Code"
-                      className="w-16 h-16 object-contain"
+                      src={callCenter.qr}
+                      alt={t('Scan to call our support team')}
+                      width="396" height="396" className="w-24 h-24 object-contain [image-rendering:pixelated]"
                       onError={(e) => (e.target.style.display = 'none')}
                     />
                   </div>

@@ -90,3 +90,7 @@ For the existing Namecheap deployment, use [the cPanel/Passenger runbook](docs/N
 ### Visitors, partner logos and typography
 
 The CRM **Website visitors** page and overview show active/recent browsers, today's visitors, total visitors, page views and 30-day statistics. Tracking respects the website's consent and browser privacy controls. **Partner logos** lets managers upload, order and publish logos for the animated grayscale/hover-color strips on Home and About. Search starts in **Economy**. The public site restores Poppins and Playfair Display; CRM restores DM Sans and Manrope. Home partners appear directly above `#biz-haqimizda`. Higher-quality responsive videos and a whole-page initial loading screen are included; see [video and loading behavior](docs/VIDEO_PERFORMANCE.md). Apply migration `0005`, update role permissions and rebuild/collect assets before enabling this release. See [setup, metric definitions and font details](docs/PARTNERS_AND_VISITORS.md).
+
+### Global loading and call center
+
+The shared fullscreen globe loader covers critical public/CRM requests while optional/background work stays interactive. Contact details are centralized in `src/lib/contact.js` (`+998990175737`), with a call QR in the callback popup. See [architecture, audit results, operation coverage and deployment](docs/GLOBAL_LOADING_AUDIT.md). Run `npm run build` to synchronize the generated Django loader assets; backend deployment still requires the existing `collectstatic` step.

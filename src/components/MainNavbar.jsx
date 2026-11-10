@@ -1,3 +1,4 @@
+import { callCenter } from '../lib/contact'
 import { useEffect, useId, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
@@ -42,7 +43,7 @@ export default function MainNavbar() {
     </button>
     {open && <nav id={menuId} aria-label={t('Mobile navigation')} className="absolute top-full left-4 right-4 rounded-2xl bg-ink/95 backdrop-blur-md flex flex-col gap-4 p-6 shadow-2xl lg:hidden">
       {links.map(link => <Link key={link.to} to={link.to} onClick={event => followLink(event, link.to)} aria-current={link.to === location.pathname && !location.hash ? 'page' : undefined} className="text-white text-base font-medium hover:text-gold border-b border-white/10 pb-3">{t(link.label)}</Link>)}
-      <a href="tel:+998901234567" className="rounded-xl bg-gold px-6 py-3 text-center font-medium text-ink">+998 90 123 45 67</a>
+      <a href={callCenter.tel} className="rounded-xl bg-gold px-6 py-3 text-center font-medium text-ink">{callCenter.display}</a>
     </nav>}
   </header>
 }

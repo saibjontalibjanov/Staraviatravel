@@ -1,60 +1,56 @@
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import { useLanguage } from '../i18n/LanguageContext'
-import { initialLoading } from '../lib/initialLoading'
+import { loadingManager } from '../shared/loadingManager'
+import { lockApplication } from '../shared/loaderLock'
+import GlobeAnimation from './loader/GlobeAnimation'
+import '../shared/globe.css'
 
-function imageReady(image, signal) {
-  if (image.complete) return Promise.resolve()
-  return new Promise(resolve => {
-    const done = () => { image.removeEventListener('load', done); image.removeEventListener('error', done); signal.removeEventListener('abort', done); resolve() }
-    image.addEventListener('load', done, { once: true }); image.addEventListener('error', done, { once: true }); signal.addEventListener('abort', done, { once: true })
-    if (signal.aborted) done()
-  })
-}
-function fontsReady(signal) {
-  const sheet = document.getElementById('website-fonts')
-  return new Promise(resolve => {
-    const done = () => { sheet?.removeEventListener('load', done); sheet?.removeEventListener('error', done); signal.removeEventListener('abort', done); if (sheet) sheet.media = 'all'; resolve() }
-    if (!sheet || sheet.sheet || signal.aborted) done()
-    else { sheet.addEventListener('load', done, { once: true }); sheet.addEventListener('error', done, { once: true }); signal.addEventListener('abort', done, { once: true }) }
-  }).then(() => {
-    if (!document.fonts || signal.aborted) return
-    return Promise.allSettled([document.fonts.load('400 16px Poppins'), document.fonts.load('600 16px Poppins'), document.fonts.load('400 24px "Playfair Display"')]).then(() => document.fonts.ready)
-  })
-}
-
-export default function WebsiteLoader({ children }) {
+export default function WebsiteLoader({ children, visibilityDelay = 180 }) {
   const { t } = useLanguage()
-  const [visible, setVisible] = useState(true)
-  const pending = useSyncExternalStore(initialLoading.subscribe, initialLoading.count, initialLoading.count)
-  useEffect(() => {
-    const controller = new AbortController(), finishFonts = initialLoading.begin()
-    document.documentElement.classList.add('site-loading')
-    fontsReady(controller.signal).finally(finishFonts)
-    if (document.readyState !== 'complete') {
-      const finishDocument = initialLoading.begin()
-      window.addEventListener('load', finishDocument, { once: true, signal: controller.signal })
-      controller.signal.addEventListener('abort', finishDocument, { once: true })
-    }
-    const deadline = setTimeout(() => { initialLoading.finish(); setVisible(false) }, 15000)
-    return () => { clearTimeout(deadline); controller.abort(); finishFonts(); document.documentElement.classList.remove('site-loading') }
+  const pending = useSyncExternalStore(loadingManager.subscribe, loadingManager.getSnapshot, loadingManager.getSnapshot)
+  const [phase, setPhase] = useState('hidden'), dialog = useRef(null), root = useRef(null)
+  const blocked = pending.count > 0 || phase !== 'hidden'
+  useLayoutEffect(() => {
+    const token = loadingManager.start({ label: 'bootstrap', immediate: true, timeoutMs: 15000 })
+    const frame = requestAnimationFrame(() => loadingManager.stop(token))
+    document.documentElement.classList.remove('site-loading')
+    window.dispatchEvent(new Event('staravia-ready'))
+    return () => { cancelAnimationFrame(frame); loadingManager.stop(token) }
   }, [])
   useEffect(() => {
-    if (!visible || pending) return
-    const controller = new AbortController()
-    // Let initial API results commit to the DOM before checking the page imagery.
-    const timer = setTimeout(async () => {
-      const images = [...document.querySelectorAll('#site-content img')].filter(image => {
-        const box = image.getBoundingClientRect()
-        return image.loading !== 'lazy' || (box.bottom > 0 && box.top < innerHeight && box.right > 0 && box.left < innerWidth)
-      })
-      await Promise.all(images.map(image => imageReady(image, controller.signal)))
-      if (!controller.signal.aborted && initialLoading.count() === 0) { initialLoading.finish(); setVisible(false) }
-    }, 400)
-    return () => { clearTimeout(timer); controller.abort() }
-  }, [pending, visible])
-  useEffect(() => { if (!visible) document.documentElement.classList.remove('site-loading') }, [visible])
+    // Typography is optional: do not hold the whole page for a font CDN.
+    const sheet = document.getElementById('website-fonts')
+    if (!sheet) return
+    const enable = () => { sheet.media = 'all' }
+    if (sheet.sheet) enable()
+    sheet.addEventListener('load',enable); sheet.addEventListener('error',enable)
+    const timer = setTimeout(enable,5000)
+    return () => { clearTimeout(timer); sheet.removeEventListener('load',enable); sheet.removeEventListener('error',enable) }
+  }, [])
+  useEffect(() => {
+    let timer
+    if (pending.count) {
+      if (pending.immediate || phase !== 'hidden') setPhase('visible')
+      else timer = setTimeout(() => setPhase('visible'),visibilityDelay)
+    } else if (phase === 'visible') setPhase('leaving')
+    else if (phase === 'leaving') timer = setTimeout(() => setPhase('hidden'),220)
+    return () => clearTimeout(timer)
+  }, [pending.count, pending.immediate, phase, visibilityDelay])
+  useLayoutEffect(() => {
+    if (!blocked) return
+    return lockApplication(document.getElementById('root'),dialog.current)
+  }, [blocked])
+  useLayoutEffect(() => {
+    if (phase === 'hidden') return
+    const element = dialog.current
+    if (!element.open) element.showModal()
+    return () => { if (element.open) element.close() }
+  }, [phase === 'hidden'])
+  // Close native top-layer dialogs before restoring the original keyboard focus.
   return <>
-    <div id="site-content" inert={visible ? '' : undefined} aria-hidden={visible ? true : undefined}>{children}</div>
-    {visible && <div className="site-loader" role="status" aria-live="polite" aria-label={t('Loading the website…')}><div className="site-loader-inner"><span className="site-loader-star" aria-hidden="true">✦</span><strong>STARAVIA</strong><span className="site-loader-ring" aria-hidden="true" /><p>{t('Preparing your journey…')}</p></div></div>}
+    {pending.timeout && <div className="global-loading-recovery" role="alert">{t('Loading took too long. Please try again.')}<button onClick={() => loadingManager.dismissTimeout()}>{t('Close')}</button></div>}
+    <div id="site-content" ref={root} aria-busy={blocked}>{children}</div>
+    {phase !== 'hidden' && createPortal(<dialog ref={dialog} className="global-loader-dialog" aria-label={t('Loading the website…')} onCancel={event => event.preventDefault()}><div className={`global-loader-overlay ${phase === 'leaving' ? 'is-leaving' : ''}`} role="status" aria-live="polite"><div className="global-loader-content"><GlobeAnimation /><strong>STARAVIA</strong><p>{t('Preparing your journey…')}</p><div className={`global-loader-progress ${pending.progress === null ? 'is-indeterminate' : ''}`} role="progressbar" aria-label={t('Loading the website…')} {...(pending.progress === null ? {} : { 'aria-valuenow': Math.round(pending.progress), 'aria-valuemin': 0, 'aria-valuemax': 100 })}><span style={pending.progress === null ? undefined : { transform: `scaleX(${pending.progress / 100})` }} /></div></div></div></dialog>, document.body)}
   </>
 }

@@ -32,7 +32,7 @@ export default function BillingContact({ token, booking, t }) {
     request.current = new AbortController()
     try {
       const response = await apiFetch(apiUrl(`/api/checkouts/${encodeURIComponent(token)}/billing`), {
-        method: 'POST',
+        method: 'POST', blockingLoader: true,
         headers: { 'Content-Type': 'application/json' },
         cache: 'no-store',
         referrerPolicy: 'no-referrer',

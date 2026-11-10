@@ -12,7 +12,6 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 import Testimonials from '../components/Testimonials';
 import PhonePopup from '../components/PhonePopup';
-import TakeoffProgressLoader from './TakeoffProgressLoader';
 
 
 
@@ -236,7 +235,7 @@ const SearchResults = () => {
           queryParams.append('return_date', returnDate);
         }
 
-        const response = await apiFetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal, timeoutMs: 45000 });
+        const response = await apiFetch(apiUrl(`/api/flights?${queryParams.toString()}`), { signal: controller.signal, timeoutMs: 45000, blockingLoader: true });
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
@@ -326,7 +325,7 @@ const SearchResults = () => {
         {/* Featured Deal Card - Clickable */}
         {loading ? (
           <>
-            <TakeoffProgressLoader />
+            <p role="status">{t('Loading the website…')}</p>
           </>
         ) : error ? (
           <div className="text-center py-20 bg-red-50 rounded-2xl border border-red-100">

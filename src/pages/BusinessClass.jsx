@@ -21,12 +21,16 @@ const BusinessClass = () => {
   }
   const [searchParams] = useSearchParams();
   const [deals, setDeals] = useState([]);
+  const [dealError, setDealError] = useState(false);
+  const [dealAttempt, setDealAttempt] = useState(0);
   const [selectedDeal, setSelectedDeal] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchDeals = async () => {
+      setDealError(false); setSelectedDeal(null); setDeals([]);
       try {
-        const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'));
+        const response = await apiFetch(apiUrl('/api/hot-flights?populate=*'), { signal: controller.signal, blockingLoader: true });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
@@ -60,11 +64,13 @@ const BusinessClass = () => {
         const dealId = searchParams.get('dealId');
         setSelectedDeal(formatted.find(deal => String(deal.id) === dealId) || formatted[0] || null);
       } catch (err) {
-        console.error('Failed to fetch hot deals:', err);
+        if (controller.signal.aborted) return;
+        setDealError(true);
       }
     };
     fetchDeals();
-  }, [searchParams]);
+    return () => controller.abort();
+  }, [searchParams, dealAttempt]);
 
   // Use selected deal's image as background, or default
   const backgroundImage = selectedDeal?.image
@@ -102,6 +108,7 @@ const BusinessClass = () => {
             
             {/* Left side - Info & Prices */}
             <div className="text-white">
+              {dealError && <div className="mb-6 rounded-lg border border-gold/50 p-4" role="alert"><p>{t('Offers could not be loaded. Please try again.')}</p><button type="button" className="mt-2 text-gold underline" onClick={() => setDealAttempt(value => value + 1)}>{t('Try again')}</button></div>}
               <p className="text-[#d4a445] font-bold tracking-widest text-sm uppercase mb-4">
                 {displayBadge}
               </p>
