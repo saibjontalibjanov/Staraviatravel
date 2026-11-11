@@ -6,7 +6,7 @@ Python 3.12+ · Django 5.2 LTS · SQLite or PostgreSQL, according to the existin
 
 Follow the [root setup guide](../README.md). All credentials/settings are in [one `.env` file](API_KEYS.md). Run migrations, `bootstrap_roles`, and `createsuperuser` before first use. No default admin password or public staff registration exists.
 
-**Admin + CRM:** `/office/` · **Login:** `/office/login/` · **Logout:** POST `/office/logout/`. All sections share the same workspace URL with a `section` query parameter. Old `/admin` and `/admin/client=123456` links redirect to the protected workspace so existing bot notifications remain useful.
+**Admin + CRM / Login:** `/` · **Logout:** POST `/logout/`. Legacy `/office` links redirect to the root. All sections share the same workspace URL with a `section` query parameter. Old `/admin` and `/admin/client=123456` links redirect to the protected workspace so existing bot notifications remain useful.
 
 Agents can manage leads, passport records, current fare search, checkouts, private profit, and permitted Telegram conversations. Managers additionally manage website content, subscribers, integration settings and audit records. Only superusers manage staff accounts. Server permission checks apply to both HTML and JSON operations; hiding a menu is not the permission boundary. Staff writes require CSRF tokens. The backend stores no raw card details.
 
@@ -49,7 +49,7 @@ Run one or more supervised worker processes; messages are claimed with a conditi
 6. Only enable `TRUST_PROXY_HTTPS` / `TRUST_PROXY_CLIENT_IP` if the trusted proxy overwrites the corresponding headers and the Django port is not publicly exposed. Preserve media and database backups across deployments.
 7. Run `python manage.py check --deploy` using your production environment.
 
-For separate frontend hosting, set public `VITE_API_URL` in the repository-root `.env.production` before building. Backend secrets remain in the backend `.env`. Serve `/office/` directly on the backend's HTTPS origin, or proxy `/office/` and `/static/` to it. Public API CORS does not grant staff cookie access across arbitrary origins.
+For separate frontend hosting, set public `VITE_API_URL` in the repository-root `.env.production` before building. Backend secrets remain in the backend `.env`. Serve the CRM root `/` directly on the backend's HTTPS origin. Keep the public React website on its separate origin. Public API CORS does not grant staff cookie access across arbitrary origins.
 
 A multi-stage [Dockerfile](../Dockerfile) builds the frontend and Python image without copying `.env`, legacy Node packages, local databases or uploads. [compose.yaml](../compose.yaml) provides PostgreSQL, web and worker services; run `docker compose --env-file django-backend/.env up --build -d` after configuring a strong URL-safe `POSTGRES_PASSWORD`. The web port binds only to localhost; connect your HTTPS reverse proxy and persistent `/uploads/` serving before publishing. Create a superuser with `docker compose --env-file django-backend/.env exec web python manage.py createsuperuser`. Never use development DEBUG/cookie settings for a public deployment.
 
@@ -84,4 +84,4 @@ Selecting **Add** or **Create PNR** copies every supplied segment (airports, cit
 
 ### Existing Namecheap installation
 
-See [the deployment/rollback runbook](../docs/NAMECHEAP_DEPLOYMENT.md). Use `passenger_wsgi.py` as Passenger's startup file with callable `application`; select the existing Python 3.12 virtual environment in cPanel. `CRM_ROOT_ENABLED=True` serves the same protected CRM directly at `/` and keeps `/office` and `/office/` as aliases. Leave it false for a combined website/backend origin. Run `python manage.py audit_database --json` for read-only schema, migration, count and SQLite integrity checks. It refuses to create a missing SQLite database and never applies migrations.
+See [the deployment/rollback runbook](../docs/NAMECHEAP_DEPLOYMENT.md). Use `passenger_wsgi.py` as Passenger's startup file with callable `application`; select the existing Python 3.12 virtual environment in cPanel. The dedicated backend serves the protected CRM directly at `/`. Old `/office` links redirect to `/` with query parameters preserved; POST aliases use method-preserving redirects. A legacy `CRM_ROOT_ENABLED=False` environment entry no longer hides the CRM. The public React website is deployed separately. Run `python manage.py audit_database --json` for read-only schema, migration, count and SQLite integrity checks. It refuses to create a missing SQLite database and never applies migrations.

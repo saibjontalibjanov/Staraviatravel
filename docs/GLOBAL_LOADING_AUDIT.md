@@ -43,11 +43,11 @@ Django is deployed separately from the Vite source tree on the existing hosting.
 
 All public call-center surfaces now use `src/lib/contact.js`:
 
-- Number: **+998990175737**; display: **+998 99 017 57 37**.
-- Telephone: `tel:+998990175737`.
-- Existing WhatsApp links: `https://wa.me/998990175737` (this changes the destination, not a claim that the number has an active WhatsApp account).
+- Updated on 2026-11-11: number **+998900235737**, display **+998 90 023 57 37**.
+- Telephone: `tel:+998900235737`.
+- Existing WhatsApp links: `https://wa.me/998900235737` (this changes the destination, not a claim that the number has an active WhatsApp account).
 - Navbar/mobile menu, TopBar, footer, homepage contact section and callback popup are updated.
-- QR PNG/SVG: `public/pictures/popup-pictures/call-center-qr-v2.{png,svg}`. Payload: **`tel:+998990175737`**.
+- QR PNG/SVG: `public/pictures/popup-pictures/call-center-qr-v3.{png,svg}`. Payload: **`tel:+998900235737`**.
 
 QR generation/independent decoding used temporary tooling outside the project. No QR library is needed at runtime or added to project dependencies. An independent decoder read both the PNG and a screenshot of the QR at its actual 96 px popup size. The versioned filename prevents stale cached QR images. Generic billing country-code selectors and sample customer phone placeholders were not changed into company contact details.
 

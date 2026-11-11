@@ -4,7 +4,7 @@ The travel website uses React/Vite for its public pages and **Python Django 5.2 
 
 ## Your admin and CRM link
 
-**`https://your-domain.com/office/`** is the single protected admin/CRM workspace. Local backend: **http://localhost:8000/office/**. The green interface includes the dashboard, client directory, passports, ticket search, private checkouts/profit, website offers, Telegram, subscribers, booking records, staff access and activity log. It uses Django staff sessions, CSRF protection and permission groups; there are no shipped default passwords.
+**`https://your-backend-domain.com/`** is the single protected admin/CRM workspace. Local backend: **http://localhost:8000/**. The green interface includes the dashboard, client directory, passports, ticket search, private checkouts/profit, website offers, Telegram, subscribers, booking records, staff access and activity log. It uses Django staff sessions, CSRF protection and permission groups; there are no shipped default passwords.
 
 ## Start locally
 
@@ -33,7 +33,7 @@ npm ci
 npm run dev
 ```
 
-Open **http://localhost:3000** for the website and **http://localhost:8000/office/** for the workspace. Vite also forwards `/office/` to Django, so **http://localhost:3000/office/** works locally. Keep the same hostname (`localhost` or `127.0.0.1`) during a session. Stop the old Strapi process/worker before using the Django bot integration.
+Open **http://localhost:3000** for the website and **http://localhost:8000/** for the workspace. The public site remains on port 3000; CRM is on port 8000. Old `/office` links redirect to the root, preserving their query parameters. Keep the same hostname (`localhost` or `127.0.0.1`) during a session. Stop the old Strapi process/worker before using the Django bot integration.
 
 ## One `.env` for API keys
 
@@ -93,4 +93,8 @@ The CRM **Website visitors** page and overview show active/recent browsers, toda
 
 ### Global loading and call center
 
-The shared fullscreen globe loader covers critical public/CRM requests while optional/background work stays interactive. Contact details are centralized in `src/lib/contact.js` (`+998990175737`), with a call QR in the callback popup. See [architecture, audit results, operation coverage and deployment](docs/GLOBAL_LOADING_AUDIT.md). Run `npm run build` to synchronize the generated Django loader assets; backend deployment still requires the existing `collectstatic` step.
+The shared fullscreen globe loader covers critical public/CRM requests while optional/background work stays interactive. Contact details are centralized in `src/lib/contact.js` (`+998900235737`), with a call QR in the callback popup. See [architecture, audit results, operation coverage and deployment](docs/GLOBAL_LOADING_AUDIT.md). Run `npm run build` to synchronize the generated Django loader assets; backend deployment still requires the existing `collectstatic` step.
+
+### Huawei SIM call history
+
+Phone calls can be reported by an explicitly configured Huawei/Android automation app, matched to CRM leads and shown in private call history and incoming-call alerts. This does not directly control a SIM or record audio. Phone-side setup is required: see [Huawei phone bridge setup](docs/PHONE_BRIDGE.md). The backend CRM now opens at `/` even if an old `.env` contains `CRM_ROOT_ENABLED=False`; the public website is deployed separately.

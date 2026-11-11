@@ -17,14 +17,14 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView
+from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView, PhoneCall
 from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm, PartnerForm
 from travel.services.leads import limit, audit
 from travel.services.validation import ServiceError
 from travel.services.telegram import config_status
 from travel.services.checkouts import admin_checkout
 
-SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('tickets','Ticket search','✈','travel.search_flights'),('visitors','Website visitors','↗','travel.view_traffic'),('partners','Partner logos','◇','travel.view_partner'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
+SECTIONS=[('dashboard','Overview','◫',None),('leads','Leads & CRM','◎','travel.view_lead'),('calls','Phone calls','☎','travel.view_phonecall'),('tickets','Ticket search','✈','travel.search_flights'),('visitors','Website visitors','↗','travel.view_traffic'),('partners','Partner logos','◇','travel.view_partner'),('offers','Website offers','▧','travel.view_hotflight'),('testimonials','Testimonials','♡','travel.view_testimonial'),('faqs','Website FAQs','?','travel.view_faq'),('telegram','Telegram inbox','➤','travel.view_telegramchat'),('subscribers','Subscribers','✉','travel.view_newslettersubscriber'),('bookings','Booking records','▤','travel.view_booking'),('searches','Saved searches','⌕','travel.view_savedsearch'),('team','Team access','♙','superuser'),('settings','Integrations','⚙','travel.configure_telegram'),('audit','Activity log','◷','travel.view_auditevent'),('account','My account','♙',None)]
 
 def workspace_path():
     return '/' if settings.CRM_ROOT_ENABLED else '/office/'
@@ -55,8 +55,14 @@ def office(request):
     if section not in [row[0] for row in navigation]:raise PermissionDenied
     context={'section':section,'navigation':navigation,'page_title':next(row[1] for row in navigation if row[0]==section),'today':timezone.localdate().isoformat(),'workspace_url':workspace_path(),'website_url':settings.PUBLIC_WEBSITE_URL or '/'}
     user=request.user
+    if user.has_perm('travel.view_phonecall'):
+        from travel.services.phone_bridge import configured
+        context['phone_bridge_bootstrap']={'enabled':configured(),'workspaceUrl':workspace_path(),'canViewClients':user.has_perm('travel.view_lead')}
     if section=='dashboard':
         context.update(lead_count=Lead.objects.count() if user.has_perm('travel.view_lead') else None,new_count=Lead.objects.filter(lead_status='new').count() if user.has_perm('travel.view_lead') else None,checkout_count=Checkout.objects.count() if user.has_perm('travel.manage_checkouts') else None,subscriber_count=NewsletterSubscriber.objects.count() if user.has_perm('travel.view_newslettersubscriber') else None,recent_leads=Lead.objects.select_related('assigned_to')[:6] if user.has_perm('travel.view_lead') else [],recent_activity=AuditEvent.objects.select_related('actor')[:6] if user.has_perm('travel.view_auditevent') else [])
+    elif section=='calls':
+        from travel.services.phone_bridge import bridge_status
+        context.update(phone_bridge=bridge_status(),page=Paginator(PhoneCall.objects.select_related('lead'),25).get_page(request.GET.get('page')))
     elif section=='visitors':
         context.update(traffic_context())
     elif section=='leads':
@@ -69,7 +75,12 @@ def office(request):
                 if not lead or not user.has_perm('travel.delete_lead'):raise PermissionDenied
                 if request.POST.get('confirm_delete')!='DELETE':messages.error(request,'Type DELETE to confirm removal.');return redirect(request.get_full_path())
                 reference=lead.client_id;lead.delete();audit(user,'lead.deleted',reference);messages.success(request,'Client removed. Associated checkout links are unavailable.');return redirect(workspace_path()+'?section=leads')
-            form=LeadForm(request.POST or None,instance=lead,initial={'language':'uz'})
+            initial={'language':'uz'}
+            if not lead and request.GET.get('phone'):
+                from travel.services.validation import phone
+                try:initial['phone']=phone(request.GET['phone'])
+                except ServiceError:pass
+            form=LeadForm(request.POST or None,instance=lead,initial=initial)
             if request.method=='POST' and form.is_valid():
                 record=form.save(commit=False)
                 if not lead:record.source='agent'

@@ -66,7 +66,9 @@ SERPAPI_KEY = os.getenv('SERPAPI_KEY', '')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_LEADS_CHAT_ID = os.getenv('TELEGRAM_LEADS_CHAT_ID', '')
 TELEGRAM_WEBHOOK_SECRET = os.getenv('TELEGRAM_WEBHOOK_SECRET', '')
-CRM_ROOT_ENABLED = flag('CRM_ROOT_ENABLED')
+# This is a dedicated CRM/API backend; the public website runs separately.
+# Keep the runtime setting for compatibility, but a stale .env=False must not hide CRM.
+CRM_ROOT_ENABLED = True
 LOGIN_URL = '/' if CRM_ROOT_ENABLED else '/office/login/'
 LOGIN_REDIRECT_URL = '/' if CRM_ROOT_ENABLED else '/office/'
 LOGOUT_REDIRECT_URL = '/' if CRM_ROOT_ENABLED else '/office/login/'
@@ -83,3 +85,8 @@ LOGGING = {
     'handlers': {'console': {'class': 'logging.StreamHandler', 'formatter': 'standard'}},
     'loggers': {'django.request': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False}},
 }
+
+# Ordinary SIM calls require an explicitly configured phone-side automation bridge.
+# No Google services, audio recording, carrier API or remote SIM control is assumed.
+PHONE_BRIDGE_TOKEN = os.getenv('PHONE_BRIDGE_TOKEN', '')
+PHONE_BRIDGE_LINE = os.getenv('PHONE_BRIDGE_LINE', '+998900235737')

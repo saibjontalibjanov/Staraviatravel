@@ -215,3 +215,32 @@ class WebsitePageView(models.Model):
     path = models.CharField(max_length=40)
     language = models.CharField(max_length=2, default='uz')
     created_at = models.DateTimeField(default=timezone.now, db_index=True)
+
+
+class PhoneCall(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    call_key = models.CharField(max_length=64,unique=True,editable=False)
+    device_id = models.CharField(max_length=64)
+    line_number = models.CharField(max_length=20)
+    remote_number = models.CharField(max_length=20,blank=True)
+    direction = models.CharField(max_length=10,choices=[('incoming','Incoming'),('outgoing','Outgoing')])
+    status = models.CharField(max_length=12,choices=[(x,x.title()) for x in ['ringing','answered','completed','missed','rejected']])
+    first_reported_at = models.DateTimeField()
+    last_reported_at = models.DateTimeField()
+    duration_seconds = models.PositiveIntegerField(null=True,blank=True)
+    lead = models.ForeignKey(Lead,null=True,blank=True,on_delete=models.SET_NULL,related_name='phone_calls')
+    match_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True,db_index=True)
+    class Meta:
+        ordering=['-first_reported_at']
+
+class PhoneCallEvent(models.Model):
+    key = models.CharField(max_length=64,unique=True,editable=False)
+    fingerprint = models.CharField(max_length=64,editable=False)
+    call = models.ForeignKey(PhoneCall,on_delete=models.CASCADE,related_name='events')
+    status = models.CharField(max_length=12)
+    reported_at = models.DateTimeField()
+    received_at = models.DateTimeField(default=timezone.now)
+    class Meta:
+        ordering=['reported_at','pk']

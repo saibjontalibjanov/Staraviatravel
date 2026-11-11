@@ -13,3 +13,11 @@ SERPAPI_KEY = ''
 TELEGRAM_BOT_TOKEN = ''
 TELEGRAM_LEADS_CHAT_ID = ''
 TELEGRAM_WEBHOOK_SECRET = ''
+
+# Legacy alias coverage remains explicit; CRMRootTests exercise the production default.
+CRM_ROOT_ENABLED = False
+LOGIN_URL = '/office/login/'
+LOGIN_REDIRECT_URL = '/office/'
+LOGOUT_REDIRECT_URL = '/office/login/'
+PHONE_BRIDGE_TOKEN = ''
+PHONE_BRIDGE_LINE = '+998900235737'

@@ -1,3 +1,4 @@
+import './calls.js'
 import { loadingManager } from './global-loader.js'
 import { emptyLeg, pricePreview, initialSearch, checkoutAutofill } from './itinerary.js'
 const $ = (value, root=document) => root.querySelector(value)

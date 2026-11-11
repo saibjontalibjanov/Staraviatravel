@@ -1,4 +1,5 @@
 import io
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.test import Client, TestCase, override_settings
@@ -9,7 +10,8 @@ class LoginDashboardRegressionTests(TestCase):
         call_command('bootstrap_roles',stdout=io.StringIO())
         self.user=User.objects.create_superuser('production-test','admin@example.test','Temporary-test-password!42')
         self.client=Client(enforce_csrf_checks=True,HTTP_ORIGIN='https://testserver')
-    def sign_in(self, path='/office/login/'):
+    def sign_in(self, path=None):
+        path=path or ('/' if settings.CRM_ROOT_ENABLED else '/office/login/')
         self.client.get(path,secure=True)
         token=self.client.cookies['csrftoken'].value
         return self.client.post(path,{'username':self.user.username,'password':'Temporary-test-password!42','csrfmiddlewaretoken':token},secure=True,follow=True)
@@ -18,28 +20,29 @@ class LoginDashboardRegressionTests(TestCase):
         self.assertEqual(response.status_code,200)
         self.assertContains(response,'Latest enquiries')
         self.assertEqual(str(self.user.pk),self.client.session['_auth_user_id'])
-        self.assertEqual(self.client.get('/office/',secure=True).status_code,200)
+        self.assertEqual(self.client.get('/office/',secure=True,follow=True).status_code,200)
         self.assertEqual(self.client.get('/office/logout/',secure=True).status_code,405)
         token=self.client.cookies['csrftoken'].value
         self.assertEqual(self.client.post('/office/logout/',{'csrfmiddlewaretoken':token},secure=True).status_code,302)
         self.assertNotIn('_auth_user_id',self.client.session)
     def test_bad_credentials_and_csrf_do_not_create_session(self):
-        self.client.get('/office/login/',secure=True)
+        path='/' if settings.CRM_ROOT_ENABLED else '/office/login/'
+        self.client.get(path,secure=True)
         token=self.client.cookies['csrftoken'].value
-        response=self.client.post('/office/login/',{'username':self.user.username,'password':'wrong','csrfmiddlewaretoken':token},secure=True)
+        response=self.client.post(path,{'username':self.user.username,'password':'wrong','csrfmiddlewaretoken':token},secure=True)
         self.assertEqual(response.status_code,200)
         self.assertNotIn('_auth_user_id',self.client.session)
-        self.assertEqual(self.client.post('/office/login/',{'username':self.user.username,'password':'wrong'},secure=True).status_code,403)
+        self.assertEqual(self.client.post(path,{'username':self.user.username,'password':'wrong'},secure=True).status_code,403)
     def test_unassigned_client_record_renders(self):
         row=Lead.objects.create(source='agent',phone='+998901234567')
         Lead.objects.filter(pk=row.pk).update(assigned_to=None)
         self.client.force_login(self.user)
-        self.assertEqual(self.client.get('/office/',{'section':'leads','lead':row.client_id},secure=True).status_code,200)
+        self.assertEqual(self.client.get('/office/',{'section':'leads','lead':row.client_id},secure=True,follow=True).status_code,200)
     def test_invalid_record_and_chat_references_return_404(self):
         self.client.force_login(self.user)
         chat=TelegramChat.objects.create(chat_id='42',display_name='Fixture chat')
         for params in [{'section':'offers','record':'bad'},{'section':'telegram','chat':'bad'},{'section':'telegram','chat':str(chat.pk),'before':'²'}]:
-            with self.subTest(params=params):self.assertEqual(self.client.get('/office/',params,secure=True).status_code,404)
+            with self.subTest(params=params):self.assertEqual(self.client.get('/office/',params,secure=True,follow=True).status_code,404)
 
 @override_settings(CRM_ROOT_ENABLED=True,LOGIN_URL='/',LOGIN_REDIRECT_URL='/',LOGOUT_REDIRECT_URL='/')
 class CRMRootTests(LoginDashboardRegressionTests):
@@ -53,7 +56,7 @@ class CRMRootTests(LoginDashboardRegressionTests):
         self.assertEqual(response.request['PATH_INFO'],'/')
         self.assertContains(response,'Latest enquiries')
         self.assertEqual(self.client.get('/office',secure=True).status_code,302)
-        self.assertEqual(self.client.get('/office/',secure=True).status_code,200)
+        self.assertEqual(self.client.get('/office/',secure=True,follow=True).status_code,200)
         self.assertEqual(self.client.get('/api/airports',secure=True).status_code,200)
         token=self.client.cookies['csrftoken'].value
         response=self.client.post('/office/logout/',{'csrfmiddlewaretoken':token},secure=True,follow=True)
@@ -98,3 +101,24 @@ class ASCIILocaleStartupTests(TestCase):
         environment={**os.environ,'LC_ALL':'C','PYTHONUTF8':'0','PYTHONCOERCECLOCALE':'0','DJANGO_SECRET_KEY':'fixture-only-signing-value-not-a-production-secret'}
         result=subprocess.run([sys.executable,str(settings.BASE_DIR/'manage.py'),'check','--settings=config.test_settings'],cwd=settings.BASE_DIR,env=environment,capture_output=True,timeout=30)
         self.assertEqual(result.returncode,0,result.stderr.decode('utf-8',errors='replace'))
+
+@override_settings(CRM_ROOT_ENABLED=True,LOGIN_URL='/',LOGIN_REDIRECT_URL='/',LOGOUT_REDIRECT_URL='/')
+class RootAliasesTests(TestCase):
+    def test_aliases_preserve_query_and_post_method(self):
+        for path in ['/office','/office/','/office/login/','/login/']:
+            response=self.client.get(path,{'section':'leads','q':'+998900235737'})
+            self.assertEqual(response.status_code,302)
+            self.assertTrue(response['Location'].startswith('/?section=leads&'))
+        response=self.client.post('/office/',{'test':'value'})
+        self.assertEqual(response.status_code,307)
+        self.assertEqual(response['Location'],'/')
+    def test_root_logout_is_post_only_and_login_is_private(self):
+        self.assertEqual(self.client.get('/logout/').status_code,405)
+        self.assertIn('no-store',self.client.get('/')['Cache-Control'])
+    def test_legacy_post_reaches_root_without_losing_form_or_query(self):
+        user=User.objects.create_superuser('alias-staff','alias@example.test','Temporary-alias-test!42')
+        self.client.force_login(user)
+        response=self.client.post('/office/?section=leads&lead=new',{'first_name':'Alias preserved','phone':'+998901112233','language':'uz'},follow=True)
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(Lead.objects.filter(first_name='Alias preserved').count(),1)
+        self.assertEqual(response.request['PATH_INFO'],'/')
