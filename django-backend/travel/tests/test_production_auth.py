@@ -106,7 +106,7 @@ class ASCIILocaleStartupTests(TestCase):
 class RootAliasesTests(TestCase):
     def test_aliases_preserve_query_and_post_method(self):
         for path in ['/office','/office/','/office/login/','/login/']:
-            response=self.client.get(path,{'section':'leads','q':'+998900235737'})
+            response=self.client.get(path,{'section':'leads','q':'+998910235737'})
             self.assertEqual(response.status_code,302)
             self.assertTrue(response['Location'].startswith('/?section=leads&'))
         response=self.client.post('/office/',{'test':'value'})

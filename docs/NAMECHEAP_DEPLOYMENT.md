@@ -1,5 +1,7 @@
 # Namecheap cPanel / Passenger deployment and rollback
 
+For the current `main` release and www/cms domains, use [the current deployment guide](NAMECHEAP_CURRENT_DEPLOYMENT.md). The audit-branch commands and no-new-migration statements below describe that earlier release; current main also includes migrations 0005 and phone-history 0006.
+
 This runbook targets the existing split-domain installation. **Do not apply these live changes until the owner approves the reviewed commit, the live traceback has been investigated, and a recoverable backup has been verified.** Local tests are not production verification. Keep `DEBUG=False` throughout. Never copy the local database or `.env` to production, reset passwords, or run `flush`.
 
 ## 1. Obtain evidence first — read-only commands

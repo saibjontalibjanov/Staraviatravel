@@ -93,8 +93,10 @@ The CRM **Website visitors** page and overview show active/recent browsers, toda
 
 ### Global loading and call center
 
-The shared fullscreen globe loader covers critical public/CRM requests while optional/background work stays interactive. Contact details are centralized in `src/lib/contact.js` (`+998900235737`), with a call QR in the callback popup. See [architecture, audit results, operation coverage and deployment](docs/GLOBAL_LOADING_AUDIT.md). Run `npm run build` to synchronize the generated Django loader assets; backend deployment still requires the existing `collectstatic` step.
+The shared fullscreen globe loader covers critical public/CRM requests while optional/background work stays interactive. Contact details are centralized in `src/lib/contact.js` (`+998910235737`), with a call QR in the callback popup. See [architecture, audit results, operation coverage and deployment](docs/GLOBAL_LOADING_AUDIT.md). Run `npm run build` to synchronize the generated Django loader assets; backend deployment still requires the existing `collectstatic` step.
 
 ### Huawei SIM call history
 
 Phone calls can be reported by an explicitly configured Huawei/Android automation app, matched to CRM leads and shown in private call history and incoming-call alerts. This does not directly control a SIM or record audio. Phone-side setup is required: see [Huawei phone bridge setup](docs/PHONE_BRIDGE.md). The backend CRM now opens at `/` even if an old `.env` contains `CRM_ROOT_ENABLED=False`; the public website is deployed separately.
+
+Current Namecheap deployment guide for **www.staraviatravel.com** + **cms.staraviatravel.com**: [step-by-step upload/update instructions](docs/NAMECHEAP_CURRENT_DEPLOYMENT.md). Current call center: **+998 91 023 57 37**.

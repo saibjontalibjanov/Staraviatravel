@@ -2,10 +2,10 @@
 
 ## Qisqa yo‘riqnoma (UZ)
 
-- Saytning yangi call-center raqami: **+998 90 023 57 37**. Yangi ochiq QR shu raqamga qo‘ng‘iroq qiladi, telefonni CRM bilan juftlamaydi.
+- Saytning yangi call-center raqami: **+998 91 023 57 37**. Yangi ochiq QR shu raqamga qo‘ng‘iroq qiladi, telefonni CRM bilan juftlamaydi.
 - CRM endi backend domenining `/` manzilida ochiladi. `/office` eski havolalari avtomatik yo‘naltiriladi.
 - Serverda bazani zaxiralab, yangi migratsiya, `bootstrap_roles` va `collectstatic` buyruqlarini bajaring.
-- Backendning mavjud `.env` fayliga kuchli `PHONE_BRIDGE_TOKEN` va `PHONE_BRIDGE_LINE=+998900235737` qo‘shing; ilovani restart qiling. Kalitni chatga yoki frontendga qo‘ymang.
+- Backendning mavjud `.env` fayliga kuchli `PHONE_BRIDGE_TOKEN` va `PHONE_BRIDGE_LINE=+998910235737` qo‘shing; ilovani restart qiling. Kalitni chatga yoki frontendga qo‘ymang.
 - Huawei telefoningizga mos MacroDroid kabi avtomatlashtirish ilovasida biznes SIM qo‘ng‘irog‘i hodisasi uchun quyidagi HTTP/JSON shartnoma asosida POST sozlang. Telefon bergan raqam/vaqt qiymatlarini ilovaning o‘z variable picker’i orqali tanlang. Ruxsatlar va fon rejimida ishlashni telefoningizda tasdiqlash kerak.
 - CRM’dagi **Phone calls** bo‘limida kelgan haqiqiy hodisani tekshiring. Biz bu muhitdan telefoningizga ilova o‘rnatmadik yoki SIM’ni ulab qo‘ymadik; hozircha server qismi va test hodisalari tekshirilgan.
 
@@ -44,7 +44,7 @@ Copy that generated value into the **existing private backend `.env`**:
 
 ```env
 PHONE_BRIDGE_TOKEN=YOUR_GENERATED_RANDOM_VALUE
-PHONE_BRIDGE_LINE=+998900235737
+PHONE_BRIDGE_LINE=+998910235737
 PUBLIC_BACKEND_URL=https://cms.staraviatravel.com
 ```
 
@@ -128,7 +128,7 @@ Check the HTTP action's response on the phone. 403 means authorization/HTTPS nee
 
 ## Verification and limitations
 
-Backend tests use phone-event fixtures, not actual SIM calls: authorization, HTTPS, duplicate events, conflicting replay, stale/invalid timestamps, epoch formats, out-of-order events, caller normalization, ambiguous/private callers, permission redaction, cursor polling, root routes and preserved customer information. Browser checks use disposable local users/data. The existing public call-center QR contains `tel:+998900235737` only; it is **not** a phone-pairing secret.
+Backend tests use phone-event fixtures, not actual SIM calls: authorization, HTTPS, duplicate events, conflicting replay, stale/invalid timestamps, epoch formats, out-of-order events, caller normalization, ambiguous/private callers, permission redaction, cursor polling, root routes and preserved customer information. Browser checks use disposable local users/data. The existing public call-center QR contains `tel:+998910235737` only; it is **not** a phone-pairing secret.
 
 No production deployment, real handset pairing or real call was performed. Huawei model/OS/app compatibility and actual device permissions/background delivery must be tested on your phone after setup.
 
@@ -136,7 +136,7 @@ No production deployment, real handset pairing or real call was performed. Huawe
 
 - Full Django suite: **85 tests passed** (including phone bridge and root/legacy-route cases).
 - Frontend suite: **38 tests passed**; production Vite build passed.
-- New QR independently decoded as `tel:+998900235737`, both from the original PNG and a screenshot at the actual 96px popup size.
+- New QR independently decoded as `tel:+998910235737`, both from the original PNG and a screenshot at the actual 96px popup size.
 - Chromium with disposable local database/user: root login/logout, `/office/?section=calls` → `/?section=calls`, authenticated simulated phone event → caller alert → correct lead, private call history, new website phone link and QR. These are simulated events, not physical Huawei calls.
 - Migration model consistency: no pending source/model changes. Migration 0006 was applied only to the known workspace-local SQLite file after a verified backup; its post-migration audit was healthy. The live/laptop database is not changed by pulling Git.
 - No server deployment, handset installation, SIM pairing, outbound call or SMS occurred. Follow the setup above on your actual phone and server before expecting live call history.

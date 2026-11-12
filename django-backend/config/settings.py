@@ -89,4 +89,4 @@ LOGGING = {
 # Ordinary SIM calls require an explicitly configured phone-side automation bridge.
 # No Google services, audio recording, carrier API or remote SIM control is assumed.
 PHONE_BRIDGE_TOKEN = os.getenv('PHONE_BRIDGE_TOKEN', '')
-PHONE_BRIDGE_LINE = os.getenv('PHONE_BRIDGE_LINE', '+998900235737')
+PHONE_BRIDGE_LINE = os.getenv('PHONE_BRIDGE_LINE', '+998910235737')

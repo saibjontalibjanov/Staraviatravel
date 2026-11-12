@@ -6,7 +6,7 @@ from django.test import TestCase,override_settings,Client
 from django.utils import timezone
 from travel.models import Lead,PhoneCall,PhoneCallEvent
 
-@override_settings(PHONE_BRIDGE_TOKEN='test-device-token-with-32-characters-minimum',PHONE_BRIDGE_LINE='+998900235737')
+@override_settings(PHONE_BRIDGE_TOKEN='test-device-token-with-32-characters-minimum',PHONE_BRIDGE_LINE='+998910235737')
 class PhoneBridgeTests(TestCase):
     def setUp(self):
         call_command('bootstrap_roles',stdout=io.StringIO())
@@ -20,7 +20,7 @@ class PhoneBridgeTests(TestCase):
     def test_event_matches_customer_and_duplicate_delivery_is_idempotent(self):
         for _ in range(2):self.assertEqual(self.send().status_code,200)
         self.assertEqual(PhoneCall.objects.count(),1);self.assertEqual(PhoneCallEvent.objects.count(),1)
-        call=PhoneCall.objects.get();self.assertEqual(call.lead,self.lead);self.assertEqual(call.line_number,'+998900235737')
+        call=PhoneCall.objects.get();self.assertEqual(call.lead,self.lead);self.assertEqual(call.line_number,'+998910235737')
         self.assertEqual(self.send(eventId='end-1',status='completed',durationSeconds=63).status_code,200)
         call.refresh_from_db();self.assertEqual(call.status,'completed');self.assertEqual(call.duration_seconds,63)
     def test_auth_https_and_disabled_bridge(self):
