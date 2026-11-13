@@ -1,3 +1,4 @@
+import { normalizeOffer, offerBackground } from '../lib/offers'
 import { apiUrl, mediaUrl, apiFetch } from '../lib/api'
 import useLeadSubmission from '../hooks/useLeadSubmission'
 import LeadFeedback from '../components/LeadFeedback'
@@ -35,27 +36,7 @@ const BusinessClass = () => {
         const data = await response.json();
         const rawDeals = Array.isArray(data) ? data : (data.data || []);
         
-        const formatted = rawDeals.map(item => {
-          const attrs = item.attributes || item;
-          let imageUrl = attrs.image;
-          if (imageUrl && typeof imageUrl === 'object') {
-            imageUrl = imageUrl.data?.attributes?.url || imageUrl.url;
-          }
-          if (imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
-            imageUrl = mediaUrl(imageUrl);
-          }
-          return {
-            id: item.id,
-            image: imageUrl,
-            title: attrs.title || '',
-            type: attrs.type || '',
-            badge: attrs.badge || '',
-            badgeColor: attrs.badgeColor || '#d4a445',
-            price: attrs.price || '',
-            oldPrice: attrs.oldPrice || '',
-            link: attrs.link || '',
-          };
-        });
+        const formatted = rawDeals.map(item => normalizeOffer(item, mediaUrl));
 
         setDeals(formatted);
 
@@ -72,9 +53,9 @@ const BusinessClass = () => {
     return () => controller.abort();
   }, [searchParams, dealAttempt]);
 
-  // Use selected deal's image as background, or default
-  const backgroundImage = selectedDeal?.image
-    || 'https://images.unsplash.com/photo-1540339832862-4745ea9fb375?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80';
+  // Prefer the separate CRM background; keep card-image fallback for older offers.
+  const backgroundImage = offerBackground(selectedDeal,
+    'https://images.unsplash.com/photo-1540339832862-4745ea9fb375?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
 
   // Use selected deal's texts or defaults
   const displayTitle = selectedDeal?.title || t('Premium Business Class Flights & Airline Tickets');

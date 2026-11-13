@@ -1,3 +1,4 @@
+import { normalizeOffer } from '../lib/offers'
 import { apiUrl, mediaUrl, apiFetch } from '../lib/api'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useState, useRef, useEffect } from 'react'
@@ -51,23 +52,7 @@ const HotDeals = () => {
 
         // Retain compatibility with older imported offer responses.
         // We flatten it so deal.destination, deal.image, etc. work in the Cards component.
-        const formattedDeals = rawDeals.map(item => {
-          const attrs = item.attributes || item;
-          let imageUrl = attrs.image;
-
-          // 1. Handle Strapi's nested media structure
-          if (imageUrl && typeof imageUrl === 'object') {
-            // Imported media metadata or the current simplified media format
-            imageUrl = imageUrl.data?.attributes?.url || imageUrl.url;
-          }
-
-          // 2. Prepend base URL if the path is relative (starts with /)
-          if (imageUrl && typeof imageUrl === 'string' && imageUrl.startsWith('/')) {
-            imageUrl = mediaUrl(imageUrl);
-          }
-
-          return { id: item.id, ...attrs, image: imageUrl };
-        });
+        const formattedDeals = rawDeals.map(item => normalizeOffer(item, mediaUrl));
 
         setDeals(formattedDeals);
       } catch (e) {

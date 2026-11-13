@@ -2,12 +2,15 @@ import json
 import logging
 from functools import wraps
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.urls import reverse
+from django.views.decorators.http import require_safe
+from PIL import Image, UnidentifiedImageError
 from travel.models import Lead, NewsletterSubscriber, HotFlight, TelegramChat, TelegramMessage, Checkout, Booking, SavedSearch, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView
 from travel.services.validation import ServiceError, obj, email, passports_input, text, request_uuid
 from travel.services.leads import create_lead, limit, audit
@@ -68,8 +71,10 @@ def flights(request):
     return search_flights(request.GET.dict())
 
 def offer_view(offer):
-    image=offer.image.url if offer.image else offer.legacy_image
-    background=offer.background.url if offer.background else offer.legacy_background
+    def uploaded_url(kind):
+        return reverse('offer-media',kwargs={'pk':offer.pk,'kind':kind})+'?v='+str(int(offer.updated_at.timestamp()*1000000))
+    image=uploaded_url('image') if offer.image else offer.legacy_image
+    background=uploaded_url('background') if offer.background else offer.legacy_background
     return {'id':offer.pk,'documentId':str(offer.pk),'title':offer.title,'type':offer.type,'badge':offer.badge,'price':offer.price,'oldPrice':offer.old_price,'image':{'url':image} if image else None,'background':{'url':background} if background else None,'link':offer.link if (offer.link.startswith('https://') or offer.link.startswith('/') and not offer.link.startswith('//')) else '','badgeColor':offer.badge_color}
 
 @endpoint(['GET'])
@@ -77,6 +82,26 @@ def hot_flights(request,pk=None):
     queryset=HotFlight.objects.filter(published=True).order_by('-created_at')
     if pk:return {'data':offer_view(get_object_or_404(queryset,pk=pk))}
     return {'data':[offer_view(offer) for offer in queryset[:100]],'meta':{'pagination':{'total':queryset.count()}}}
+
+@require_safe
+def offer_media(request,pk,kind):
+    # Only public published offer fields are addressable; never arbitrary media paths.
+    if kind not in ('image','background'):raise Http404
+    offer=get_object_or_404(HotFlight,pk=pk,published=True)
+    field=getattr(offer,kind)
+    if not field:raise Http404
+    try:
+        with field.storage.open(field.name,'rb') as probe:
+            image=Image.open(probe)
+            content_type=Image.MIME.get(image.format,'')
+            if content_type not in ('image/jpeg','image/png','image/webp','image/gif','image/avif','image/bmp','image/tiff'):raise Http404
+        stream=field.storage.open(field.name,'rb')
+    except (OSError,ValueError,UnidentifiedImageError):raise Http404 from None
+    response=FileResponse(stream,content_type=content_type)
+    response['X-Content-Type-Options']='nosniff'
+    # The JSON URL changes when the record is edited, bypassing stale image caches.
+    response['Cache-Control']='public, max-age=300'
+    return response
 
 @csrf_exempt
 @endpoint(['POST'])

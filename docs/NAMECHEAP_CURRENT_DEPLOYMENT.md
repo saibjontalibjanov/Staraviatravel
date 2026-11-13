@@ -106,7 +106,7 @@ python manage.py audit_database --json
 
 `bootstrap_roles` updates standard Agents/Managers permissions; review custom roles before using it. No new administrator/password is needed when an existing account works. Current migrations include partner/visitor `0005` and phone-history `0006_phonecall_phonecallevent`; only unapplied migrations run. This phone-number update adds no migration.
 
-Keep `/uploads/` mapped to the persistent backend `media/` on the new hostname using hosting-supported configuration. Do not rely on Django DEBUG media serving in production.
+Published offer card/background uploads now have dedicated `/api/hot-flights/<id>/image` and `/background` endpoints, so they do not require an Apache `/uploads/` mapping. Keep `/uploads/` mapped to the persistent backend `media/` for partner logos and legacy direct media links using hosting-supported configuration. See [offer image troubleshooting](OFFER_IMAGES.md). Do not rely on Django DEBUG media serving in production.
 
 Start/restart **this** Python application through Setup Python App. Verify:
 

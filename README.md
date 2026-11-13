@@ -100,3 +100,5 @@ The shared fullscreen globe loader covers critical public/CRM requests while opt
 Phone calls can be reported by an explicitly configured Huawei/Android automation app, matched to CRM leads and shown in private call history and incoming-call alerts. This does not directly control a SIM or record audio. Phone-side setup is required: see [Huawei phone bridge setup](docs/PHONE_BRIDGE.md). The backend CRM now opens at `/` even if an old `.env` contains `CRM_ROOT_ENABLED=False`; the public website is deployed separately.
 
 Current Namecheap deployment guide for **www.staraviatravel.com** + **cms.staraviatravel.com**: [step-by-step upload/update instructions](docs/NAMECHEAP_CURRENT_DEPLOYMENT.md). Current call center: **+998 91 023 57 37**.
+
+Uploaded offer photos are served through published-offer image endpoints, including the separate Business Class background. See [offer image troubleshooting and deployment](docs/OFFER_IMAGES.md).
