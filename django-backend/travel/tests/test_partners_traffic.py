@@ -59,7 +59,7 @@ class PartnersTrafficTests(TestCase):
             row=Partner.objects.get();Partner.objects.create(name='Hidden',logo='partners/hidden.png',published=False,position=0)
             earlier=Partner.objects.create(name='First',logo='partners/first.png',position=1)
             data=self.client.get('/api/partners').json()['data']
-            self.assertEqual([item['id'] for item in data],[earlier.pk,row.pk]);self.assertTrue(data[1]['logo'].endswith('partner.png'))
+            self.assertEqual([item['id'] for item in data],[earlier.pk,row.pk]);self.assertTrue(data[1]['logo'].startswith(f'/api/partners/{row.pk}/logo?v='))
             self.assertNotIn('legacy_key',data[1])
             self.assertEqual(self.client.get('/office/?section=partners').status_code,200)
             self.assertEqual(self.client.get('/office/?section=partners&record='+str(row.pk)).status_code,200)

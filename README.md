@@ -102,3 +102,11 @@ Phone calls can be reported by an explicitly configured Huawei/Android automatio
 Current Namecheap deployment guide for **www.staraviatravel.com** + **cms.staraviatravel.com**: [step-by-step upload/update instructions](docs/NAMECHEAP_CURRENT_DEPLOYMENT.md). Current call center: **+998 91 023 57 37**.
 
 Uploaded offer photos are served through published-offer image endpoints, including the separate Business Class background. See [offer image troubleshooting and deployment](docs/OFFER_IMAGES.md).
+
+### Partner media and current CRM design
+
+Published partner logos now use Django storage-backed `/api/partners/<id>/logo`
+endpoints; staff previews require permission. The CRM adapts the current
+`New-CRM-system` reference to real Django workflows, including Kanban/table
+leads, content cards and five themes. See [release findings, validation, and the
+Namecheap deployment/rollback steps](docs/PARTNER_CRM_RELEASE.md).

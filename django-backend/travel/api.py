@@ -264,7 +264,31 @@ def testimonials(request):
 
 @endpoint(['GET'])
 def partners(request):
-    return {'data':[{'id':row.pk,'name':row.name,'logo':row.logo.url,'website':row.website if row.website.startswith('https://') else ''} for row in Partner.objects.filter(published=True).exclude(logo='')[:100]]}
+    return {'data':[{'id':row.pk,'name':row.name,'logo':reverse('partner-logo',kwargs={'pk':row.pk})+'?v='+str(int(row.updated_at.timestamp()*1000000)),'website':row.website if row.website.startswith('https://') else ''} for row in Partner.objects.filter(published=True).exclude(logo='')[:100]]}
+
+@require_safe
+def partner_logo(request,pk,preview=False):
+    # Public URLs can address a published Partner only, never an upload path.
+    if preview:
+        if not request.user.is_authenticated or not request.user.is_active or not request.user.is_staff:
+            return JsonResponse({'error':{'message':'Staff sign-in required.'}},status=401)
+        if not request.user.has_perm('travel.view_partner'):
+            return JsonResponse({'error':{'message':'Access denied.'}},status=403)
+    row=get_object_or_404(Partner.objects.all() if preview else Partner.objects.filter(published=True),pk=pk)
+    if not row.logo:raise Http404
+    try:
+        with row.logo.storage.open(row.logo.name,'rb') as probe:
+            image=Image.open(probe)
+            content_type=Image.MIME.get(image.format,'')
+            if content_type not in ('image/png','image/jpeg','image/webp'):raise Http404
+            image.verify()
+        stream=row.logo.storage.open(row.logo.name,'rb')
+    except (OSError,ValueError,UnidentifiedImageError):raise Http404 from None
+    response=FileResponse(stream,content_type=content_type)
+    response['X-Content-Type-Options']='nosniff'
+    # Check publication on every request, including after a logo is unpublished.
+    response['Cache-Control']='no-store, private' if preview else 'no-store'
+    return response
 
 @csrf_exempt
 @endpoint(['POST'])

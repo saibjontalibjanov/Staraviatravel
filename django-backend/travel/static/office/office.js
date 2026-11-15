@@ -32,7 +32,34 @@ function input(label,value,onChange,{type='text',required=true,max=200,min,optio
 }
 function dirty(){state.requestId=null;const confirmed=$('[name=fareConfirmed]',$('#checkout-form')||document);if(confirmed)confirmed.checked=false;overview()}
 function money(amount,currency='USD'){return new Intl.NumberFormat('en-US',{style:'currency',currency}).format(amount)}
-$('[data-menu]')?.addEventListener('click',()=>$('.sidebar').classList.toggle('open'))
+const menuButton=$('[data-menu]'), sidebar=$('.sidebar'), backdrop=$('.nav-backdrop')
+function setMenu(open){
+ sidebar?.classList.toggle('open',open);document.body.classList.toggle('nav-is-open',open)
+ menuButton?.setAttribute('aria-expanded',String(open));if(backdrop)backdrop.hidden=!open
+ if(sidebar){if(open){sidebar.setAttribute('role','dialog');sidebar.setAttribute('aria-modal','true');sidebar.setAttribute('aria-label','Workspace navigation');$('[data-menu-close]',sidebar)?.focus()}else{sidebar.removeAttribute('role');sidebar.removeAttribute('aria-modal');sidebar.removeAttribute('aria-label')}}
+ if(!open)menuButton?.focus()
+}
+menuButton?.addEventListener('click',()=>setMenu(!sidebar.classList.contains('open')))
+$$('[data-menu-close]').forEach(button=>button.addEventListener('click',()=>setMenu(false)))
+document.addEventListener('keydown',event=>{
+ if(!sidebar?.classList.contains('open'))return
+ if(event.key==='Escape'){event.preventDefault();setMenu(false)}
+ if(event.key==='Tab'){
+  const items=$$('a,button',sidebar).filter(item=>item.getClientRects().length), first=items[0],last=items.at(-1)
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus()}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}
+ }
+})
+const desktopMenu=matchMedia('(min-width:1024px)')
+desktopMenu.addEventListener('change',event=>{if(event.matches&&sidebar?.classList.contains('open'))setMenu(false)})
+$('[data-collapse]')?.addEventListener('click',event=>{
+ const collapsed=document.body.classList.toggle('sidebar-collapsed')
+ event.currentTarget.setAttribute('aria-label',collapsed?'Expand sidebar':'Collapse sidebar')
+})
+$$('.logo-preview img,.offer-art img').forEach(image=>{
+ const failed=()=>{image.hidden=true;const message=image.parentElement.querySelector('.image-failure');if(message)message.hidden=false}
+ image.addEventListener('error',failed);if(image.complete&&!image.naturalWidth)failed()
+})
 
 // Native dialogs provide focus trapping, Escape dismissal and focus restoration.
 const dialogTriggers = new WeakMap()

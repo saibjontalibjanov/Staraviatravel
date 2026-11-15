@@ -135,7 +135,7 @@ class PermissionsAndWorkspace(Base):
     def test_all_green_workspace_sections_render(self):
         self.client.force_login(self.admin)
         for section in ['dashboard','leads','tickets','offers','telegram','subscribers','bookings','searches','team','settings','audit']:
-            response=self.client.get('/office/',{'section':section});self.assertEqual(response.status_code,200,section);self.assertContains(response,'ADMIN & CRM');self.assertEqual(response['Referrer-Policy'],'same-origin')
+            response=self.client.get('/office/',{'section':section});self.assertEqual(response.status_code,200,section);self.assertContains(response,'ADMIN &amp; CRM');self.assertEqual(response['Referrer-Policy'],'same-origin')
         for section in ['offers','bookings','searches']:
             self.assertEqual(self.client.get('/office/',{'section':section,'record':'new'}).status_code,200)
         self.assertEqual(self.client.get('/office/',{'section':'leads','lead':self.lead.client_id}).status_code,200)

@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from travel.models import Lead, Checkout, HotFlight, NewsletterSubscriber, TelegramChat, TelegramMessage, Booking, SavedSearch, AuditEvent, Testimonial, FAQ, Partner, WebsiteVisitor, WebsitePageView, PhoneCall
-from travel.forms import StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm, PartnerForm
+from travel.forms import AccountProfileForm, StaffLoginForm, LeadForm, HotFlightForm, BookingForm, SavedSearchForm, StaffCreationForm, TestimonialForm, FAQForm, PartnerForm
 from travel.services.leads import limit, audit
 from travel.services.validation import ServiceError
 from travel.services.telegram import config_status
@@ -54,11 +54,16 @@ def office(request):
     navigation=available(request.user)
     if section not in [row[0] for row in navigation]:raise PermissionDenied
     context={'section':section,'navigation':navigation,'page_title':next(row[1] for row in navigation if row[0]==section),'today':timezone.localdate().isoformat(),'workspace_url':workspace_path(),'website_url':settings.PUBLIC_WEBSITE_URL or '/'}
+    groups = {'dashboard':'Operations','leads':'Operations','calls':'Operations','tickets':'Operations','bookings':'Operations','searches':'Operations','visitors':'Website & Content','partners':'Website & Content','offers':'Website & Content','testimonials':'Website & Content','faqs':'Website & Content','telegram':'Communication','subscribers':'Communication'}
+    descriptions = {'dashboard':'Your operations snapshot, from stored client and website records.','leads':'Track enquiries and manage customer relationships.','calls':'Call history and customer matching from your connected phone.','tickets':'Search current fares with your configured flight provider.','visitors':'Website audience and page views from consenting visitors.','partners':'Manage the partner logos displayed on your website.','offers':'Create and publish travel offers for your website.','testimonials':'Review customer feedback and manage publication.','faqs':'Manage traveler questions in Uzbek, Russian and English.','telegram':'Client conversations and actual delivery status.','team':'Manage staff accounts and workspace access.','settings':'Server-side integration configuration and status.','account':'Your profile, appearance and account security.'}
+    context.update(section_group=groups.get(section,'Workspace'),section_description=descriptions.get(section,'Manage your workspace records.'))
     user=request.user
     if user.has_perm('travel.view_phonecall'):
         from travel.services.phone_bridge import configured
         context['phone_bridge_bootstrap']={'enabled':configured(),'workspaceUrl':workspace_path(),'canViewClients':user.has_perm('travel.view_lead')}
     if section=='dashboard':
+        if user.has_perm('travel.view_lead'):
+            context['lead_sources'] = Lead.objects.values('source').annotate(total=Count('pk')).order_by('-total')
         context.update(lead_count=Lead.objects.count() if user.has_perm('travel.view_lead') else None,new_count=Lead.objects.filter(lead_status='new').count() if user.has_perm('travel.view_lead') else None,checkout_count=Checkout.objects.count() if user.has_perm('travel.manage_checkouts') else None,subscriber_count=NewsletterSubscriber.objects.count() if user.has_perm('travel.view_newslettersubscriber') else None,recent_leads=Lead.objects.select_related('assigned_to')[:6] if user.has_perm('travel.view_lead') else [],recent_activity=AuditEvent.objects.select_related('actor')[:6] if user.has_perm('travel.view_auditevent') else [])
     elif section=='calls':
         from travel.services.phone_bridge import bridge_status
@@ -66,6 +71,16 @@ def office(request):
     elif section=='visitors':
         context.update(traffic_context())
     elif section=='leads':
+        if request.method=='POST' and request.POST.get('action')=='stage':
+            if not user.has_perm('travel.change_lead'):raise PermissionDenied
+            state=request.POST.get('lead_status')
+            if state not in dict(Lead._meta.get_field('lead_status').choices):
+                return HttpResponse('Choose a valid client status.',status=400)
+            record=get_object_or_404(Lead,client_id=request.POST.get('client_id',''))
+            record.lead_status=state;record.save(update_fields=['lead_status','updated_at'])
+            audit(user,'lead.status.changed',record.client_id)
+            messages.success(request,'Client status updated.')
+            return redirect(workspace_path()+'?section=leads&view=kanban')
         reference=request.GET.get('lead')
         lead=get_object_or_404(Lead,client_id=reference) if reference and reference!='new' else None
         if reference:
@@ -92,7 +107,10 @@ def office(request):
             leads=Lead.objects.select_related('assigned_to')
             if query:leads=leads.filter(Q(client_id__icontains=query)|Q(first_name__icontains=query)|Q(last_name__icontains=query)|Q(phone__icontains=query)|Q(email__icontains=query))
             if state in ['new','contacted','qualified','closed']:leads=leads.filter(lead_status=state)
-            context.update(page=Paginator(leads,25).get_page(request.GET.get('page')),query=query,status=state,states=['new','contacted','qualified','closed'])
+            page=Paginator(leads,24).get_page(request.GET.get('page'))
+            view='table' if request.GET.get('view')=='table' else 'kanban'
+            columns=[{'key':key,'label':label,'rows':[row for row in page if row.lead_status==key]} for key,label in Lead._meta.get_field('lead_status').choices]
+            context.update(page=page,query=query,status=state,states=['new','contacted','qualified','closed'],lead_view=view,lead_columns=columns)
     elif section=='tickets':
         context['lead_bootstrap']={}
     elif section in ['offers','bookings','searches','testimonials','faqs','partners']:
@@ -111,7 +129,18 @@ def office(request):
             if request.method=='POST' and form.is_valid():
                 record=form.save();audit(user,f'{model._meta.model_name}.saved',record.pk);messages.success(request,'Record saved.');return redirect(f'{workspace_path()}?section={section}')
             context.update(form=form,record=record)
-        else:context['page']=Paginator(model.objects.order_by('position','pk') if section in ['faqs','partners'] else model.objects.order_by('-created_at'),25).get_page(request.GET.get('page'))
+        else:
+            records=model.objects.order_by('position','pk') if section in ['faqs','partners'] else model.objects.order_by('-created_at')
+            query=request.GET.get('q','').strip()[:100]
+            if query:
+                if section=='faqs': records=records.filter(Q(question_en__icontains=query)|Q(question_uz__icontains=query)|Q(question_ru__icontains=query)|Q(answer_en__icontains=query)|Q(answer_uz__icontains=query)|Q(answer_ru__icontains=query))
+                elif section=='offers': records=records.filter(title__icontains=query)
+                elif section in ['partners','testimonials']: records=records.filter(name__icontains=query)
+            visibility=request.GET.get('visibility','')
+            if section in ['offers','partners','testimonials','faqs'] and visibility in ['published','draft']:
+                records=records.filter(published=visibility=='published')
+            context.update(page=Paginator(records,24).get_page(request.GET.get('page')),query=query,visibility=visibility)
+
     elif section=='subscribers':
         context['page']=Paginator(NewsletterSubscriber.objects.order_by('-created_at'),50).get_page(request.GET.get('page'))
         if request.GET.get('export')=='csv':
@@ -143,10 +172,14 @@ def office(request):
             if form.is_valid():record=form.save();audit(user,'staff.created',record.pk);messages.success(request,'Staff account created.');return redirect(workspace_path()+'?section=team')
         context.update(form=form,team=User.objects.filter(is_staff=True).prefetch_related('groups'))
     elif section=='account':
-        form=PasswordChangeForm(user,request.POST or None)
-        if request.method=='POST' and form.is_valid():
+        profile_action=request.method=='POST' and request.POST.get('action')=='profile'
+        profile_form=AccountProfileForm(request.POST if profile_action else None,instance=user,prefix='profile')
+        form=PasswordChangeForm(user,request.POST if request.method=='POST' and not profile_action else None)
+        if profile_action and profile_form.is_valid():
+            profile_form.save();audit(user,'staff.profile.changed',user.pk);messages.success(request,'Your profile was updated.');return redirect(workspace_path()+'?section=account')
+        if request.method=='POST' and not profile_action and form.is_valid():
             form.save();update_session_auth_hash(request,user);audit(user,'staff.password.changed',user.pk);messages.success(request,'Your password was updated.');return redirect(workspace_path()+'?section=account')
-        context['form']=form
+        context.update(form=form,profile_form=profile_form)
     elif section=='audit':context['page']=Paginator(AuditEvent.objects.select_related('actor'),50).get_page(request.GET.get('page'))
     if section=='dashboard' and user.has_perm('travel.view_traffic'):context.update(traffic_context())
     return render(request,'office/workspace.html',context)

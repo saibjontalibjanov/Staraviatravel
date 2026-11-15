@@ -1,5 +1,6 @@
 import re
 from django import forms
+from django.core.files.uploadedfile import UploadedFile
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
 from travel.models import Lead, HotFlight, Booking, SavedSearch, Testimonial, FAQ, Partner
@@ -90,8 +91,14 @@ class PartnerForm(forms.ModelForm):
     class Meta:
         model = Partner
         fields = ['name', 'logo', 'website', 'position', 'published']
+        # Render the protected preview separately; never link raw /uploads/ files.
+        widgets = {'logo': forms.FileInput(attrs={'accept': 'image/png,image/jpeg,image/webp'})}
     def clean_logo(self):
         image = self.cleaned_data.get('logo')
+        if image and not isinstance(image, UploadedFile):
+            return image
+        if image and getattr(image, 'content_type', None) and getattr(image, 'image', None) and image.image.format not in ('PNG', 'JPEG', 'WEBP'):
+            raise forms.ValidationError('Use PNG, JPEG or WebP.')
         if image and getattr(image, 'size', 0) > 2 * 1024 * 1024:
             raise forms.ValidationError('Logo must be 2 MB or smaller. Use PNG, JPEG or WebP.')
         return image
@@ -102,3 +109,10 @@ class PartnerForm(forms.ModelForm):
         if value and (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password):
             raise forms.ValidationError('Use an HTTPS website address without credentials.')
         return value
+
+
+class AccountProfileForm(forms.ModelForm):
+    """Only the signed-in user's public staff profile, never role/access fields."""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']

@@ -1,0 +1,4 @@
+<div class="overview-charts {% if not traffic or not perms.travel.view_lead %}single-chart{% endif %}">
+{% if traffic %}{% include 'office/traffic_chart.html' %}{% endif %}
+{% if perms.travel.view_lead %}<section class="panel source-panel"><div class="panel-heading"><h2>Lead sources</h2><span class="muted">All records</span></div><div class="source-total"><strong>{{ lead_count }}</strong><span class="muted">Total clients</span></div>{% for row in lead_sources %}<div class="source-row"><span>{{ row.source|default:'Unspecified'|title }}</span><strong>{{ row.total }}</strong><meter min="0" max="{{ lead_count }}" value="{{ row.total }}" aria-label="{{ row.source }} leads">{{ row.total }}</meter></div>{% empty %}<div class="empty"><p>No client records yet.</p></div>{% endfor %}</section>{% endif %}
+</div>
